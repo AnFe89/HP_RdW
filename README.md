@@ -1,73 +1,70 @@
-# React + TypeScript + Vite
+# ⚔️ Ritter der Würfelrunde - Command Center
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> "In the grim darkness of the far future, there is only war... and scheduling conflicts."
 
-Currently, two official plugins are available:
+This is the official web portal for the **Ritter der Würfelrunde** Tabletop Club in Wiesbaden. It serves as a tactical hub for operatives (members) to reserve tables, check mission briefings (news), and manage their service records (accounts).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📡 Deployment Status
 
-## React Compiler
+**Live Operations:** [Vercel Deployment](https://hp-rdw.vercel.app) (Check Vercel for actual URL)
+**Repository:** [GitHub](https://github.com/AnFe89/HP_RdW)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛡️ Key Features
 
-## Expanding the ESLint configuration
+### 1. The Command Center (Landing)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Tech**: React Three Fiber, Custom Shaders.
+- **Visuals**: A procedural 3D wireframe topographic map that reacts to mouse movement.
+- **Immersion**: Deep void colors, glitch effects, and military-grade typography.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 2. The War Room (Reservations)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- **Tactical Map**: A 2D schematized view of the gaming floor (Sectors A1-B3).
+- **Real-time Intel**: Live reservation status fetched from Supabase.
+- **Identity Protocol**: Only registered "Operatives" (with unique Codenames) can secure sectors.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### 3. Operative Management
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- **Codename System**: Usernames enforced via database unique constraints.
+- **Secure Access**: Passwordless Magic Link & Email login.
+- **Right to be Forgotten**: GDPR-compliant "Delete Identity" feature cleans up all traces (Profiles & Reservations) via cascading database policies.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🏗️ Tech Stack
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- **Core**: React (Vite), TypeScript
+- **Styling**: Tailwind CSS, Framer Motion
+- **3D Engine**: React Three Fiber (R3F), Drei
+- **Backend**: Supabase (PostgreSQL, Auth, Realtime)
+
+## 🛠️ Setup for Local Development
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/AnFe89/HP_RdW.git
+   cd hp-ritter-der-wuerfelrunde
+   ```
+
+2. **Install Supply Lines**
+
+   ```bash
+   npm install
+   ```
+
+3. **Configure Tech-Priest Protocols (.env)**
+   Create a `.env` file with your Supabase credentials:
+
+   ```env
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_KEY=your_supabase_anon_key
+   ```
+
+4. **Ignite Engine**
+   ```bash
+   npm run dev
+   ```
+
+## © Copyright
+
+**Ritter der Würfelrunde © 2026**
+_Imperial Thought of the Day: Victory needs no explanation, defeat allows none._
