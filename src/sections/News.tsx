@@ -40,10 +40,10 @@ export const News = () => {
                  <GlitchText text="INCOMING" /> <br />
                  <span className="text-neon/50">TRANSMISSION</span>
               </h2>
-              <p className="text-silver/50 font-tactical text-sm max-w-xs border-l border-silver/20 pl-4 py-2">
-                 DECODING ASTRO-TELEPATHIC DATA STREAM... <br/>
-                 PRIORITY LEVEL: VERMILLION
-              </p>
+               <p className="text-silver/90 font-tactical text-base max-w-xs border-l border-neon/50 pl-4 py-2 mt-4 tracking-wide shadow-[0_0_15px_rgba(0,0,0,0.5)] bg-black/20">
+                  DECODING ASTRO-TELEPATHIC DATA STREAM... <br/>
+                  <span className="text-neon drop-shadow-[0_0_5px_rgba(102,252,241,0.8)]">PRIORITY LEVEL: VERMILLION</span>
+               </p>
            </div>
         </div>
 

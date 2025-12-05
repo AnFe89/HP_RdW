@@ -6,7 +6,7 @@ export const Footer = () => {
                     R
                 </div>
             </div>
-            <p>RITTER DER WÜRFELRUNDE © 2027</p>
+            <p>RITTER DER WÜRFELRUNDE © 2026</p>
             <p className="mt-2 text-[10px]">IMPERIAL THOUGHT OF THE DAY: "VICTORY NEEDS NO EXPLANATION, DEFEAT ALLOWS NONE."</p>
         </footer>
     )
