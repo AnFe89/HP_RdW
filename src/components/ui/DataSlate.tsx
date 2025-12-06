@@ -14,11 +14,12 @@ export const DataSlate = ({ title, date, category, summary, index }: DataSlatePr
 
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
-      transition={{ duration: 0.6, ease: "easeOut", delay: index * 0.1 }}
-      className="relative p-4 md:p-6 border border-silver/10 hover:border-silver/30 bg-white/5 backdrop-blur-md transition-all duration-300 group cursor-pointer w-full max-w-2xl rounded-2xl hover:shadow-[0_0_30px_rgba(102,252,241,0.1)] hover:-translate-y-1"
+      whileHover={{ y: -5, transition: { duration: 0.2 } }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.5, ease: "easeOut", delay: index * 0.1 }}
+      className="relative p-4 md:p-6 border border-silver/10 hover:border-silver/30 bg-white/5 backdrop-blur-md transition-colors duration-300 group cursor-pointer w-full max-w-2xl rounded-2xl hover:shadow-[0_0_30px_rgba(102,252,241,0.1)]"
     >
       <div className="absolute top-0 right-0 p-2 opacity-50 text-[10px] font-mono text-silver group-hover:text-neon">
         // REF: {refId}

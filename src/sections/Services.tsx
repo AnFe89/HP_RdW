@@ -298,7 +298,7 @@ export const Services = () => {
                             : 'border-white/5 text-silver/40 hover:border-white/20 hover:text-[#66fcf1]'
                         }`}
                 >
-                    <div className={`absolute inset-0 bg-[#66fcf1]/10 transform -translate-x-full transition-transform duration-300 ${mode !== '40k' && 'group-hover:translate-x-0'}`} />
+
                     WARHAMMER 40K
                 </button>
                 <button 
@@ -309,7 +309,7 @@ export const Services = () => {
                             : 'border-white/5 text-silver/40 hover:border-white/20 hover:text-[#66fcf1]'
                         }`}
                 >
-                     <div className={`absolute inset-0 bg-[#66fcf1]/10 transform -translate-x-full transition-transform duration-300 ${mode !== 'killteam' && 'group-hover:translate-x-0'}`} />
+
                     KILL TEAM
                 </button>
             </div>
