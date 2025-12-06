@@ -15,11 +15,12 @@ This is the official web portal for the **Ritter der Würfelrunde** Tabletop Clu
 
 - **Tech**: React Three Fiber, Custom Shaders.
 - **Visuals**: A procedural 3D wireframe topographic map that reacts to mouse movement.
+- **Design**: Modern "Glassmorphism" UI with frosted glass panels, neon accents, and responsive animations.
 - **Immersion**: Deep void colors, glitch effects, and military-grade typography.
 
 ### 2. The War Room (Reservations)
 
-- **Tactical Map**: A 2D schematized view of the gaming floor (Sectors A1-B3).
+- **Tactical Map**: A 2D schematized view of the gaming floor (Nephilim, Nachmund, Chalnath, etc.).
 - **Real-time Intel**: Live reservation status fetched from Supabase.
 - **Identity Protocol**: Only registered "Operatives" (with unique Codenames) can secure sectors.
 
