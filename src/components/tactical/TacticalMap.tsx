@@ -11,101 +11,150 @@ interface TacticalMapProps {
 
 export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, occupied }: TacticalMapProps) => {
     
-    // Grid layout for 6 tables
-    const tables = [
-        { id: 1, label: "NEPHILIM SECTOR", x: "10%", y: "10%" },
-        { id: 2, label: "NACHMUND SECTOR", x: "40%", y: "10%" },
-        { id: 3, label: "CHALNATH EXPANSE", x: "70%", y: "10%" },
-        { id: 4, label: "ULTRAMAR SECTOR", x: "10%", y: "55%" },
-        { id: 5, label: "OCTARIUS SECTOR", x: "40%", y: "55%" },
-        { id: 6, label: "CALIXIS SECTOR", x: "70%", y: "55%" },
+    // Galaxy layout for 6 sectors (systems)
+    const systems = [
+        { id: 1, label: "NEPHILIM", x: "15%", y: "20%", size: "md", color: "#66fcf1" },     // Top Left
+        { id: 2, label: "NACHMUND", x: "50%", y: "15%", size: "lg", color: "#45a29e" },     // Top Center
+        { id: 3, label: "CHALNATH", x: "85%", y: "25%", size: "md", color: "#c5c6c7" },     // Top Right
+        { id: 4, label: "ULTRAMAR", x: "20%", y: "70%", size: "lg", color: "#1f2833" },     // Bottom Left
+        { id: 5, label: "OCTARIUS", x: "50%", y: "80%", size: "sm", color: "#8b0000" },     // Bottom Center (Danger)
+        { id: 6, label: "CALIXIS", x: "80%", y: "65%", size: "md", color: "#cb2d3e" },      // Bottom Right
+    ];
+
+    // Warp Lanes (Connections)
+    const warpLanes = [
+        { from: 1, to: 2 },
+        { from: 2, to: 3 },
+        { from: 1, to: 4 },
+        { from: 2, to: 5 },
+        { from: 3, to: 6 },
+        { from: 4, to: 5 },
+        { from: 5, to: 6 },
     ];
 
     return (
-        <div className="w-full h-full min-h-[350px] md:min-h-[500px] bg-[#0b0c10] relative overflow-hidden p-8 border border-[#1f2833]">
-            {/* Grid Lines */}
-            <div className="absolute inset-0 z-0 opacity-20 pointer-events-none" 
+        <div className="w-full h-full min-h-[400px] md:min-h-[500px] bg-[#0b0c10] relative overflow-hidden border border-[#1f2833] rounded-xl shadow-inner">
+            {/* Background Image */}
+            <div className="absolute inset-0 z-0">
+                <img src="/galaxy-bg.png" alt="Galaxy" className="w-full h-full object-cover opacity-60" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0b0c10] via-transparent to-[#0b0c10]/80" />
+            </div>
+
+            {/* Grid Overlay */}
+            <div className="absolute inset-0 z-0 opacity-10 pointer-events-none" 
                  style={{ 
-                     backgroundImage: 'linear-gradient(#1f2833 1px, transparent 1px), linear-gradient(90deg, #1f2833 1px, transparent 1px)', 
-                     backgroundSize: '40px 40px' 
+                     backgroundImage: 'linear-gradient(#66fcf1 1px, transparent 1px), linear-gradient(90deg, #66fcf1 1px, transparent 1px)', 
+                     backgroundSize: '80px 80px' 
                  }} 
             />
 
             {/* Map Container */}
-            <div className="relative z-10 w-full h-full max-w-4xl mx-auto border-2 border-[#1f2833] rounded-sm bg-[#0b0c10]/90">
-                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#0b0c10] px-4 py-1 text-sm font-military tracking-widest text-[#66fcf1] border border-[#1f2833] shadow-[0_0_10px_rgba(102,252,241,0.2)]">
-                    TACTICAL OVERVIEW
-                </div>
+            <div className="relative z-10 w-full h-full">
+                
+                {/* SVG Layer for Warp Lanes */}
+                <svg className="absolute inset-0 w-full h-full pointer-events-none">
+                    <defs>
+                        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feGaussianBlur stdDeviation="2" result="blur" />
+                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                        </filter>
+                    </defs>
+                    {warpLanes.map((lane, i) => {
+                        const start = systems.find(s => s.id === lane.from);
+                        const end = systems.find(s => s.id === lane.to);
+                        if (!start || !end) return null;
+                        return (
+                            <motion.line
+                                key={i}
+                                x1={start.x} y1={start.y}
+                                x2={end.x} y2={end.y}
+                                stroke="#66fcf1"
+                                strokeWidth="1"
+                                strokeOpacity="0.2"
+                                strokeDasharray="5 5"
+                                initial={{ pathLength: 0 }}
+                                animate={{ pathLength: 1 }}
+                                transition={{ duration: 2, delay: i * 0.1 }}
+                            />
+                        );
+                    })}
+                </svg>
 
-                {tables.map((table) => {
-                    const count = occupied[table.id] || 0;
+                {systems.map((system) => {
+                    const count = occupied[system.id] || 0;
                     const capacity = currentMode === '40k' ? 2 : 4;
                     const isFull = count >= capacity;
-                    const isSelected = selectedSector === table.id;
+                    const isSelected = selectedSector === system.id;
+                    
+                    // Size classes
+                    const sizeClass = system.size === 'lg' ? 'w-24 h-24' : system.size === 'md' ? 'w-16 h-16' : 'w-12 h-12';
 
                     return (
-                        <motion.div
-                            key={table.id}
-                            className={clsx(
-                                "absolute w-[25%] h-[35%] border-2 transition-colors duration-200 cursor-pointer flex flex-col items-center justify-center p-2 group",
-                                isSelected ? "border-[#66fcf1] bg-[#66fcf1]/20" : 
-                                isFull ? "border-red-500/50 bg-red-900/30" : 
-                                count > 0 ? "border-yellow-500/50 bg-yellow-900/20" : // Partial State
-                                "border-[#c5c6c7]/30 bg-[#1f2833]/40 hover:border-[#66fcf1] hover:bg-[#1f2833]/80"
-                            )}
-                            style={{ left: table.x, top: table.y }}
-                            onClick={() => onSelectSector(table.id)}
+                        <div
+                            key={system.id}
+                            className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
+                            style={{ left: system.x, top: system.y }}
+                            onClick={() => onSelectSector(system.id)}
                         >
-                            {/* Table Graphic */}
-                            <div className={clsx(
-                                "w-full h-full border border-dashed flex flex-col items-center justify-center relative transition-all duration-300",
-                                isFull ? "border-red-500/50" : count > 0 ? "border-yellow-500/50" : "border-[#66fcf1]/40"
-                            )}>
-                                {/* Visual Pips for Capacity */}
-                                <div className="absolute top-2 right-2 flex gap-1">
+                            {/* Hover Hololith Effect */}
+                            <motion.div 
+                                className="absolute inset-0 -m-4 border border-[#66fcf1]/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                initial={false}
+                                animate={{ scale: isSelected ? 1.2 : 1, rotate: isSelected ? 180 : 0 }}
+                            />
+                            
+                            {/* Planet Visual */}
+                            <motion.div
+                                className={clsx(
+                                    sizeClass, "rounded-full relative flex items-center justify-center shadow-[0_0_20px_rgba(0,0,0,0.8)] border-2 transition-all duration-300",
+                                    isSelected ? "border-[#66fcf1] shadow-[0_0_30px_#66fcf1]" : 
+                                    isFull ? "border-red-500 shadow-[0_0_20px_red]" :
+                                    count > 0 ? "border-yellow-500 shadow-[0_0_20px_yellow]" :
+                                    "border-white/20 group-hover:border-[#66fcf1]/80"
+                                )}
+                                style={{ 
+                                    background: `radial-gradient(circle at 30% 30%, ${system.color}, #000)`,
+                                }}
+                                whileHover={{ scale: 1.1 }}
+                            >
+                                {/* Orbital Ring */}
+                                <div className="absolute inset-[-4px] rounded-full border border-white/10 opacity-50 group-hover:animate-spin-slow pointer-events-none" />
+
+                                {/* Capacity Pips */}
+                                <div className="absolute -bottom-6 flex gap-1 transform translate-y-1">
                                     {[...Array(capacity)].map((_, i) => (
                                         <div 
                                             key={i}
                                             className={clsx(
-                                                "w-1.5 h-1.5 rounded-full border",
+                                                "w-1.5 h-1.5 rounded-full",
                                                 i < count 
-                                                    ? (isFull ? "bg-red-500 border-red-500" : "bg-yellow-500 border-yellow-500")
-                                                    : "border-[#c5c6c7]/30 bg-transparent"
+                                                    ? (isFull ? "bg-red-500 box-shadow-[0_0_5px_red]" : "bg-yellow-500 shadow-[0_0_5px_yellow]")
+                                                    : "bg-[#1f2833]"
                                             )}
                                         />
                                     ))}
                                 </div>
+                            </motion.div>
 
-                                {currentMode === 'killteam' && (
-                                    <div className="absolute left-1/2 top-0 bottom-0 w-px bg-current opacity-40" />
-                                )}
-                                
-                                {/* Corner markers */}
-                                <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-current opacity-80" />
-                                <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-current opacity-80" />
-                                <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-current opacity-80" />
-                                <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-current opacity-80" />
-                                
-                                <div className="m-auto text-xs font-military tracking-widest text-center">
-                                    <span className={clsx(
-                                        "block text-lg mb-1 font-bold",
-                                        isFull ? "text-red-500" : count > 0 ? "text-yellow-500" : isSelected ? "text-[#66fcf1]" : "text-white"
-                                    )}>{table.id}</span>
-                                    <span className="text-[10px] opacity-80 text-[#c5c6c7]">{table.label}</span>
-                                </div>
-                            </div>
-                            
-                            {/* Status Indicator */}
+                            {/* Label */}
                             <div className={clsx(
-                                "absolute -bottom-6 text-[10px] font-mono font-bold w-full text-center tracking-tighter",
-                                isFull ? "text-red-500" : count > 0 ? "text-yellow-500" : "text-green-500"
+                                "absolute -top-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap font-military tracking-widest text-xs transition-colors",
+                                isSelected ? "text-[#66fcf1] drop-shadow-[0_0_5px_#66fcf1]" : "text-[#c5c6c7] opacity-70 group-hover:opacity-100"
                             )}>
-                                {isFull ? "[FULL]" : `[${count}/${capacity}]`}
+                                {system.label}
                             </div>
-                        </motion.div>
+
+                        </div>
                     );
                 })}
+            </div>
+
+            {/* HUD Overlay */}
+            <div className="absolute bottom-4 right-4 text-[10px] font-mono text-[#66fcf1]/40 border-l border-t border-[#66fcf1]/20 p-2">
+                <div>GALACTIC COORDS: 40.999 // 12.451</div>
+                <div>SECTOR THREAT LEVEL: VERMILLION</div>
             </div>
         </div>
     );
 });
+
