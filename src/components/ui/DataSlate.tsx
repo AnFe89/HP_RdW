@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 
 interface DataSlateProps {
@@ -10,17 +10,14 @@ interface DataSlateProps {
 }
 
 export const DataSlate = ({ title, date, category, summary, index }: DataSlateProps) => {
-  const [refId, setRefId] = useState("");
-  useEffect(() => {
-    setRefId(Math.random().toString(36).substr(2, 9).toUpperCase());
-  }, []);
+  const [refId] = useState(() => Math.random().toString(36).substr(2, 9).toUpperCase());
 
   return (
     <motion.div 
-      initial={{ opacity: 0, x: -50 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
+      transition={{ duration: 0.6, ease: "easeOut", delay: index * 0.1 }}
       className="relative p-4 md:p-6 border border-silver/10 hover:border-silver/30 bg-white/5 backdrop-blur-md transition-all duration-300 group cursor-pointer w-full max-w-2xl rounded-2xl hover:shadow-[0_0_30px_rgba(102,252,241,0.1)] hover:-translate-y-1"
     >
       <div className="absolute top-0 right-0 p-2 opacity-50 text-[10px] font-mono text-silver group-hover:text-neon">

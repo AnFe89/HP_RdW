@@ -226,7 +226,7 @@ export const Services = () => {
   );
 
   return (
-    <section className="relative w-full min-h-screen py-10 md:py-20 px-4 md:px-10 flex flex-col gap-6 md:gap-10 bg-[#0b0c10] z-20 border-y border-[#c5c6c7]/20 shadow-[0_0_50px_rgba(0,0,0,0.8)] backdrop-blur-sm">
+    <section className="relative w-full min-h-screen py-10 md:py-20 px-4 md:px-10 flex flex-col gap-6 md:gap-10 bg-[#0b0c10] z-20 border-y border-[#c5c6c7]/20 shadow-[0_0_50px_rgba(0,0,0,0.8)]">
       
       <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
 
@@ -256,7 +256,7 @@ export const Services = () => {
         />
         
         {/* Scanlines Overlay */}
-        <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[size:100%_2px,3px_100%] opacity-20" />
+        <div className="absolute inset-0 pointer-events-none bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,#000000_3px)] opacity-10" />
       </div>
 
       {/* Control Panel */}
