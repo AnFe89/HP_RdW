@@ -30,10 +30,9 @@ export const Services = () => {
     const day = d.getDay();
     let daysUntil = (4 - day + 7) % 7;
     
-    // If today is Thursday and after 23:59, move to next.
-    if (daysUntil === 0 && d.getHours() >= 23) {
-        daysUntil = 7;
-    }
+    // Standard Reset: 23:59 Thursday.
+    // Logic: If it's Thursday (daysUntil=0), we keep it 0 until midnight.
+    // Once day becomes Friday (5), daysUntil becomes 6 (matches next week).
     
     const nextThursday = new Date(d);
     nextThursday.setDate(d.getDate() + daysUntil);
