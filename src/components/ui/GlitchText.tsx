@@ -35,5 +35,15 @@ export const GlitchText = ({ text, className = '' }: GlitchTextProps) => {
     return () => clearInterval(interval);
   }, [text]);
 
-  return <span className={className}>{displayText}</span>;
+  return (
+    <span className={`relative inline-block ${className}`}>
+        {/* Stabilizer: Reserves exact space for final text */}
+        <span className="invisible opacity-0">{text}</span>
+        
+        {/* Animator: Overlays perfectly */}
+        <span className="absolute top-0 left-0 w-full h-full text-center">
+            {displayText}
+        </span>
+    </span>
+  );
 };

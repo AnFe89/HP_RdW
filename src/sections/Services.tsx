@@ -107,7 +107,7 @@ export const Services = () => {
         .subscribe();
 
     return () => { subscription.unsubscribe(); };
-  }, [initData]);
+  }, [initData, isLoggedIn]);
 
   const handleReservation = async () => {
       if (!isLoggedIn) {
@@ -244,7 +244,7 @@ export const Services = () => {
       <div className="flex flex-col md:flex-row gap-10 w-full">
         {/* 2D Tactical Viewport */}
         <div className="w-full md:w-2/3 h-[400px] md:h-[600px] border border-white/10 relative overflow-hidden bg-gradient-to-br from-white/5 to-transparent rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] backdrop-blur-md">
-        <div className="absolute top-4 left-4 z-10 font-tactical text-xs text-[#66fcf1] flex gap-4">
+        <div className="absolute top-4 left-4 z-10 font-tactical text-xs text-[#66fcf1] flex flex-col md:flex-row gap-2 md:gap-4 bg-black/40 backdrop-blur-sm p-2 rounded border border-white/5">
              <div className="flex items-center gap-2">
                 <span className="w-2 h-2 bg-[#66fcf1] rounded-full animate-pulse"/> 
                 LIVE FEED
