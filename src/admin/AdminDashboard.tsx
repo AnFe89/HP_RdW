@@ -29,6 +29,10 @@ export const AdminDashboard = () => {
     // News Form State
     const [newNews, setNewNews] = useState({ title: '', date: '40.999.M42', category: 'ANNOUNCEMENT', summary: '' });
     const [editingId, setEditingId] = useState<string | null>(null);
+    const [currentUserId, setCurrentUserId] = useState<string>('');
+
+    // HARDCODED CHAPTER MASTER ID (Your ID)
+    const CHAPTER_MASTER_ID = '9f9a24d1-01d8-4a53-b29a-c71b7b208590';
 
     const fetchData = useCallback(async () => {
         const { data: profilesData } = await supabase.from('profiles').select('*').order('created_at', { ascending: false });
@@ -41,6 +45,7 @@ export const AdminDashboard = () => {
     const checkAdmin = useCallback(async () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
+            setCurrentUserId(user.id);
             const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
             if (profile?.role === 'admin') {
                 setIsAdmin(true);
@@ -63,10 +68,25 @@ export const AdminDashboard = () => {
     
 
 
-    const handleRoleUpdate = async (userId: string, newRole: string) => {
-        const { error } = await supabase.from('profiles').update({ role: newRole }).eq('id', userId);
+    const handleRoleUpdate = async (targetUserId: string, newRole: string) => {
+        // SECURITY CHECK: Only Chapter Master can touch Admin roles
+        if (currentUserId !== CHAPTER_MASTER_ID) {
+            // If trying to SET admin
+            if (newRole === 'admin') {
+                alert("ACCESS DENIED. ONLY THE LORD INQUISITOR CAN PROMOTE COMMANDERS.");
+                return;
+            }
+            // If trying to CHANGE an existing admin (demotion)
+            const targetProfile = profiles.find(p => p.id === targetUserId);
+            if (targetProfile?.role === 'admin') {
+                alert("ACCESS DENIED. YOU CANNOT MODIFY A FELLOW COMMANDER'S RANK.");
+                return;
+            }
+        }
+
+        const { error } = await supabase.from('profiles').update({ role: newRole }).eq('id', targetUserId);
         if (!error) {
-            setProfiles(profiles.map(p => p.id === userId ? { ...p, role: newRole } : p));
+            setProfiles(profiles.map(p => p.id === targetUserId ? { ...p, role: newRole } : p));
         } else {
             alert("Role update failed: " + error.message);
         }
@@ -146,7 +166,9 @@ export const AdminDashboard = () => {
             <div className="max-w-6xl mx-auto">
                 <h1 className="text-4xl font-military text-center mb-10 text-white">
                     <GlitchText text="COMMAND BRIDGE" />
-                    <span className="block text-sm font-mono text-neon mt-2">ADMINISTRATION TERMINAL</span>
+                    <span className="block text-sm font-mono text-neon mt-2">
+                        {currentUserId === CHAPTER_MASTER_ID ? 'WELCOME, LORD INQUISITOR' : 'ADMINISTRATION TERMINAL'}
+                    </span>
                 </h1>
 
                 {/* Tabs */}
@@ -288,13 +310,19 @@ export const AdminDashboard = () => {
                                             <select 
                                                 className={`bg-black/40 border p-1 text-xs font-mono outline-none cursor-pointer
                                                     ${profile.role === 'admin' ? 'border-red-500 text-red-500' : 
-                                                      profile.role === 'member' ? 'border-neon text-neon' : 'border-silver/30 text-silver'}`}
+                                                      profile.role === 'member' ? 'border-neon text-neon' : 'border-silver/30 text-silver'}
+                                                    ${(currentUserId !== CHAPTER_MASTER_ID && profile.role === 'admin') ? 'opacity-50 cursor-not-allowed' : ''}  
+                                                `}
                                                 value={profile.role}
                                                 onChange={(e) => handleRoleUpdate(profile.id, e.target.value)}
+                                                disabled={currentUserId !== CHAPTER_MASTER_ID && profile.role === 'admin'}
                                             >
                                                 <option value="guest">GUEST (RECRUIT)</option>
                                                 <option value="member">MEMBER (OPERATIVE)</option>
-                                                <option value="admin">ADMIN (COMMANDER)</option>
+                                                {/* Only show/allow Admin option if I am Master or if the user is already admin */}
+                                                {(currentUserId === CHAPTER_MASTER_ID || profile.role === 'admin') && (
+                                                    <option value="admin">ADMIN (COMMANDER)</option>
+                                                )}
                                             </select>
                                         </td>
                                     </tr>
