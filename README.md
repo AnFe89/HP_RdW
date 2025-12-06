@@ -20,15 +20,24 @@ This is the official web portal for the **Ritter der Würfelrunde** Tabletop Clu
 
 ### 2. The War Room (Reservations)
 
-- **Tactical Map**: A 2D schematized view of the gaming floor (Nephilim, Nachmund, Chalnath, etc.).
+- **Galaxy Map**: A 2D schematized view of the gaming floor (Galaxy Map) with sector status.
 - **Real-time Intel**: Live reservation status fetched from Supabase.
-- **Identity Protocol**: Only registered "Operatives" (with unique Codenames) can secure sectors.
+- **Identity Protocol**:
+  - **Operatives** (Member) can reserve Sectors.
+  - **Commanders** (Admins) override protocols and can reserve any sector.
+  - **Guests** can view but not interact with deployment zones.
 
-### 3. Operative Management
+### 3. The Command Bridge (Admin)
+
+- **Secure Access**: Protected route (`/admin`) visible only to users with `role: admin`.
+- **Propaganda Machine**: Create, Update, and Delete News signals broadcasted to the main page.
+- **Personnel Files**: Promote recruits (Guests) to Operatives (Members) or Commanders (Admins).
+
+### 4. Operative Management
 
 - **Codename System**: Usernames enforced via database unique constraints.
 - **Secure Access**: Passwordless Magic Link & Email login.
-- **Right to be Forgotten**: GDPR-compliant "Delete Identity" feature cleans up all traces (Profiles & Reservations) via cascading database policies.
+- **Right to be Forgotten**: GDPR-compliant "Delete Identity" feature cleans up all traces.
 
 ## 🏗️ Tech Stack
 

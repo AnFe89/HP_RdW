@@ -28,6 +28,7 @@ export const AdminDashboard = () => {
     
     // News Form State
     const [newNews, setNewNews] = useState({ title: '', date: '40.999.M42', category: 'ANNOUNCEMENT', summary: '' });
+    const [editingId, setEditingId] = useState<string | null>(null);
 
     const fetchData = useCallback(async () => {
         const { data: profilesData } = await supabase.from('profiles').select('*').order('created_at', { ascending: false });
@@ -73,13 +74,43 @@ export const AdminDashboard = () => {
 
     const handleAddNews = async (e: React.FormEvent) => {
         e.preventDefault();
-        const { data, error } = await supabase.from('news').insert([newNews]).select();
-        if (!error && data) {
-            setNews([data[0], ...news]);
-            setNewNews({ title: '', date: '40.999.M42', category: 'ANNOUNCEMENT', summary: '' });
+        
+        if (editingId) {
+            // UPDATE EXISTING
+            const { error } = await supabase.from('news').update(newNews).eq('id', editingId);
+            if (!error) {
+                setNews(news.map(n => n.id === editingId ? { ...n, ...newNews, id: editingId } : n));
+                setNewNews({ title: '', date: '40.999.M42', category: 'ANNOUNCEMENT', summary: '' });
+                setEditingId(null);
+            } else {
+                alert("Update failed: " + error.message);
+            }
         } else {
-            alert("News post failed: " + error?.message);
+            // CREATE NEW
+            const { data, error } = await supabase.from('news').insert([newNews]).select();
+            if (!error && data) {
+                setNews([data[0], ...news]);
+                setNewNews({ title: '', date: '40.999.M42', category: 'ANNOUNCEMENT', summary: '' });
+            } else {
+                alert("News post failed: " + error?.message);
+            }
         }
+    };
+
+    const startEdit = (item: NewsItem) => {
+        setNewNews({
+            title: item.title,
+            date: item.date,
+            category: item.category,
+            summary: item.summary
+        });
+        setEditingId(item.id);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const cancelEdit = () => {
+        setNewNews({ title: '', date: '40.999.M42', category: 'ANNOUNCEMENT', summary: '' });
+        setEditingId(null);
     };
 
     const handleDeleteNews = async (id: string) => {
@@ -139,7 +170,9 @@ export const AdminDashboard = () => {
                     <div className="grid md:grid-cols-2 gap-10">
                         {/* Form */}
                         <div className="bg-[#1f2833]/50 p-6 rounded-xl border border-white/10">
-                            <h3 className="text-xl text-white font-military mb-6">TRANSMIT NEW SIGNAL</h3>
+                            <h3 className="text-xl text-white font-military mb-6">
+                                {editingId ? `EDITING SIGNAL: ${editingId.slice(0,8)}...` : 'TRANSMIT NEW SIGNAL'}
+                            </h3>
                             <form onSubmit={handleAddNews} className="space-y-4">
                                 <div>
                                     <label className="block text-xs font-mono text-silver mb-1">DATA HEADER (TITLE)</label>
@@ -185,27 +218,46 @@ export const AdminDashboard = () => {
                                         required
                                     />
                                 </div>
-                                <button type="submit" className="w-full py-3 bg-neon/10 border border-neon text-neon hover:bg-neon/20 font-bold tracking-widest transition-all">
-                                    UPLOAD TO NOOSPHERE
-                                </button>
+                                <div className="flex gap-2">
+                                    <button type="submit" className="flex-1 py-3 bg-neon/10 border border-neon text-neon hover:bg-neon/20 font-bold tracking-widest transition-all">
+                                        {editingId ? 'UPDATE SIGNAL' : 'UPLOAD TO NOOSPHERE'}
+                                    </button>
+                                    {editingId && (
+                                        <button 
+                                            type="button" 
+                                            onClick={cancelEdit}
+                                            className="px-4 py-3 bg-red-900/20 border border-red-500/50 text-red-500 hover:bg-red-900/40 font-bold tracking-widest transition-all"
+                                        >
+                                            CANCEL
+                                        </button>
+                                    )}
+                                </div>
                             </form>
                         </div>
 
                         {/* List */}
                         <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
                             {news.map(item => (
-                                <div key={item.id} className="bg-[#1f2833]/30 p-4 border-l-2 border-neon flex justify-between items-start group">
+                                <div key={item.id} className={`bg-[#1f2833]/30 p-4 border-l-2 flex justify-between items-start group transition-colors ${editingId === item.id ? 'border-yellow-500 bg-yellow-500/10' : 'border-neon'}`}>
                                     <div>
                                         <div className="text-neon text-xs font-mono mb-1">{item.category} // {item.date}</div>
                                         <h4 className="text-white font-bold">{item.title}</h4>
                                         <p className="text-silver/60 text-sm mt-2 line-clamp-2">{item.summary}</p>
                                     </div>
-                                    <button 
-                                        onClick={() => handleDeleteNews(item.id)}
-                                        className="text-red-500 opacity-0 group-hover:opacity-100 transition-opacity hover:text-red-400"
-                                    >
-                                        [DELETE]
-                                    </button>
+                                    <div className="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button 
+                                            onClick={() => startEdit(item)}
+                                            className="text-yellow-500 hover:text-yellow-400 text-xs font-bold tracking-wider text-right"
+                                        >
+                                            [EDIT]
+                                        </button>
+                                        <button 
+                                            onClick={() => handleDeleteNews(item.id)}
+                                            className="text-red-500 hover:text-red-400 text-xs font-bold tracking-wider text-right"
+                                        >
+                                            [DELETE]
+                                        </button>
+                                    </div>
                                 </div>
                             ))}
                         </div>
