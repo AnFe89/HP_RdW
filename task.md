@@ -1,9 +1,6 @@
-# Tasks
+# Debugging 404 Deployment Not Found
 
-- [ ] Analyze `App.tsx` and routing for auth callback handling. <!-- id: 0 -->
-- [ ] Determine typical Supabase "Site URL" misconfiguration causes. <!-- id: 1 -->
-- [ ] Verify `AdminDashboard.tsx` fallback for missing usernames. <!-- id: 2 -->
-- [ ] Create `supabase_fix_names.sql` to manually set usernames for users with NULL names. <!-- id: 3 -->
-- [ ] Notify User with instructions for: <!-- id: 4 -->
-  - [ ] Updating Supabase Site URL.
-  - [ ] Running the Name Fix SQL.
+- [x] Identify error type (`DEPLOYMENT_NOT_FOUND` = Vercel infrastructure 404).
+- [ ] Verify live site URL availability. <!-- id: 1 -->
+- [ ] Guide user to correct Supabase "Site URL" configuration. <!-- id: 2 -->
+- [ ] Verify if "Redirect URLs" are wildcarded correctly. <!-- id: 3 -->
