@@ -36,9 +36,9 @@ export const News = () => {
         {/* Sticky Header */}
         <div className="md:w-1/3">
            <div className="sticky top-24">
-              <h2 className="text-3xl md:text-5xl font-military text-silver mb-8 leading-none">
+              <h2 className="text-3xl md:text-5xl font-military text-white mb-8 leading-none">
                  <GlitchText text="INCOMING" /> <br />
-                 <span className="text-neon/50">TRANSMISSION</span>
+                 <span className="text-neon/80">TRANSMISSION</span>
               </h2>
                <p className="text-silver/90 font-tactical text-base max-w-xs border-l border-neon/50 pl-4 py-2 mt-4 tracking-wide shadow-[0_0_15px_rgba(0,0,0,0.5)] bg-black/20">
                   DECODING ASTRO-TELEPATHIC DATA STREAM... <br/>

@@ -4,6 +4,7 @@ import { Layout } from './components/Layout';
 import { Hero } from './sections/Hero';
 import { Services } from './sections/Services';
 import { News } from './sections/News';
+import { Board } from './sections/Board';
 import { Footer } from './components/Footer';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
             <Services />
         </Suspense>
         <News />
+        <Board />
         <Footer />
       </Layout>
       <Loader 

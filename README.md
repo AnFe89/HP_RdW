@@ -65,6 +65,16 @@ This is the official web portal for the **Ritter der Würfelrunde** Tabletop Clu
    npm run dev
    ```
 
+## 📜 Development Guidelines
+
+### Mobile First Policy
+
+Every new section or page added to the application **must** be fully optimized for mobile devices. Ensure:
+
+- Components stack vertically on small screens.
+- Images scale correctly without overflow.
+- Touch targets are accessible.
+
 ## © Copyright
 
 **Ritter der Würfelrunde © 2026**
