@@ -13,12 +13,12 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
     
     // Galaxy layout for 6 sectors (systems)
     const systems = [
-        { id: 1, label: "NEPHILIM", x: "22%", y: "22%", size: "md", color: "#66fcf1" },     // Moved from 15/20 to avoid top-left overlap
-        { id: 2, label: "NACHMUND", x: "50%", y: "15%", size: "lg", color: "#45a29e" },     // Top Center
-        { id: 3, label: "CHALNATH", x: "85%", y: "25%", size: "md", color: "#c5c6c7" },     // Top Right
-        { id: 4, label: "ULTRAMAR", x: "20%", y: "70%", size: "lg", color: "#1f2833" },     // Bottom Left
-        { id: 5, label: "OCTARIUS", x: "50%", y: "80%", size: "sm", color: "#8b0000" },     // Bottom Center (Danger)
-        { id: 6, label: "CALIXIS", x: "80%", y: "65%", size: "md", color: "#cb2d3e" },      // Bottom Right
+        { id: 1, label: "1. NEPHILIM", x: "22%", y: "22%", size: "md", color: "#66fcf1" },     // Moved from 15/20 to avoid top-left overlap
+        { id: 2, label: "2. NACHMUND", x: "50%", y: "15%", size: "lg", color: "#45a29e" },     // Top Center
+        { id: 3, label: "3. CHALNATH EXPANSE", x: "85%", y: "25%", size: "md", color: "#c5c6c7" },     // Top Right
+        { id: 4, label: "4. ULTRAMAR", x: "20%", y: "70%", size: "lg", color: "#1f2833" },     // Bottom Left
+        { id: 5, label: "5. OCTARIUS", x: "50%", y: "80%", size: "sm", color: "#8b0000" },     // Bottom Center (Danger)
+        { id: 6, label: "6. CALIXIS", x: "80%", y: "65%", size: "md", color: "#cb2d3e" },      // Bottom Right
     ];
 
     // Warp Lanes (Connections)
