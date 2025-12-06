@@ -317,7 +317,7 @@ export const Services = () => {
             {/* Sector Info */}
             <div className="space-y-4 min-h-[150px]">
                 {/* Global Status Info */}
-                <div className="text-xs font-bold text-[#c5c6c7] border-b border-[#c5c6c7]/30 pb-3 mb-4 tracking-wide flex justify-between">
+                <div className="text-sm md:text-base font-bold text-[#c5c6c7] border-b border-[#c5c6c7]/30 pb-3 mb-4 tracking-wide flex justify-between">
                     <div>NEXT DEP: <span className="text-[#66fcf1]">{gameDate?.toLocaleDateString()} @ 18:00</span></div>
                     <div>ID: <span className={isLoggedIn && userRole === 'member' ? "text-[#66fcf1]" : "text-red-500"}>{isLoggedIn ? (userRole === 'member' ? 'MEMBER' : 'GUEST') : "UNKNOWN"}</span></div>
                 </div>
