@@ -139,6 +139,13 @@ export const Services = () => {
 
       const capacity = mode === '40k' ? 2 : 4; 
 
+      // CHECK: Does User already have a reservation anywhere? (Admins included)
+      const alreadyBooked = reservations.some(r => r.reservist === username);
+      if (alreadyBooked) {
+          alert("TACTICAL ERROR: YOU ARE ALREADY DEPLOYED TO A SECTOR. CANCEL EXISTING ORDER TO REDEPLOY.");
+          return;
+      }
+
       if (currentCount >= capacity) {
           alert("SECTOR FULL. CAPACITY REACHED.");
           return;
