@@ -115,7 +115,7 @@ export const Services = () => {
           return;
       }
 
-      if (userRole !== 'member') {
+      if (userRole !== 'member' && userRole !== 'admin') {
           alert("ACCESS DENIED. MEMBERSHIP REQUIRED.");
           return;
       }
@@ -319,7 +319,7 @@ export const Services = () => {
                 {/* Global Status Info */}
                 <div className="text-sm md:text-base font-bold text-[#c5c6c7] border-b border-[#c5c6c7]/30 pb-3 mb-4 tracking-wide flex justify-between">
                     <div>NEXT DEP: <span className="text-[#66fcf1]">{gameDate?.toLocaleDateString()} @ 18:00</span></div>
-                    <div>ID: <span className={isLoggedIn && userRole === 'member' ? "text-[#66fcf1]" : "text-red-500"}>{isLoggedIn ? (userRole === 'member' ? 'MEMBER' : 'GUEST') : "UNKNOWN"}</span></div>
+                    <div>ID: <span className={isLoggedIn && (userRole === 'member' || userRole === 'admin') ? "text-[#66fcf1]" : "text-red-500"}>{isLoggedIn ? (userRole === 'member' ? 'MEMBER' : userRole === 'admin' ? 'COMMANDER' : 'GUEST') : "UNKNOWN"}</span></div>
                 </div>
 
                 <AnimatePresence mode="wait">
@@ -389,13 +389,13 @@ export const Services = () => {
                                 <button 
                                     onClick={handleReservation}
                                     className={`mt-6 w-full py-4 uppercase tracking-widest text-sm font-bold flex items-center justify-center gap-2 group/btn transition-all duration-300 border shadow-[0_0_15px_rgba(0,0,0,0.5)] rounded-xl backdrop-blur-sm
-                                        ${(!isLoggedIn || userRole !== 'member') 
+                                        ${(!isLoggedIn || (userRole !== 'member' && userRole !== 'admin')) 
                                             ? 'bg-white/5 text-[#c5c6c7] border-[#c5c6c7]/20 hover:bg-red-900/20 hover:border-red-500/50 hover:text-red-500' 
                                             : 'bg-[#66fcf1]/10 border-[#66fcf1]/50 text-[#66fcf1] hover:bg-[#66fcf1]/20 hover:text-white hover:shadow-[0_0_25px_rgba(102,252,241,0.5)]'}
                                     `}
                                 >
                                     {!isLoggedIn && <span className="w-2 h-2 bg-red-500 rounded-full group-hover/btn:bg-red-500 group-hover/btn:shadow-[0_0_10px_red]" />}
-                                    {!isLoggedIn ? "LOGIN TO RESERVE" : userRole !== 'member' ? "MEMBERSHIP REQUIRED" : "INITIATE DEPLOYMENT SEQUENCE"}
+                                    {!isLoggedIn ? "LOGIN TO RESERVE" : (userRole !== 'member' && userRole !== 'admin') ? "MEMBERSHIP REQUIRED" : "INITIATE DEPLOYMENT SEQUENCE"}
                                 </button>
                             )}
                         </motion.div>
