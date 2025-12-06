@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 import { clsx } from 'clsx';
 
@@ -8,7 +9,7 @@ interface TacticalMapProps {
     occupied: Record<number, number>;
 }
 
-export const TacticalMap = ({ onSelectSector, currentMode, selectedSector, occupied }: TacticalMapProps) => {
+export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, occupied }: TacticalMapProps) => {
     
     // Grid layout for 6 tables
     const tables = [
@@ -107,4 +108,4 @@ export const TacticalMap = ({ onSelectSector, currentMode, selectedSector, occup
             </div>
         </div>
     );
-};
+});

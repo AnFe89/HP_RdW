@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TacticalMap } from '../components/tactical/TacticalMap';
 import { AuthModal } from '../components/auth/AuthModal';
@@ -220,8 +220,13 @@ export const Services = () => {
       }
   };
 
+  const occupiedCounts = useMemo(() => 
+    Object.fromEntries(Object.entries(occupiedData).map(([k, v]) => [k, v.count])), 
+    [occupiedData]
+  );
+
   return (
-    <section className="relative w-full min-h-screen py-10 md:py-20 px-4 md:px-10 flex flex-col gap-6 md:gap-10 bg-[#0b0c10] z-20 border-y border-[#c5c6c7]/20 shadow-[0_0_50px_rgba(0,0,0,0.8)]">
+    <section className="relative w-full min-h-screen py-10 md:py-20 px-4 md:px-10 flex flex-col gap-6 md:gap-10 bg-[#0b0c10] z-20 border-y border-[#c5c6c7]/20 shadow-[0_0_50px_rgba(0,0,0,0.8)] backdrop-blur-sm">
       
       <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
 
@@ -232,7 +237,7 @@ export const Services = () => {
 
       <div className="flex flex-col md:flex-row gap-10 w-full">
         {/* 2D Tactical Viewport */}
-        <div className="w-full md:w-2/3 h-[400px] md:h-[600px] border-2 border-[#c5c6c7]/40 relative overflow-hidden bg-[#1f2833]/40 rounded-sm shadow-[0_0_30px_rgba(0,0,0,0.5)]">
+        <div className="w-full md:w-2/3 h-[400px] md:h-[600px] border border-white/10 relative overflow-hidden bg-gradient-to-br from-white/5 to-transparent rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] backdrop-blur-md">
         <div className="absolute top-4 left-4 z-10 font-tactical text-xs text-[#66fcf1] flex gap-4">
              <div className="flex items-center gap-2">
                 <span className="w-2 h-2 bg-[#66fcf1] rounded-full animate-pulse"/> 
@@ -247,7 +252,7 @@ export const Services = () => {
             onSelectSector={setSelectedSector} 
             selectedSector={selectedSector}
             currentMode={mode}
-            occupied={Object.fromEntries(Object.entries(occupiedData).map(([k, v]) => [k, v.count]))}
+            occupied={occupiedCounts}
         />
         
         {/* Scanlines Overlay */}
@@ -259,10 +264,10 @@ export const Services = () => {
         {/* Member Area Link */}
         <div 
           onClick={() => setIsAuthOpen(true)}
-          className={`border-2 p-4 transition-all duration-300 cursor-pointer group flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 shadow-[0_0_15px_rgba(0,0,0,0.5)]
+          className={`border p-6 transition-all duration-300 cursor-pointer group flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] rounded-2xl backdrop-blur-md
             ${isLoggedIn 
-                ? "border-[#66fcf1] bg-[#66fcf1]/10 text-[#66fcf1] shadow-[0_0_20px_rgba(102,252,241,0.15)] hover:bg-[#66fcf1]/20" 
-                : "border-red-900/50 bg-[#0b0c10] text-[#c5c6c7] hover:border-red-500 hover:text-red-500 hover:shadow-[0_0_15px_rgba(239,68,68,0.2)]"
+                ? "border-emerald-500/30 bg-emerald-900/10 text-emerald-400 hover:bg-emerald-900/20" 
+                : "border-white/10 bg-white/5 text-silver hover:border-red-500/50 hover:text-red-400 hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]"
             }`}
         >
              <span className="flex items-center gap-3 font-bold tracking-wider">
@@ -274,7 +279,7 @@ export const Services = () => {
              </span>
         </div>
 
-        <div className="border border-[#66fcf1]/50 p-6 bg-[#0b0c10]/95 relative group flex-1 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
+        <div className="border border-white/10 p-8 bg-gradient-to-br from-white/5 to-transparent backdrop-blur-md relative group flex-1 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] rounded-3xl">
             {/* Corner Accents */}
             <div className="absolute -top-1 -left-1 w-2 h-2 border-l-2 border-t-2 border-[#66fcf1]" />
             <div className="absolute -bottom-1 -right-1 w-2 h-2 border-r-2 border-b-2 border-[#66fcf1]" />
@@ -287,10 +292,10 @@ export const Services = () => {
             <div className="flex gap-4 mb-8">
                 <button 
                     onClick={() => setMode('40k')}
-                    className={`flex-1 py-3 border-2 transition-all duration-300 font-bold tracking-wider relative overflow-hidden group
+                    className={`flex-1 py-3 border transition-all duration-300 font-bold tracking-wider relative overflow-hidden group rounded-xl
                         ${mode === '40k' 
-                            ? 'bg-[#66fcf1]/40 text-[#66fcf1] border-[#66fcf1] shadow-[0_0_20px_rgba(102,252,241,0.6)]' 
-                            : 'border-[#c5c6c7]/30 text-[#c5c6c7]/60 hover:border-[#66fcf1] hover:text-[#66fcf1]'
+                            ? 'bg-white/10 text-[#66fcf1] border-white/20 shadow-[0_4px_16px_0_rgba(102,252,241,0.1)]' 
+                            : 'border-white/5 text-silver/40 hover:border-white/20 hover:text-[#66fcf1]'
                         }`}
                 >
                     <div className={`absolute inset-0 bg-[#66fcf1]/10 transform -translate-x-full transition-transform duration-300 ${mode !== '40k' && 'group-hover:translate-x-0'}`} />
@@ -298,10 +303,10 @@ export const Services = () => {
                 </button>
                 <button 
                     onClick={() => setMode('killteam')}
-                    className={`flex-1 py-3 border-2 transition-all duration-300 font-bold tracking-wider relative overflow-hidden group
+                    className={`flex-1 py-3 border transition-all duration-300 font-bold tracking-wider relative overflow-hidden group rounded-xl
                         ${mode === 'killteam' 
-                            ? 'bg-[#66fcf1]/40 text-[#66fcf1] border-[#66fcf1] shadow-[0_0_20px_rgba(102,252,241,0.6)]' 
-                            : 'border-[#c5c6c7]/30 text-[#c5c6c7]/60 hover:border-[#66fcf1] hover:text-[#66fcf1]'
+                            ? 'bg-white/10 text-[#66fcf1] border-white/20 shadow-[0_4px_16px_0_rgba(102,252,241,0.1)]' 
+                            : 'border-white/5 text-silver/40 hover:border-white/20 hover:text-[#66fcf1]'
                         }`}
                 >
                      <div className={`absolute inset-0 bg-[#66fcf1]/10 transform -translate-x-full transition-transform duration-300 ${mode !== 'killteam' && 'group-hover:translate-x-0'}`} />
@@ -346,7 +351,7 @@ export const Services = () => {
                             
                             {/* Command Roster */}
                             {occupiedData[selectedSector]?.names && occupiedData[selectedSector]?.names.length > 0 && (
-                                <div className="mt-2 bg-[#66fcf1]/5 p-2 border border-[#66fcf1]/10">
+                                <div className="mt-2 bg-[#66fcf1]/5 p-2 border border-[#66fcf1]/10 rounded-lg">
                                     <div className="text-[10px] text-[#c5c6c7] mb-1">DEPLOYED COMMANDERS:</div>
                                     <div className="space-y-1">
                                         {occupiedData[selectedSector]?.names.map((name, i) => (
@@ -368,25 +373,25 @@ export const Services = () => {
                             {userReservations.includes(selectedSector) ? (
                                 <button 
                                     onClick={handleCancel}
-                                    className="mt-6 w-full py-4 bg-red-900/40 hover:bg-red-600 hover:text-white border-2 border-red-500 transition-all uppercase tracking-widest text-sm font-bold shadow-[0_0_15px_rgba(239,68,68,0.3)]"
+                                    className="mt-6 w-full py-4 bg-red-900/40 hover:bg-red-600/80 hover:text-white border border-red-500/50 transition-all uppercase tracking-widest text-sm font-bold shadow-[0_0_15px_rgba(239,68,68,0.3)] rounded-xl backdrop-blur-sm"
                                 >
                                     ABORT MISSION (CANCEL)
                                 </button>
                             ) : (occupiedData[selectedSector]?.count > 0 && occupiedData[selectedSector]?.mode !== mode) ? (
-                                <button disabled className="mt-6 w-full py-4 bg-[#0b0c10] text-red-500 border-2 border-red-900/50 uppercase tracking-widest text-sm font-bold opacity-60 cursor-not-allowed">
+                                <button disabled className="mt-6 w-full py-4 bg-black/20 text-red-500 border border-red-900/30 uppercase tracking-widest text-sm font-bold opacity-60 cursor-not-allowed rounded-xl">
                                     SYSTEM MISMATCH ({occupiedData[selectedSector]?.mode.toUpperCase()})
                                 </button>
                             ) : (occupiedData[selectedSector]?.count || 0) >= ((occupiedData[selectedSector]?.mode || mode) === '40k' ? 2 : 4) ? (
-                                <button disabled className="mt-6 w-full py-4 bg-[#0b0c10] text-[#c5c6c7]/30 border-2 border-[#1f2833] uppercase tracking-widest text-sm font-bold cursor-not-allowed">
+                                <button disabled className="mt-6 w-full py-4 bg-black/20 text-[#c5c6c7]/30 border border-[#1f2833] uppercase tracking-widest text-sm font-bold cursor-not-allowed rounded-xl">
                                     SECTOR FULL
                                 </button>
                             ) : (
                                 <button 
                                     onClick={handleReservation}
-                                    className={`mt-6 w-full py-4 uppercase tracking-widest text-sm font-bold flex items-center justify-center gap-2 group/btn transition-all duration-300 border-2 shadow-[0_0_15px_rgba(0,0,0,0.5)]
+                                    className={`mt-6 w-full py-4 uppercase tracking-widest text-sm font-bold flex items-center justify-center gap-2 group/btn transition-all duration-300 border shadow-[0_0_15px_rgba(0,0,0,0.5)] rounded-xl backdrop-blur-sm
                                         ${(!isLoggedIn || userRole !== 'member') 
-                                            ? 'bg-[#1f2833] text-[#c5c6c7] border-[#c5c6c7]/30 hover:bg-red-900/20 hover:border-red-500 hover:text-red-500' 
-                                            : 'bg-[#66fcf1]/10 border-[#66fcf1] text-[#66fcf1] hover:bg-[#66fcf1] hover:text-[#0b0c10] hover:shadow-[0_0_25px_rgba(102,252,241,0.5)]'}
+                                            ? 'bg-white/5 text-[#c5c6c7] border-[#c5c6c7]/20 hover:bg-red-900/20 hover:border-red-500/50 hover:text-red-500' 
+                                            : 'bg-[#66fcf1]/10 border-[#66fcf1]/50 text-[#66fcf1] hover:bg-[#66fcf1]/20 hover:text-white hover:shadow-[0_0_25px_rgba(102,252,241,0.5)]'}
                                     `}
                                 >
                                     {!isLoggedIn && <span className="w-2 h-2 bg-red-500 rounded-full group-hover/btn:bg-red-500 group-hover/btn:shadow-[0_0_10px_red]" />}
