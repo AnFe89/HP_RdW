@@ -30,8 +30,14 @@ This is the official web portal for the **Ritter der Würfelrunde** Tabletop Clu
 ### 3. The Command Bridge (Admin)
 
 - **Secure Access**: Protected route (`/admin`) visible only to users with `role: admin`.
-- **Propaganda Machine**: Create, Update, and Delete News signals broadcasted to the main page.
-- **Personnel Files**: Promote recruits (Guests) to Operatives (Members) or Commanders (Admins).
+- **Propaganda Machine**:
+  - Full **Rich Text Editor** (Markdown) for news.
+  - **Image Upload** via Supabase Storage.
+  - Create, Update, and Delete signals.
+- **Personnel Files**:
+  - Promote recruits (Guests) to Operatives (Members).
+  - **Inquisitor Protocol**: Only the designated "Lord Inquisitor" can appoint or remove Commanders (Admins).
+- **Mobile Optimized**: Fully tactical ready on smartphones with adaptive UI.
 
 ### 4. Operative Management
 
