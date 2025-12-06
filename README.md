@@ -6,7 +6,7 @@ This is the official web portal for the **Ritter der Würfelrunde** Tabletop Clu
 
 ## 📡 Deployment Status
 
-**Live Operations:** [Vercel Deployment](https://hp-rdw.vercel.app) (Check Vercel for actual URL)
+**Live Operations:** [Vercel Deployment](https://hprdw.vercel.app)
 **Repository:** [GitHub](https://github.com/AnFe89/HP_RdW)
 
 ## 🛡️ Key Features
