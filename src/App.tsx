@@ -12,27 +12,27 @@ function App() {
   return (
     <>
       <Layout>
-        <Suspense fallback={null}>
-            <Hero />
-            <Services />
-        </Suspense>
-        <News />
-        <Board />
-        
-        {/* Simple URL-based routing for Admin until React Router is fully set up */}
         {window.location.pathname === '/admin' ? (
-           <div className="fixed inset-0 z-50 bg-[#0b0c10] overflow-y-auto">
+           <div className="relative min-h-screen bg-[#0b0c10]">
               <AdminDashboard />
               <button 
                 onClick={() => window.location.href = '/'}
-                className="fixed top-4 right-4 text-silver hover:text-white border border-silver/20 px-4 py-2 bg-black/50"
+                className="fixed top-4 right-4 text-[#66fcf1] hover:text-white border border-[#66fcf1]/50 hover:bg-[#66fcf1]/10 px-6 py-3 bg-black/80 backdrop-blur-md shadow-[0_0_15px_rgba(102,252,241,0.2)] font-bold tracking-wider z-[100] rounded"
               >
                 EXIT BRIDGE
               </button>
            </div>
-        ) : null}
-
-        <Footer />
+        ) : (
+          <>
+            <Suspense fallback={null}>
+                <Hero />
+                <Services />
+            </Suspense>
+            <News />
+            <Board />
+            <Footer />
+          </>
+        )}
       </Layout>
       <Loader 
         containerStyles={{ background: '#0b0c10' }}
