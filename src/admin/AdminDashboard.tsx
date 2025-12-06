@@ -1,0 +1,257 @@
+import { useState, useEffect, useCallback } from 'react';
+import { supabase } from '../lib/supabase';
+import { GlitchText } from '../components/ui/GlitchText';
+
+interface Profile {
+    id: string;
+    username: string;
+    role: string;
+    created_at: string;
+}
+
+interface NewsItem {
+    id: string;
+    title: string;
+    date: string;
+    category: string;
+    summary: string;
+}
+
+export const AdminDashboard = () => {
+    const [activeTab, setActiveTab] = useState<'propaganda' | 'personnel'>('propaganda');
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [loading, setLoading] = useState(true);
+
+    // Data State
+    const [profiles, setProfiles] = useState<Profile[]>([]);
+    const [news, setNews] = useState<NewsItem[]>([]);
+    
+    // News Form State
+    const [newNews, setNewNews] = useState({ title: '', date: '40.999.M42', category: 'ANNOUNCEMENT', summary: '' });
+
+    const fetchData = useCallback(async () => {
+        const { data: profilesData } = await supabase.from('profiles').select('*').order('created_at', { ascending: false });
+        if (profilesData) setProfiles(profilesData);
+
+        const { data: newsData } = await supabase.from('news').select('*').order('created_at', { ascending: false });
+        if (newsData) setNews(newsData);
+    }, []);
+
+    const checkAdmin = useCallback(async () => {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+            const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+            if (profile?.role === 'admin') {
+                setIsAdmin(true);
+                fetchData();
+                setLoading(false);
+                return true;
+            }
+        }
+        setLoading(false);
+        return false;
+    }, [fetchData]);
+
+    useEffect(() => {
+        checkAdmin();
+    }, [checkAdmin]);
+
+    // Perform redirect in render or separate effect to avoid "modifying value" lint error
+    // Ideally use react-router navigate, but window.location is a hard refresh fallback.
+    // For now, simpler: just don't render content.
+    
+
+
+    const handleRoleUpdate = async (userId: string, newRole: string) => {
+        const { error } = await supabase.from('profiles').update({ role: newRole }).eq('id', userId);
+        if (!error) {
+            setProfiles(profiles.map(p => p.id === userId ? { ...p, role: newRole } : p));
+        } else {
+            alert("Role update failed: " + error.message);
+        }
+    };
+
+    const handleAddNews = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const { data, error } = await supabase.from('news').insert([newNews]).select();
+        if (!error && data) {
+            setNews([data[0], ...news]);
+            setNewNews({ title: '', date: '40.999.M42', category: 'ANNOUNCEMENT', summary: '' });
+        } else {
+            alert("News post failed: " + error?.message);
+        }
+    };
+
+    const handleDeleteNews = async (id: string) => {
+        const { error } = await supabase.from('news').delete().eq('id', id);
+        if (!error) {
+            setNews(news.filter(n => n.id !== id));
+        } else {
+            alert("Delete failed: " + error.message);
+        }
+    };
+
+    if (loading) return <div className="text-white p-10 font-mono animate-pulse">AUTHENTICATING COMMAND CODES...</div>;
+    
+    if (!isAdmin) {
+        return (
+            <div className="min-h-screen pt-24 px-4 flex flex-col items-center justify-center text-center">
+                <h1 className="text-4xl text-red-500 font-military mb-4">ACCESS DENIED</h1>
+                <p className="text-white font-mono mb-8">
+                    IDENTIFICATION PROTOCOLS FAILED.<br/>
+                    YOUR GENE-SEED IS NOT RECOGNIZED BY THE LOGIS ENGINES.
+                </p>
+                <div className="text-xs text-silver/50 font-mono border border-silver/20 p-4 max-w-md mx-auto">
+                    DEBUG INFO:<br/>
+                    USER AUTH: {JSON.stringify(isAdmin)}<br/>
+                    ROLE CHECK: FAILED
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="min-h-screen pt-24 px-4 pb-20 bg-[#0b0c10]">
+            <div className="max-w-6xl mx-auto">
+                <h1 className="text-4xl font-military text-center mb-10 text-white">
+                    <GlitchText text="COMMAND BRIDGE" />
+                    <span className="block text-sm font-mono text-neon mt-2">ADMINISTRATION TERMINAL</span>
+                </h1>
+
+                {/* Tabs */}
+                <div className="flex border-b border-white/10 mb-8">
+                    <button 
+                        onClick={() => setActiveTab('propaganda')}
+                        className={`px-8 py-4 font-bold tracking-wider transition-colors ${activeTab === 'propaganda' ? 'text-neon border-b-2 border-neon bg-white/5' : 'text-silver/50 hover:text-white'}`}
+                    >
+                        SECTOR: PROPAGANDA
+                    </button>
+                    <button 
+                        onClick={() => setActiveTab('personnel')}
+                        className={`px-8 py-4 font-bold tracking-wider transition-colors ${activeTab === 'personnel' ? 'text-neon border-b-2 border-neon bg-white/5' : 'text-silver/50 hover:text-white'}`}
+                    >
+                        SECTOR: PERSONNEL
+                    </button>
+                </div>
+
+                {/* Content */}
+                {activeTab === 'propaganda' && (
+                    <div className="grid md:grid-cols-2 gap-10">
+                        {/* Form */}
+                        <div className="bg-[#1f2833]/50 p-6 rounded-xl border border-white/10">
+                            <h3 className="text-xl text-white font-military mb-6">TRANSMIT NEW SIGNAL</h3>
+                            <form onSubmit={handleAddNews} className="space-y-4">
+                                <div>
+                                    <label className="block text-xs font-mono text-silver mb-1">DATA HEADER (TITLE)</label>
+                                    <input 
+                                        type="text" 
+                                        className="w-full bg-black/50 border border-white/20 p-2 text-white focus:border-neon outline-none"
+                                        value={newNews.title}
+                                        onChange={e => setNewNews({...newNews, title: e.target.value})}
+                                        required
+                                    />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-xs font-mono text-silver mb-1">TIMESTAMP</label>
+                                        <input 
+                                            type="text" 
+                                            className="w-full bg-black/50 border border-white/20 p-2 text-white focus:border-neon outline-none"
+                                            value={newNews.date}
+                                            onChange={e => setNewNews({...newNews, date: e.target.value})}
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-mono text-silver mb-1">CLASSIFICATION</label>
+                                        <select 
+                                            className="w-full bg-black/50 border border-white/20 p-2 text-white focus:border-neon outline-none"
+                                            value={newNews.category}
+                                            onChange={e => setNewNews({...newNews, category: e.target.value})}
+                                        >
+                                            <option>ANNOUNCEMENT</option>
+                                            <option>TOURNAMENT</option>
+                                            <option>LOGISTICS</option>
+                                            <option>EVENT</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-mono text-silver mb-1">PAYLOAD (SUMMARY)</label>
+                                    <textarea 
+                                        className="w-full bg-black/50 border border-white/20 p-2 text-white focus:border-neon outline-none h-32"
+                                        value={newNews.summary}
+                                        onChange={e => setNewNews({...newNews, summary: e.target.value})}
+                                        required
+                                    />
+                                </div>
+                                <button type="submit" className="w-full py-3 bg-neon/10 border border-neon text-neon hover:bg-neon/20 font-bold tracking-widest transition-all">
+                                    UPLOAD TO NOOSPHERE
+                                </button>
+                            </form>
+                        </div>
+
+                        {/* List */}
+                        <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
+                            {news.map(item => (
+                                <div key={item.id} className="bg-[#1f2833]/30 p-4 border-l-2 border-neon flex justify-between items-start group">
+                                    <div>
+                                        <div className="text-neon text-xs font-mono mb-1">{item.category} // {item.date}</div>
+                                        <h4 className="text-white font-bold">{item.title}</h4>
+                                        <p className="text-silver/60 text-sm mt-2 line-clamp-2">{item.summary}</p>
+                                    </div>
+                                    <button 
+                                        onClick={() => handleDeleteNews(item.id)}
+                                        className="text-red-500 opacity-0 group-hover:opacity-100 transition-opacity hover:text-red-400"
+                                    >
+                                        [DELETE]
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {activeTab === 'personnel' && (
+                    <div className="bg-[#1f2833]/30 rounded-xl overflow-hidden border border-white/10">
+                        <table className="w-full text-left">
+                            <thead className="bg-black/50 text-xs font-mono text-silver">
+                                <tr>
+                                    <th className="p-4">CODENAME</th>
+                                    <th className="p-4">JOINED</th>
+                                    <th className="p-4">CLEARANCE LEVEL</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-white/5">
+                                {profiles.map(profile => (
+                                    <tr key={profile.id} className="hover:bg-white/5 transition-colors">
+                                        <td className="p-4">
+                                            <span className="text-neon font-bold">{profile.username}</span>
+                                            <div className="text-[10px] text-silver/40 font-mono">{profile.id}</div>
+                                        </td>
+                                        <td className="p-4 text-silver/80 text-sm">
+                                            {new Date(profile.created_at).toLocaleDateString()}
+                                        </td>
+                                        <td className="p-4">
+                                            <select 
+                                                className={`bg-black/40 border p-1 text-xs font-mono outline-none cursor-pointer
+                                                    ${profile.role === 'admin' ? 'border-red-500 text-red-500' : 
+                                                      profile.role === 'member' ? 'border-neon text-neon' : 'border-silver/30 text-silver'}`}
+                                                value={profile.role}
+                                                onChange={(e) => handleRoleUpdate(profile.id, e.target.value)}
+                                            >
+                                                <option value="guest">GUEST (RECRUIT)</option>
+                                                <option value="member">MEMBER (OPERATIVE)</option>
+                                                <option value="admin">ADMIN (COMMANDER)</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};

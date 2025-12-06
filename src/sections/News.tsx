@@ -1,34 +1,43 @@
+import { useState, useEffect } from 'react';
 import { DataSlate } from '../components/ui/DataSlate';
 import { GlitchText } from '../components/ui/GlitchText';
+import { supabase } from '../lib/supabase';
 
-const NEWS_ITEMS = [
-  {
-    title: "PLASTIC MOSHPIT 2027 REGISTRATION",
-    date: "40.999.M42",
-    category: "TOURNAMENT",
-    summary: "Registration for the annual Plastic MoshPit tournament is now open. Prepare your lists. 2000pts. Matched Play. Nephilim ruleset in effect."
-  },
-  {
-    title: "SECTOR 4 MAINTENANCE COMPLETE",
-    date: "40.992.M42",
-    category: "LOGISTICS",
-    summary: "Terrain density in Sector 4 has been increased by 15%. Line of sight blockers added to quadrant Delta. Engage with caution."
-  },
-  {
-    title: "NEW KILL TEAM SEASON",
-    date: "40.985.M42",
-    category: "EVENT",
-    summary: "Into the Dark season begins next week. Close quarters combat rules apply. Check the discord for matchmaking."
-  },
-  {
-    title: "CHAPTER COMMAND PROTOCOLS",
-    date: "40.980.M42",
-    category: "ANNOUNCEMENT",
-    summary: "Board meeting minutes have been uploaded to the Member Area. Review changes to club access hours."
-  }
-];
+interface NewsItem {
+    id: string;
+    title: string;
+    date: string;
+    category: string;
+    summary: string;
+}
 
 export const News = () => {
+  const [news, setNews] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchNews = async () => {
+        const { data, error } = await supabase.from('news').select('*').order('created_at', { ascending: false });
+        if (error) {
+            console.error("Error loading news:", error);
+        } else {
+            setNews(data || []);
+        }
+        setLoading(false);
+    };
+
+    fetchNews();
+
+    // Subscribe to realtime changes
+    const subscription = supabase.channel('news')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'news' }, () => {
+             fetchNews(); 
+        })
+        .subscribe();
+
+    return () => { subscription.unsubscribe(); }
+  }, []);
+
   return (
     <section className="relative w-full py-12 md:py-24 px-4 bg-void">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-8 md:gap-16">
@@ -49,9 +58,15 @@ export const News = () => {
 
         {/* Feed */}
         <div className="md:w-2/3 flex flex-col gap-8">
-            {NEWS_ITEMS.map((item, i) => (
-                <DataSlate key={i} index={i} {...item} />
-            ))}
+            {loading ? (
+                 <div className="text-neon/50 font-mono animate-pulse">ESTABLISHING NOOSPHERE CONNECTION...</div>
+            ) : news.length === 0 ? (
+                 <div className="text-silver/50 font-mono">NO ACTIVE TRANSMISSIONS FOUND.</div>
+            ) : (
+                news.map((item, i) => (
+                    <DataSlate key={item.id || i} index={i} {...item} />
+                ))
+            )}
             
             {/* Infinite Scroll Loader Mock */}
             <div className="flex items-center gap-2 text-silver/30 text-xs font-mono justify-center py-10">
