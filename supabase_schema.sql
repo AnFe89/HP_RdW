@@ -16,7 +16,7 @@ BEGIN
     INSERT INTO public.profiles (id, username, role, email, email_confirmed_at)
     VALUES (
         new.id, 
-        new.raw_user_meta_data->>'username', 
+        COALESCE(new.raw_user_meta_data->>'username', 'Recruit-' || substring(new.id::text, 1, 6)), 
         'guest', 
         new.email, 
         new.email_confirmed_at
