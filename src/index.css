@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Share+Tech+Mono&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Share+Tech+Mono&display=block");
 
 @tailwind base;
 @tailwind components;
@@ -8,9 +8,9 @@
   html {
     @apply bg-void text-silver font-tactical scroll-smooth;
     /* Debug fallback: If tailwind fails, this will be visible if CSS loads */
-    background-color: #0b0c10; 
+    background-color: #0b0c10;
   }
-  
+
   body {
     @apply overflow-x-hidden;
   }
@@ -19,11 +19,11 @@
   ::-webkit-scrollbar {
     width: 6px;
   }
-  
+
   ::-webkit-scrollbar-track {
     @apply bg-void;
   }
-  
+
   ::-webkit-scrollbar-thumb {
     @apply bg-neon/20 rounded-full hover:bg-neon/40 transition-colors;
   }
@@ -33,7 +33,7 @@
   .text-glow {
     text-shadow: 0 0 10px rgba(102, 252, 241, 0.5);
   }
-  
+
   .border-glow {
     box-shadow: 0 0 15px rgba(102, 252, 241, 0.2);
   }
