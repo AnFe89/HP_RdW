@@ -290,7 +290,7 @@ export const Services = () => {
             <div className="absolute -top-1 -left-1 w-2 h-2 border-l-2 border-t-2 border-[#66fcf1]" />
             <div className="absolute -bottom-1 -right-1 w-2 h-2 border-r-2 border-b-2 border-[#66fcf1]" />
 
-            <h3 className="font-military text-2xl text-[#c5c6c7] mb-6">
+            <h3 className="font-military text-lg md:text-2xl text-[#c5c6c7] mb-6 whitespace-nowrap overflow-hidden text-ellipsis">
                 <GlitchText text="OPERATION: RESERVATION" />
             </h3>
 

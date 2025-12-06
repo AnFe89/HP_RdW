@@ -121,7 +121,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                             onClick={(e) => e.stopPropagation()}
                             className="w-full max-w-md bg-[#0b0c10] border border-[#66fcf1]/30 p-8 shadow-[0_0_50px_rgba(102,252,241,0.1)] relative"
                         >
-                            <h2 className="text-2xl font-military text-[#c5c6c7] mb-6 text-center">
+                            <h2 className="text-xl md:text-2xl font-military text-[#c5c6c7] mb-6 text-center whitespace-nowrap overflow-hidden text-ellipsis">
                                 <GlitchText text={
                                     view === 'login' ? "IDENTIFICATION REQUIRED" : 
                                     view === 'register' ? "NEW OPERATIVE REGISTRATION" : 

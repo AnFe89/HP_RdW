@@ -165,7 +165,9 @@ export const AdminDashboard = () => {
         <div className="min-h-screen pt-24 px-4 pb-20 bg-[#0b0c10]">
             <div className="max-w-6xl mx-auto">
                 <h1 className="text-4xl font-military text-center mb-10 text-white">
-                    <GlitchText text="COMMAND BRIDGE" />
+                    <div className="whitespace-nowrap overflow-hidden text-ellipsis px-2 max-w-full">
+                        <GlitchText text="COMMAND BRIDGE" />
+                    </div>
                     <span className="block text-sm font-mono text-neon mt-2">
                         {currentUserId === CHAPTER_MASTER_ID ? 'WELCOME, LORD INQUISITOR' : 'ADMINISTRATION TERMINAL'}
                     </span>
