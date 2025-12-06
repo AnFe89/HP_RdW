@@ -82,7 +82,7 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
                     const isSelected = selectedSector === system.id;
                     
                     // Size classes
-                    const sizeClass = system.size === 'lg' ? 'w-24 h-24' : system.size === 'md' ? 'w-16 h-16' : 'w-12 h-12';
+                    const sizeClass = system.size === 'lg' ? 'w-16 h-16 md:w-24 md:h-24' : system.size === 'md' ? 'w-12 h-12 md:w-16 md:h-16' : 'w-10 h-10 md:w-12 md:h-12';
 
                     return (
                         <div
@@ -145,7 +145,7 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
             </div>
 
             {/* HUD Overlay */}
-            <div className="absolute bottom-2 right-2 md:bottom-4 md:right-4 text-[9px] md:text-[10px] font-mono text-[#66fcf1]/80 border-l border-t border-[#66fcf1]/40 p-2 bg-black/20 backdrop-blur-sm">
+            <div className="absolute bottom-2 right-2 md:bottom-4 md:right-4 text-[9px] md:text-[10px] font-mono text-[#66fcf1]/80 border-l border-t border-[#66fcf1]/40 p-2 bg-black/80 backdrop-blur-md z-20">
                 <div>GALACTIC COORDS: 40.999 // 12.451</div>
                 <div>SECTOR THREAT LEVEL: VERMILLION</div>
             </div>

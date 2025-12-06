@@ -236,7 +236,7 @@ export const Services = () => {
       <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
 
       {/* Header */}
-      <h2 className="text-3xl md:text-6xl font-military text-white text-center tracking-widest drop-shadow-[0_0_15px_rgba(102,252,241,0.3)]">
+      <h2 className="text-2xl md:text-6xl font-military text-white text-center tracking-widest drop-shadow-[0_0_15px_rgba(102,252,241,0.3)]">
         TISCHRESERVIERUNGEN
       </h2>
 
