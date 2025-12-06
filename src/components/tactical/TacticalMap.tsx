@@ -21,7 +21,120 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
         { id: 6, label: "CALIXIS", x: "80%", y: "65%", size: "md", color: "#cb2d3e" },      // Bottom Right
     ];
 
-    // ... (warpLanes unchanged) ...
+    // Warp Lanes (Connections)
+    const warpLanes = [
+        { from: 1, to: 2 },
+        { from: 2, to: 3 },
+        { from: 1, to: 4 },
+        { from: 2, to: 5 },
+        { from: 3, to: 6 },
+        { from: 4, to: 5 },
+        { from: 5, to: 6 },
+    ];
+
+    return (
+        <div className="w-full h-full min-h-[400px] md:min-h-[500px] bg-[#0b0c10] relative overflow-hidden border border-[#1f2833] rounded-xl shadow-inner">
+            {/* Background Image */}
+            <div className="absolute inset-0 z-0">
+                <img src="/galaxy-bg.png" alt="Galaxy" className="w-full h-full object-cover opacity-60" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0b0c10] via-transparent to-[#0b0c10]/80" />
+            </div>
+
+            {/* Grid Overlay */}
+            <div className="absolute inset-0 z-0 opacity-10 pointer-events-none" 
+                 style={{ 
+                     backgroundImage: 'linear-gradient(#66fcf1 1px, transparent 1px), linear-gradient(90deg, #66fcf1 1px, transparent 1px)', 
+                     backgroundSize: '80px 80px' 
+                 }} 
+            />
+
+            {/* Map Container */}
+            <div className="relative z-10 w-full h-full">
+                
+                {/* SVG Layer for Warp Lanes */}
+                <svg className="absolute inset-0 w-full h-full pointer-events-none">
+                    <defs>
+                        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feGaussianBlur stdDeviation="2" result="blur" />
+                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                        </filter>
+                    </defs>
+                    {warpLanes.map((lane, i) => {
+                        const start = systems.find(s => s.id === lane.from);
+                        const end = systems.find(s => s.id === lane.to);
+                        if (!start || !end) return null;
+                        return (
+                            <motion.line
+                                key={i}
+                                x1={start.x} y1={start.y}
+                                x2={end.x} y2={end.y}
+                                stroke="#66fcf1"
+                                strokeWidth="1"
+                                strokeOpacity="0.2"
+                                strokeDasharray="5 5"
+                                initial={{ pathLength: 0 }}
+                                animate={{ pathLength: 1 }}
+                                transition={{ duration: 2, delay: i * 0.1 }}
+                            />
+                        );
+                    })}
+                </svg>
+
+                {systems.map((system) => {
+                    const count = occupied[system.id] || 0;
+                    const capacity = currentMode === '40k' ? 2 : 4;
+                    const isFull = count >= capacity;
+                    const isSelected = selectedSector === system.id;
+                    
+                    // Size classes
+                    const sizeClass = system.size === 'lg' ? 'w-24 h-24' : system.size === 'md' ? 'w-16 h-16' : 'w-12 h-12';
+
+                    return (
+                        <div
+                            key={system.id}
+                            className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
+                            style={{ left: system.x, top: system.y }}
+                            onClick={() => onSelectSector(system.id)}
+                        >
+                            {/* Hover Hololith Effect */}
+                            <motion.div 
+                                className="absolute inset-0 -m-4 border border-[#66fcf1]/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                initial={false}
+                                animate={{ scale: isSelected ? 1.2 : 1, rotate: isSelected ? 180 : 0 }}
+                            />
+                            
+                            {/* Planet Visual */}
+                            <motion.div
+                                className={clsx(
+                                    sizeClass, "rounded-full relative flex items-center justify-center shadow-[0_0_20px_rgba(0,0,0,0.8)] border-2 transition-all duration-300",
+                                    isSelected ? "border-[#66fcf1] shadow-[0_0_30px_#66fcf1]" : 
+                                    isFull ? "border-red-500 shadow-[0_0_20px_red]" :
+                                    count > 0 ? "border-yellow-500 shadow-[0_0_20px_yellow]" :
+                                    "border-white/20 group-hover:border-[#66fcf1]/80"
+                                )}
+                                style={{ 
+                                    background: `radial-gradient(circle at 30% 30%, ${system.color}, #000)`,
+                                }}
+                                whileHover={{ scale: 1.1 }}
+                            >
+                                {/* Orbital Ring */}
+                                <div className="absolute inset-[-4px] rounded-full border border-white/10 opacity-50 group-hover:animate-spin-slow pointer-events-none" />
+
+                                {/* Capacity Pips */}
+                                <div className="absolute -bottom-6 flex gap-1 transform translate-y-1">
+                                    {[...Array(capacity)].map((_, i) => (
+                                        <div 
+                                            key={i}
+                                            className={clsx(
+                                                "w-1.5 h-1.5 rounded-full",
+                                                i < count 
+                                                    ? (isFull ? "bg-red-500 box-shadow-[0_0_5px_red]" : "bg-yellow-500 shadow-[0_0_5px_yellow]")
+                                                    : "bg-[#1f2833]"
+                                            )}
+                                        />
+                                    ))}
+                                </div>
+                            </motion.div>
 
                             {/* Label */}
                             <div className={clsx(
@@ -44,4 +157,3 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
         </div>
     );
 });
-
