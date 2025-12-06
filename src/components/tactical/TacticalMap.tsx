@@ -13,12 +13,12 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
     
     // Grid layout for 6 tables
     const tables = [
-        { id: 1, label: "SECTOR A1", x: "10%", y: "10%" },
-        { id: 2, label: "SECTOR A2", x: "40%", y: "10%" },
-        { id: 3, label: "SECTOR A3", x: "70%", y: "10%" },
-        { id: 4, label: "SECTOR B1", x: "10%", y: "55%" },
-        { id: 5, label: "SECTOR B2", x: "40%", y: "55%" },
-        { id: 6, label: "SECTOR B3", x: "70%", y: "55%" },
+        { id: 1, label: "NEPHILIM SECTOR", x: "10%", y: "10%" },
+        { id: 2, label: "NACHMUND SECTOR", x: "40%", y: "10%" },
+        { id: 3, label: "CHALNATH EXPANSE", x: "70%", y: "10%" },
+        { id: 4, label: "ULTRAMAR SECTOR", x: "10%", y: "55%" },
+        { id: 5, label: "OCTARIUS SECTOR", x: "40%", y: "55%" },
+        { id: 6, label: "CALIXIS SECTOR", x: "70%", y: "55%" },
     ];
 
     return (
