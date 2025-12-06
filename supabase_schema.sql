@@ -4,15 +4,26 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
     username TEXT UNIQUE,
     role TEXT DEFAULT 'guest',
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    email TEXT,
+    email_confirmed_at TIMESTAMP WITH TIME ZONE
 );
 
 -- Function to handle new user signup automatically
 CREATE OR REPLACE FUNCTION public.handle_new_user() 
 RETURNS TRIGGER AS $$
 BEGIN
-    INSERT INTO public.profiles (id, username, role)
-    VALUES (new.id, new.raw_user_meta_data->>'username', 'guest');
+    INSERT INTO public.profiles (id, username, role, email, email_confirmed_at)
+    VALUES (
+        new.id, 
+        new.raw_user_meta_data->>'username', 
+        'guest', 
+        new.email, 
+        new.email_confirmed_at
+    )
+    ON CONFLICT (id) DO UPDATE SET
+        email = EXCLUDED.email,
+        email_confirmed_at = EXCLUDED.email_confirmed_at;
     RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -22,6 +33,24 @@ DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
     AFTER INSERT ON auth.users
     FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
+
+-- Trigger for UPDATE (Email Confirmation sync)
+CREATE OR REPLACE FUNCTION public.handle_user_update() 
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE public.profiles
+    SET 
+        email = new.email,
+        email_confirmed_at = new.email_confirmed_at
+    WHERE id = new.id;
+    RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS on_auth_user_updated ON auth.users;
+CREATE TRIGGER on_auth_user_updated
+    AFTER UPDATE ON auth.users
+    FOR EACH ROW EXECUTE PROCEDURE public.handle_user_update();
 
 -- 1. Create News Table
 CREATE TABLE IF NOT EXISTS public.news (

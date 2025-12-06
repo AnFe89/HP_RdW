@@ -7,6 +7,8 @@ interface Profile {
     username: string;
     role: string;
     created_at: string;
+    email?: string;
+    email_confirmed_at?: string | null;
 }
 
 interface NewsItem {
@@ -377,6 +379,7 @@ export const AdminDashboard = () => {
                             <thead className="bg-black/50 text-xs font-mono text-silver">
                                 <tr>
                                     <th className="p-4">CODENAME</th>
+                                    <th className="p-4">EMAIL / STATUS</th>
                                     <th className="p-4">JOINED</th>
                                     <th className="p-4">CLEARANCE LEVEL</th>
                                 </tr>
@@ -387,6 +390,14 @@ export const AdminDashboard = () => {
                                         <td className="p-4">
                                             <span className="text-neon font-bold">{profile.username}</span>
                                             <div className="text-[10px] text-silver/40 font-mono">{profile.id}</div>
+                                        </td>
+                                        <td className="p-4">
+                                            <div className="text-white text-sm">{profile.email || "N/A"}</div>
+                                            {profile.email_confirmed_at ? (
+                                                <span className="text-[10px] text-green-400 font-mono bg-green-900/20 px-1 rounded border border-green-500/30">VERIFIED</span>
+                                            ) : (
+                                                <span className="text-[10px] text-yellow-500 font-mono bg-yellow-900/20 px-1 rounded border border-yellow-500/30">PENDING CONFIRMATION</span>
+                                            )}
                                         </td>
                                         <td className="p-4 text-silver/80 text-sm">
                                             {new Date(profile.created_at).toLocaleDateString()}
