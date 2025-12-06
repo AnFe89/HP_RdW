@@ -172,16 +172,16 @@ export const AdminDashboard = () => {
                 </h1>
 
                 {/* Tabs */}
-                <div className="flex border-b border-white/10 mb-8">
+                <div className="flex flex-col sm:flex-row border-b border-white/10 mb-8">
                     <button 
                         onClick={() => setActiveTab('propaganda')}
-                        className={`px-8 py-4 font-bold tracking-wider transition-colors ${activeTab === 'propaganda' ? 'text-neon border-b-2 border-neon bg-white/5' : 'text-silver/50 hover:text-white'}`}
+                        className={`px-4 sm:px-8 py-3 sm:py-4 font-bold tracking-wider transition-colors w-full sm:w-auto ${activeTab === 'propaganda' ? 'text-neon border-b-2 border-neon bg-white/5' : 'text-silver/50 hover:text-white'}`}
                     >
                         SECTOR: PROPAGANDA
                     </button>
                     <button 
                         onClick={() => setActiveTab('personnel')}
-                        className={`px-8 py-4 font-bold tracking-wider transition-colors ${activeTab === 'personnel' ? 'text-neon border-b-2 border-neon bg-white/5' : 'text-silver/50 hover:text-white'}`}
+                        className={`px-4 sm:px-8 py-3 sm:py-4 font-bold tracking-wider transition-colors w-full sm:w-auto ${activeTab === 'personnel' ? 'text-neon border-b-2 border-neon bg-white/5' : 'text-silver/50 hover:text-white'}`}
                     >
                         SECTOR: PERSONNEL
                     </button>
@@ -231,15 +231,98 @@ export const AdminDashboard = () => {
                                         </select>
                                     </div>
                                 </div>
-                                <div>
-                                    <label className="block text-xs font-mono text-silver mb-1">PAYLOAD (SUMMARY)</label>
-                                    <textarea 
-                                        className="w-full bg-black/50 border border-white/20 p-2 text-white focus:border-neon outline-none h-32"
-                                        value={newNews.summary}
-                                        onChange={e => setNewNews({...newNews, summary: e.target.value})}
-                                        required
-                                    />
-                                </div>
+                                    <div>
+                                        <label className="block text-xs font-mono text-silver mb-1">PAYLOAD (SUMMARY)</label>
+                                        
+                                        {/* Markdown Toolbar */}
+                                        <div className="flex flex-wrap gap-2 mb-2 bg-black/30 p-2 rounded border border-white/10">
+                                            <button 
+                                                type="button"
+                                                onClick={() => {
+                                                    setNewNews(prev => ({...prev, summary: prev.summary + '**BOLD**'}));
+                                                }}
+                                                className="px-3 py-2 md:px-2 md:py-1 text-xs font-bold text-[#66fcf1] border border-[#66fcf1]/30 hover:bg-[#66fcf1]/10 rounded touch-manipulation"
+                                                title="Bold"
+                                            >
+                                                B
+                                            </button>
+                                            <button 
+                                                type="button"
+                                                onClick={() => {
+                                                    setNewNews(prev => ({...prev, summary: prev.summary + '*Italic*'}));
+                                                }}
+                                                className="px-3 py-2 md:px-2 md:py-1 text-xs italic text-[#66fcf1] border border-[#66fcf1]/30 hover:bg-[#66fcf1]/10 rounded touch-manipulation"
+                                                title="Italic"
+                                            >
+                                                I
+                                            </button>
+                                            <button 
+                                                type="button"
+                                                onClick={() => {
+                                                    setNewNews(prev => ({...prev, summary: prev.summary + '\n# Heading'}));
+                                                }}
+                                                className="px-3 py-2 md:px-2 md:py-1 text-xs font-bold text-[#66fcf1] border border-[#66fcf1]/30 hover:bg-[#66fcf1]/10 rounded touch-manipulation"
+                                                title="Heading"
+                                            >
+                                                H1
+                                            </button>
+                                            <button 
+                                                type="button"
+                                                onClick={() => {
+                                                    setNewNews(prev => ({...prev, summary: prev.summary + '[Link Text](url)'}));
+                                                }}
+                                                className="px-3 py-2 md:px-2 md:py-1 text-xs text-[#66fcf1] border border-[#66fcf1]/30 hover:bg-[#66fcf1]/10 rounded touch-manipulation"
+                                                title="Link"
+                                            >
+                                                LINK
+                                            </button>
+                                            <label className="px-3 py-2 md:px-2 md:py-1 text-xs text-[#66fcf1] border border-[#66fcf1]/30 hover:bg-[#66fcf1]/10 rounded cursor-pointer flex items-center gap-1 touch-manipulation">
+                                                <span>IMG</span>
+                                                <input 
+                                                    type="file" 
+                                                    className="hidden" 
+                                                    accept="image/*"
+                                                    onChange={async (e) => {
+                                                        const file = e.target.files?.[0];
+                                                        if (!file) return;
+
+                                                        const fileExt = file.name.split('.').pop();
+                                                        const fileName = `${Math.random()}.${fileExt}`;
+                                                        const filePath = `${fileName}`;
+
+                                                        // Upload
+                                                        const { error: uploadError } = await supabase.storage
+                                                            .from('news-images')
+                                                            .upload(filePath, file);
+
+                                                        if (uploadError) {
+                                                            alert('Upload failed: ' + uploadError.message);
+                                                            return;
+                                                        }
+
+                                                        // Get URL
+                                                        const { data: { publicUrl } } = supabase.storage
+                                                            .from('news-images')
+                                                            .getPublicUrl(filePath);
+
+                                                        // Insert Markdown
+                                                        setNewNews(prev => ({
+                                                            ...prev, 
+                                                            summary: prev.summary + `\n![Image](${publicUrl})\n`
+                                                        }));
+                                                    }}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        <textarea 
+                                            className="w-full bg-black/50 border border-white/20 p-2 text-white focus:border-neon outline-none h-64 font-mono text-sm"
+                                            value={newNews.summary}
+                                            onChange={e => setNewNews({...newNews, summary: e.target.value})}
+                                            required
+                                            placeholder="Supports Markdown: **bold**, *italic*, [links](url)..."
+                                        />
+                                    </div>
                                 <div className="flex gap-2">
                                     <button type="submit" className="flex-1 py-3 bg-neon/10 border border-neon text-neon hover:bg-neon/20 font-bold tracking-widest transition-all">
                                         {editingId ? 'UPDATE SIGNAL' : 'UPLOAD TO NOOSPHERE'}
