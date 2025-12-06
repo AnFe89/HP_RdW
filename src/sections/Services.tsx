@@ -221,18 +221,18 @@ export const Services = () => {
   };
 
   return (
-    <section className="relative w-full min-h-screen py-20 px-4 md:px-10 flex flex-col gap-10 bg-[#0b0c10] z-20 border-y border-[#c5c6c7]/20 shadow-[0_0_50px_rgba(0,0,0,0.8)]">
+    <section className="relative w-full min-h-screen py-10 md:py-20 px-4 md:px-10 flex flex-col gap-6 md:gap-10 bg-[#0b0c10] z-20 border-y border-[#c5c6c7]/20 shadow-[0_0_50px_rgba(0,0,0,0.8)]">
       
       <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
 
       {/* Header */}
-      <h2 className="text-4xl md:text-6xl font-military text-white text-center tracking-widest drop-shadow-[0_0_15px_rgba(102,252,241,0.3)]">
+      <h2 className="text-3xl md:text-6xl font-military text-white text-center tracking-widest drop-shadow-[0_0_15px_rgba(102,252,241,0.3)]">
         TISCHRESERVIERUNGEN
       </h2>
 
       <div className="flex flex-col md:flex-row gap-10 w-full">
         {/* 2D Tactical Viewport */}
-        <div className="w-full md:w-2/3 h-[600px] border-2 border-[#c5c6c7]/40 relative overflow-hidden bg-[#1f2833]/40 rounded-sm shadow-[0_0_30px_rgba(0,0,0,0.5)]">
+        <div className="w-full md:w-2/3 h-[400px] md:h-[600px] border-2 border-[#c5c6c7]/40 relative overflow-hidden bg-[#1f2833]/40 rounded-sm shadow-[0_0_30px_rgba(0,0,0,0.5)]">
         <div className="absolute top-4 left-4 z-10 font-tactical text-xs text-[#66fcf1] flex gap-4">
              <div className="flex items-center gap-2">
                 <span className="w-2 h-2 bg-[#66fcf1] rounded-full animate-pulse"/> 
@@ -259,7 +259,7 @@ export const Services = () => {
         {/* Member Area Link */}
         <div 
           onClick={() => setIsAuthOpen(true)}
-          className={`border-2 p-4 transition-all duration-300 cursor-pointer group flex justify-between items-center shadow-[0_0_15px_rgba(0,0,0,0.5)]
+          className={`border-2 p-4 transition-all duration-300 cursor-pointer group flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 shadow-[0_0_15px_rgba(0,0,0,0.5)]
             ${isLoggedIn 
                 ? "border-[#66fcf1] bg-[#66fcf1]/10 text-[#66fcf1] shadow-[0_0_20px_rgba(102,252,241,0.15)] hover:bg-[#66fcf1]/20" 
                 : "border-red-900/50 bg-[#0b0c10] text-[#c5c6c7] hover:border-red-500 hover:text-red-500 hover:shadow-[0_0_15px_rgba(239,68,68,0.2)]"

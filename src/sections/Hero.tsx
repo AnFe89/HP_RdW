@@ -9,7 +9,7 @@ export const Hero = () => {
       
       <div className="z-10 text-center space-y-4 mix-blend-difference pointer-events-none">
         <motion.h1 
-            className="text-7xl md:text-9xl font-military text-silver uppercase tracking-tight leading-none"
+            className="text-5xl sm:text-7xl md:text-9xl font-military text-silver uppercase tracking-tight leading-none"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 1.2, ease: "easeOut" }}

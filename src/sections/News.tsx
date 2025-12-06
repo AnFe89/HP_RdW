@@ -30,13 +30,13 @@ const NEWS_ITEMS = [
 
 export const News = () => {
   return (
-    <section className="relative w-full py-24 px-4 bg-void">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-16">
+    <section className="relative w-full py-12 md:py-24 px-4 bg-void">
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-8 md:gap-16">
         
         {/* Sticky Header */}
         <div className="md:w-1/3">
            <div className="sticky top-24">
-              <h2 className="text-4xl md:text-5xl font-military text-silver mb-8 leading-none">
+              <h2 className="text-3xl md:text-5xl font-military text-silver mb-8 leading-none">
                  <GlitchText text="INCOMING" /> <br />
                  <span className="text-neon/50">TRANSMISSION</span>
               </h2>

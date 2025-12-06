@@ -21,7 +21,7 @@ export const TacticalMap = ({ onSelectSector, currentMode, selectedSector, occup
     ];
 
     return (
-        <div className="w-full h-full min-h-[500px] bg-[#0b0c10] relative overflow-hidden p-8 border border-[#1f2833]">
+        <div className="w-full h-full min-h-[350px] md:min-h-[500px] bg-[#0b0c10] relative overflow-hidden p-8 border border-[#1f2833]">
             {/* Grid Lines */}
             <div className="absolute inset-0 z-0 opacity-20 pointer-events-none" 
                  style={{ 

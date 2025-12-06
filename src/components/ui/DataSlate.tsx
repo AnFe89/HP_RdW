@@ -21,7 +21,7 @@ export const DataSlate = ({ title, date, category, summary, index }: DataSlatePr
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="relative p-6 border-l-4 border-silver/20 hover:border-neon bg-gradient-to-r from-silver/5 to-transparent transition-colors group cursor-pointer w-full max-w-2xl"
+      className="relative p-4 md:p-6 border-l-4 border-silver/20 hover:border-neon bg-gradient-to-r from-silver/5 to-transparent transition-colors group cursor-pointer w-full max-w-2xl"
     >
       <div className="absolute top-0 right-0 p-2 opacity-50 text-[10px] font-mono text-silver group-hover:text-neon">
         // REF: {refId}
