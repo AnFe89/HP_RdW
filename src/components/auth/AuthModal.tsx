@@ -35,7 +35,19 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         setIsLoading(true);
         setMessage(null);
         try {
-            const { error } = await supabase.auth.signInWithPassword({ email, password });
+            let loginEmail = email;
+
+            // Check if input is NOT an email (simple check)
+            if (!email.includes('@')) {
+                const { data: userEmail, error: rpcError } = await supabase.rpc('get_email_by_username', { username_input: email });
+                
+                if (rpcError) throw rpcError;
+                if (!userEmail) throw new Error("OPERATIVE IDENTITY NOT FOUND.");
+                
+                loginEmail = userEmail;
+            }
+
+            const { error } = await supabase.auth.signInWithPassword({ email: loginEmail, password });
             if (error) throw error;
             onClose();
         } catch (error: any) {
@@ -157,10 +169,12 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                                     )}
 
                                     <div>
-                                        <label className="block text-xs font-mono text-[#66fcf1] mb-2">OPERATOR EMAIL</label>
-                                        <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
+                                        <label className="block text-xs font-mono text-[#66fcf1] mb-2">
+                                            {view === 'login' ? "OPERATOR EMAIL OR USERNAME" : "OPERATOR EMAIL"}
+                                        </label>
+                                        <input type="text" required value={email} onChange={(e) => setEmail(e.target.value)}
                                             className="w-full bg-[#1f2833]/50 border border-[#1f2833] focus:border-[#66fcf1] text-[#c5c6c7] p-3 outline-none transition-colors font-mono"
-                                            placeholder="name@chapter.com" />
+                                            placeholder={view === 'login' ? "name@chapter.com OR COMMANDER X" : "name@chapter.com"} />
                                     </div>
 
                                     {view !== 'forgot' && (
