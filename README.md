@@ -22,10 +22,12 @@ This is the official web portal for the **Ritter der Würfelrunde** Tabletop Clu
 
 - **Galaxy Map**: A 2D schematized view of the gaming floor (Galaxy Map) with sector status.
 - **Real-time Intel**: Live reservation status fetched from Supabase.
-- **Identity Protocol**:
-  - **Operatives** (Member) can reserve Sectors.
-  - **Commanders** (Admins) override protocols and can reserve any sector.
-  - **Guests** can view but not interact with deployment zones.
+- **Secure Access**:
+  - **Restricted Sector Protocol**: Only fully authorized **Operatives** (Members) and **Commanders** (Admins) can view the tactical map.
+  - **Unauthorized Personnel** (Guests) are greeted with a "Restricted Sector" warning screen.
+  - **Identity Protocol**:
+    - **Operatives** (Member) can reserve Sectors.
+    - **Commanders** (Admins) override protocols and can reserve any sector.
 
 ### 3. The Command Bridge (Admin)
 
@@ -42,6 +44,7 @@ This is the official web portal for the **Ritter der Würfelrunde** Tabletop Clu
 ### 4. Operative Management
 
 - **Codename System**: Usernames enforced via database unique constraints.
+- **Flexible Identification**: Login with either **Email** or **Codename** (Username).
 - **Secure Access**: Passwordless Magic Link & Email login.
 - **Right to be Forgotten**: GDPR-compliant "Delete Identity" feature cleans up all traces.
 
