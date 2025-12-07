@@ -26,7 +26,7 @@ BEGIN
         email_confirmed_at = EXCLUDED.email_confirmed_at;
     RETURN new;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 -- Trigger to call the function on every new user signup
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
@@ -45,7 +45,7 @@ BEGIN
     WHERE id = new.id;
     RETURN new;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 DROP TRIGGER IF EXISTS on_auth_user_updated ON auth.users;
 CREATE TRIGGER on_auth_user_updated
@@ -108,3 +108,28 @@ USING (
 
 -- 5. Helper to make yourself Admin (Run this manually once for your user)
 -- UPDATE public.profiles SET role = 'admin' WHERE id = 'YOUR_USER_ID';
+
+-- 6. Helper for Username Login (Secure Lookup) - FIXED
+CREATE OR REPLACE FUNCTION public.get_email_by_username(username_input TEXT)
+RETURNS TEXT
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS c:\Users\Besitzer\hp ritter der würfelrunde
+BEGIN
+    RETURN (SELECT email FROM public.profiles WHERE username = username_input LIMIT 1);
+END;
+c:\Users\Besitzer\hp ritter der würfelrunde;
+
+-- 7. Helper to Delete Own Account
+CREATE OR REPLACE FUNCTION public.delete_own_account()
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS c:\Users\Besitzer\hp ritter der würfelrunde
+BEGIN
+  -- Delete the user from auth.users (Cascades to profile)
+  DELETE FROM auth.users WHERE id = auth.uid();
+END;
+c:\Users\Besitzer\hp ritter der würfelrunde;
