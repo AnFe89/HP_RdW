@@ -270,9 +270,9 @@ export const Services = () => {
         <div 
           onClick={() => setIsAuthOpen(true)}
           className={`border p-6 transition-all duration-300 cursor-pointer group flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] rounded-2xl backdrop-blur-md
-            ${isLoggedIn 
+                ${isLoggedIn 
                 ? "border-emerald-500/30 bg-emerald-900/10 text-emerald-400 hover:bg-emerald-900/20" 
-                : "border-white/10 bg-white/5 text-silver hover:border-red-500/50 hover:text-red-400 hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]"
+                : "border-red-500/40 bg-red-900/10 text-red-100 shadow-[0_0_15px_rgba(239,68,68,0.2)] hover:bg-red-900/20 hover:border-red-500 hover:shadow-[0_0_25px_rgba(239,68,68,0.4)]"
             }`}
         >
              <span className="flex items-center gap-3 font-bold tracking-wider">
