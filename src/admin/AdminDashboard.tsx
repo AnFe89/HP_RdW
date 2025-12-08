@@ -374,57 +374,78 @@ export const AdminDashboard = () => {
                 )}
 
                 {activeTab === 'personnel' && (
-                    <div className="bg-[#1f2833]/30 rounded-xl overflow-hidden border border-white/10">
-                        <table className="w-full text-left">
-                            <thead className="bg-black/50 text-xs font-mono text-silver">
-                                <tr>
-                                    <th className="p-4">CODENAME</th>
-                                    <th className="p-4">EMAIL / STATUS</th>
-                                    <th className="p-4">JOINED</th>
-                                    <th className="p-4">CLEARANCE LEVEL</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-white/5">
-                                {profiles.map(profile => (
-                                    <tr key={profile.id} className="hover:bg-white/5 transition-colors">
-                                        <td className="p-4">
-                                            <span className="text-neon font-bold">{profile.username}</span>
-                                            <div className="text-[10px] text-silver/40 font-mono">{profile.id}</div>
-                                        </td>
-                                        <td className="p-4">
-                                            <div className="text-white text-sm">{profile.email || "N/A"}</div>
-                                            {profile.email_confirmed_at ? (
-                                                <span className="text-[10px] text-green-400 font-mono bg-green-900/20 px-1 rounded border border-green-500/30">VERIFIED</span>
-                                            ) : (
-                                                <span className="text-[10px] text-yellow-500 font-mono bg-yellow-900/20 px-1 rounded border border-yellow-500/30">PENDING CONFIRMATION</span>
-                                            )}
-                                        </td>
-                                        <td className="p-4 text-silver/80 text-sm">
-                                            {new Date(profile.created_at).toLocaleDateString()}
-                                        </td>
-                                        <td className="p-4">
-                                            <select 
-                                                className={`bg-black/40 border p-1 text-xs font-mono outline-none cursor-pointer
-                                                    ${profile.role === 'admin' ? 'border-red-500 text-red-500' : 
-                                                      profile.role === 'member' ? 'border-neon text-neon' : 'border-silver/30 text-silver'}
-                                                    ${(currentUserId !== CHAPTER_MASTER_ID && profile.role === 'admin') ? 'opacity-50 cursor-not-allowed' : ''}  
-                                                `}
-                                                value={profile.role}
-                                                onChange={(e) => handleRoleUpdate(profile.id, e.target.value)}
-                                                disabled={currentUserId !== CHAPTER_MASTER_ID && profile.role === 'admin'}
-                                            >
-                                                <option value="guest">GUEST (RECRUIT)</option>
-                                                <option value="member">MEMBER (OPERATIVE)</option>
-                                                {/* Only show/allow Admin option if I am Master or if the user is already admin */}
-                                                {(currentUserId === CHAPTER_MASTER_ID || profile.role === 'admin') && (
-                                                    <option value="admin">ADMIN (COMMANDER)</option>
-                                                )}
-                                            </select>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                    <div className="space-y-4">
+                        <div className="flex justify-between items-center">
+                            <h3 className="text-xl text-white font-military">OPERATIVE MANIFEST ({profiles.length})</h3>
+                            <button 
+                                onClick={() => { setLoading(true); fetchData(); setLoading(false); }}
+                                className="px-4 py-2 bg-neon/10 border border-neon text-neon hover:bg-neon/20 font-bold font-mono text-xs tracking-wider transition-all"
+                            >
+                                REFRESH INTEL
+                            </button>
+                        </div>
+
+                        {profiles.length === 0 ? (
+                            <div className="bg-[#1f2833]/30 p-8 rounded-xl border border-white/10 text-center">
+                                <h4 className="text-red-500 font-bold mb-2">NO PERSONNEL RECORDS FOUND</h4>
+                                <p className="text-silver/60 text-sm font-mono max-w-lg mx-auto">
+                                    If users are registered but not appearing here, the database Trigger responsible for creating public profiles might be missing or broken.
+                                </p>
+                            </div>
+                        ) : (
+                            <div className="bg-[#1f2833]/30 rounded-xl overflow-hidden border border-white/10">
+                                <table className="w-full text-left">
+                                    <thead className="bg-black/50 text-xs font-mono text-silver">
+                                        <tr>
+                                            <th className="p-4">CODENAME</th>
+                                            <th className="p-4">EMAIL / STATUS</th>
+                                            <th className="p-4">JOINED</th>
+                                            <th className="p-4">CLEARANCE LEVEL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-white/5">
+                                        {profiles.map(profile => (
+                                            <tr key={profile.id} className="hover:bg-white/5 transition-colors">
+                                                <td className="p-4">
+                                                    <span className="text-neon font-bold">{profile.username}</span>
+                                                    <div className="text-[10px] text-silver/40 font-mono">{profile.id}</div>
+                                                </td>
+                                                <td className="p-4">
+                                                    <div className="text-white text-sm">{profile.email || "N/A"}</div>
+                                                    {profile.email_confirmed_at ? (
+                                                        <span className="text-[10px] text-green-400 font-mono bg-green-900/20 px-1 rounded border border-green-500/30">VERIFIED</span>
+                                                    ) : (
+                                                        <span className="text-[10px] text-yellow-500 font-mono bg-yellow-900/20 px-1 rounded border border-yellow-500/30">PENDING CONFIRMATION</span>
+                                                    )}
+                                                </td>
+                                                <td className="p-4 text-silver/80 text-sm">
+                                                    {new Date(profile.created_at).toLocaleDateString()}
+                                                </td>
+                                                <td className="p-4">
+                                                    <select 
+                                                        className={`bg-black/40 border p-1 text-xs font-mono outline-none cursor-pointer
+                                                            ${profile.role === 'admin' ? 'border-red-500 text-red-500' : 
+                                                              profile.role === 'member' ? 'border-neon text-neon' : 'border-silver/30 text-silver'}
+                                                            ${(currentUserId !== CHAPTER_MASTER_ID && profile.role === 'admin') ? 'opacity-50 cursor-not-allowed' : ''}  
+                                                        `}
+                                                        value={profile.role}
+                                                        onChange={(e) => handleRoleUpdate(profile.id, e.target.value)}
+                                                        disabled={currentUserId !== CHAPTER_MASTER_ID && profile.role === 'admin'}
+                                                    >
+                                                        <option value="guest">GUEST (RECRUIT)</option>
+                                                        <option value="member">MEMBER (OPERATIVE)</option>
+                                                        {/* Only show/allow Admin option if I am Master or if the user is already admin */}
+                                                        {(currentUserId === CHAPTER_MASTER_ID || profile.role === 'admin') && (
+                                                            <option value="admin">ADMIN (COMMANDER)</option>
+                                                        )}
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
