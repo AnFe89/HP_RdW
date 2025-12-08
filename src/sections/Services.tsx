@@ -251,7 +251,7 @@ export const Services = () => {
                     LIVE FEED
                  </div>
                  <div>
-                    SECTOR STATUS: <span className="text-[#c5c6c7]">ACTIVE</span>
+                    STATUS: <span className="text-[#c5c6c7]">ACTIVE</span>
                  </div>
             </div>
             
