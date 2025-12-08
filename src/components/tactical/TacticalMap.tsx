@@ -18,7 +18,7 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
         { id: 2, label: "2. NACHMUND SECTOR", x: "50%", y: "15%", size: "lg", color: "#10b981", labelPos: 'bottom' }, // Emerald
         { id: 3, label: "3. CHALNATH EXPANSE", x: "85%", y: "25%", size: "md", color: "#a855f7", labelPos: 'bottom' }, // Purple
         { id: 4, label: "4. ULTRAMAR SECTOR", x: "20%", y: "70%", size: "lg", color: "#3b82f6", labelPos: 'top' },    // Royal Blue (Ultramarines)
-        { id: 5, label: "5. OCTARIUS SECTOR", x: "50%", y: "80%", size: "sm", color: "#ef4444", labelPos: 'bottom' }, // Red (Danger)
+        { id: 5, label: "5. OCTARIUS SECTOR", x: "50%", y: "80%", size: "sm", color: "#ef4444", labelPos: 'top' },    // Red (Danger) - Request: Top on mobile to avoid cutoff
         { id: 6, label: "6. CALIXIS SECTOR", x: "80%", y: "65%", size: "md", color: "#f59e0b", labelPos: 'top' },    // Amber
     ];
 
@@ -136,8 +136,9 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
                             <div className={clsx(
                                 "absolute left-1/2 transform -translate-x-1/2 whitespace-nowrap font-military tracking-widest transition-colors px-2 py-0.5 rounded bg-black/60 z-20 pointer-events-none",
                                 "text-[10px] md:text-sm", // Smaller text on mobile
-                                // Mobile: Dynamic (Top or Bottom) | Desktop: Always Top (md:-top-12 -> md:-top-10)
-                                system.labelPos === 'top' ? "-top-10" : "top-16", 
+                                // Mobile: Dynamic (Top or Bottom) | Desktop: Always Top 
+                                // Reduced mobile offsets: -top-8 (from -top-10) and top-12 (from top-16) to be closer
+                                system.labelPos === 'top' ? "-top-8" : "top-12", 
                                 "md:-top-10",
                                 isSelected ? "text-[#66fcf1] z-30" : "text-[#c5c6c7] opacity-80 group-hover:opacity-100"
                             )}>
