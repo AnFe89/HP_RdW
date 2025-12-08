@@ -92,7 +92,7 @@ const Dice = () => {
 
     const meshRefs = useRef<(THREE.Mesh | null)[]>([]);
 
-    useFrame((state, delta) => {
+    useFrame((_, delta) => {
         meshRefs.current.forEach((mesh, i) => {
             if (!mesh) return;
             mesh.rotation.x += delta * (0.2 + (i % 3) * 0.1);
