@@ -135,7 +135,9 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
                             <div className={clsx(
                                 "absolute left-1/2 transform -translate-x-1/2 whitespace-nowrap font-military tracking-widest transition-colors px-2 py-0.5 rounded bg-black/60 z-20 pointer-events-none",
                                 "text-[10px] md:text-sm", // Smaller text on mobile
-                                system.labelPos === 'top' ? "-top-10 md:-top-12" : "top-16 md:top-28", // Increased offsets to clear pips/graphics
+                                // Mobile: Dynamic (Top or Bottom) | Desktop: Always Top (md:-top-12)
+                                system.labelPos === 'top' ? "-top-10" : "top-16", 
+                                "md:-top-12",
                                 isSelected ? "text-[#66fcf1] z-30" : "text-[#c5c6c7] opacity-80 group-hover:opacity-100"
                             )}>
                                 {system.label}
