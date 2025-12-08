@@ -244,7 +244,7 @@ export const Services = () => {
       {isLoggedIn && (userRole === 'member' || userRole === 'admin') ? (
           <div className="flex flex-col md:flex-row gap-10 w-full">
             {/* 2D Tactical Viewport */}
-            <div className="w-full md:w-2/3 h-[400px] md:h-[600px] border border-white/10 relative overflow-hidden bg-black/90 rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.5)]">
+            <div className="w-full md:w-2/3 h-[500px] md:h-[600px] border border-white/10 relative overflow-hidden bg-black/90 rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.5)]">
             <div className="absolute top-4 left-4 z-10 font-tactical text-xs text-[#66fcf1] flex flex-col md:flex-row gap-2 md:gap-4 bg-black/80 p-2 rounded border border-white/5">
                  <div className="flex items-center gap-2">
                     <span className="w-2 h-2 bg-[#66fcf1] rounded-full animate-pulse"/> 
@@ -413,7 +413,7 @@ export const Services = () => {
           </div>
       ) : (
           /* RESTRICTED ACCESS VIEW */
-          <div className="relative w-full max-w-4xl mx-auto h-[400px] border border-red-900/50 bg-black/90 rounded-3xl flex flex-col items-center justify-center text-center p-8 overflow-hidden shadow-[0_0_50px_rgba(220,38,38,0.2)]">
+          <div className="relative w-full max-w-4xl mx-auto min-h-[500px] h-auto border border-red-900/50 bg-black/90 rounded-3xl flex flex-col items-center justify-center text-center p-8 overflow-hidden shadow-[0_0_50px_rgba(220,38,38,0.2)]">
               {/* Scanlines caused by jamming */}
               <div className="absolute inset-0 pointer-events-none bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,#ff0000_3px)] opacity-5 z-0" />
               

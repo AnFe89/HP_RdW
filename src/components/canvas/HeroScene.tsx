@@ -1,4 +1,4 @@
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Float, PerspectiveCamera } from '@react-three/drei';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
@@ -52,6 +52,7 @@ const createDieFace = (number: number, color: string = '#ffffff', dotColor: stri
 };
 
 const Dice = () => {
+    const { viewport } = useThree();
     const [diceData, setDiceData] = useState<{position: [number, number, number], rotation: [number, number, number], scale: number}[]>([]);
     
     // Generate materials for faces 1-6
@@ -69,17 +70,29 @@ const Dice = () => {
     }, []);
 
     useEffect(() => {
-        // Generate positions avoiding the center (Logo Area)
-        const count = 25; 
+        // Dynamic exclusion zone based on viewport
+        // On mobile (narrow width), we need a smaller exclusion zone for the logo
+        const mobile = viewport.width < 10;
+        const exclusionX = mobile ? viewport.width * 0.3 : 6; 
+        const exclusionY = mobile ? viewport.height * 0.2 : 4;
+
+        const count = mobile ? 15 : 25; // Reduce count slightly for mobile to avoid clutter
         const newDice: {position: [number, number, number], rotation: [number, number, number], scale: number}[] = [];
 
         for (let i = 0; i < count; i++) {
             let x, y, z;
+            let attempts = 0;
             do {
-                x = (Math.random() - 0.5) * 25;
-                y = (Math.random() - 0.5) * 15;
+                // Spread across the full viewport with some padding
+                x = (Math.random() - 0.5) * viewport.width * 1.5; 
+                y = (Math.random() - 0.5) * viewport.height * 1.5;
                 z = (Math.random() - 0.5) * 10;
-            } while (Math.abs(x) < 6 && Math.abs(y) < 4);
+                attempts++;
+            } while (
+                // Exclude center area where logo is
+                (Math.abs(x) < exclusionX && Math.abs(y) < exclusionY) && 
+                attempts < 100
+            );
 
             newDice.push({
                 position: [x, y, z],
@@ -88,7 +101,7 @@ const Dice = () => {
             });
         }
         setDiceData(newDice);
-    }, []);
+    }, [viewport.width, viewport.height]); // Re-run when viewport changes
 
     const meshRefs = useRef<(THREE.Mesh | null)[]>([]);
 

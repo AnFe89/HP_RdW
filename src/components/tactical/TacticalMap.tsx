@@ -11,14 +11,14 @@ interface TacticalMapProps {
 
 export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, occupied }: TacticalMapProps) => {
     
-    // Galaxy layout for 6 sectors (systems)
+    // Galaxy layout for 6 sectors (systems) with specific label positioning to avoid overlap
     const systems = [
-        { id: 1, label: "1. NEPHILIM SECTOR", x: "22%", y: "22%", size: "md", color: "#66fcf1" },     // Moved from 15/20 to avoid top-left overlap
-        { id: 2, label: "2. NACHMUND SECTOR", x: "50%", y: "15%", size: "lg", color: "#45a29e" },     // Top Center
-        { id: 3, label: "3. CHALNATH EXPANSE", x: "85%", y: "25%", size: "md", color: "#c5c6c7" },     // Top Right
-        { id: 4, label: "4. ULTRAMAR SECTOR", x: "20%", y: "70%", size: "lg", color: "#1f2833" },     // Bottom Left
-        { id: 5, label: "5. OCTARIUS SECTOR", x: "50%", y: "80%", size: "sm", color: "#8b0000" },     // Bottom Center (Danger)
-        { id: 6, label: "6. CALIXIS SECTOR", x: "80%", y: "65%", size: "md", color: "#cb2d3e" },      // Bottom Right
+        { id: 1, label: "1. NEPHILIM SECTOR", x: "22%", y: "22%", size: "md", color: "#66fcf1", labelPos: 'top' },
+        { id: 2, label: "2. NACHMUND SECTOR", x: "50%", y: "15%", size: "lg", color: "#45a29e", labelPos: 'bottom' }, // Label below to avoid hitting top edge
+        { id: 3, label: "3. CHALNATH EXPANSE", x: "85%", y: "25%", size: "md", color: "#c5c6c7", labelPos: 'bottom' }, // Label below to avoid mix with Nephilim/Nachmund titles
+        { id: 4, label: "4. ULTRAMAR SECTOR", x: "20%", y: "70%", size: "lg", color: "#1f2833", labelPos: 'top' }, // Label above
+        { id: 5, label: "5. OCTARIUS SECTOR", x: "50%", y: "80%", size: "sm", color: "#8b0000", labelPos: 'top' }, 
+        { id: 6, label: "6. CALIXIS SECTOR", x: "80%", y: "65%", size: "md", color: "#cb2d3e", labelPos: 'bottom' },
     ];
 
     // Warp Lanes (Connections)
@@ -81,8 +81,8 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
                     const isFull = count >= capacity;
                     const isSelected = selectedSector === system.id;
                     
-                    // Size classes
-                    const sizeClass = system.size === 'lg' ? 'w-16 h-16 md:w-24 md:h-24' : system.size === 'md' ? 'w-12 h-12 md:w-16 md:h-16' : 'w-10 h-10 md:w-12 md:h-12';
+                    // Size classes - slightly smaller on mobile to prevent crowding
+                    const sizeClass = system.size === 'lg' ? 'w-14 h-14 md:w-24 md:h-24' : system.size === 'md' ? 'w-10 h-10 md:w-16 md:h-16' : 'w-8 h-8 md:w-12 md:h-12';
 
                     return (
                         <div
@@ -131,10 +131,12 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
                                 </div>
                             </motion.div>
 
-                            {/* Label - removed blur, simplified shadow */}
+                            {/* Label - Responsive positioning and size */}
                             <div className={clsx(
-                                "absolute -top-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap font-military tracking-widest text-xs transition-colors px-2 py-0.5 rounded bg-black/60", 
-                                isSelected ? "text-[#66fcf1]" : "text-[#c5c6c7] opacity-80 group-hover:opacity-100"
+                                "absolute left-1/2 transform -translate-x-1/2 whitespace-nowrap font-military tracking-widest transition-colors px-2 py-0.5 rounded bg-black/60 z-20 pointer-events-none",
+                                "text-[10px] md:text-sm", // Smaller text on mobile
+                                system.labelPos === 'top' ? "-top-8 md:-top-10" : "top-14 md:top-24", // Dynamic positioning above or below
+                                isSelected ? "text-[#66fcf1] z-30" : "text-[#c5c6c7] opacity-80 group-hover:opacity-100"
                             )}>
                                 {system.label}
                             </div>

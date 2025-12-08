@@ -15,7 +15,7 @@ export const Hero = () => {
                     initial={{ scale: 0.8, opacity: 0, filter: "blur(10px)" }}
                     animate={{ scale: 1, opacity: 1, filter: "blur(0px)" }}
                     transition={{ duration: 2.5, ease: "easeOut" }}
-                    className="relative flex justify-center items-center"
+                    className="relative flex justify-center items-center w-full"
                 >
                     {/* Performance optimized glow: Static radial gradient instead of dynamic drop-shadow */}
                     <div 
@@ -26,7 +26,7 @@ export const Hero = () => {
                     <img 
                         src="/hero-logo.png" 
                         alt="Ritter der Würfelrunde" 
-                        className="relative z-10 w-full max-w-[1600px] h-auto object-contain translate-x-[5%] md:translate-x-[8%] transform scale-110 md:scale-155"
+                        className="relative z-10 w-full max-w-[1600px] h-auto object-contain md:translate-x-[8%] transform scale-110 md:scale-155"
                         style={{ filter: 'none' }} // Ensure no drop-shadow
                     />
                     
@@ -36,7 +36,7 @@ export const Hero = () => {
                    initial={{ opacity: 0 }}
                    animate={{ opacity: 1 }}
                    transition={{ duration: 1, delay: 1 }}
-                   className="mt-12 md:mt-24"
+                   className="mt-8 md:mt-24 px-4"
                 >
                      <p className="text-silver/60 font-tactical max-w-lg mx-auto text-center text-sm md:text-base tracking-wider">
                         Der Verein für alle TableTop-Gamer in Wiesbaden und Umgebung.
