@@ -1,44 +1,48 @@
 import { motion } from 'framer-motion';
 import { HeroScene } from '../components/canvas/HeroScene';
 
-
 export const Hero = () => {
     return (
         <section className="relative w-full h-screen overflow-hidden flex flex-col items-center justify-center">
             {/* Always render scene to persist state */}
             <HeroScene />
       
-            <div className="z-10 text-center space-y-4 mix-blend-difference pointer-events-none">
-                <motion.h1 
-                    className="text-5xl sm:text-7xl md:text-9xl font-military text-silver uppercase tracking-tight leading-none"
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 1.2, ease: "easeOut" }}
+            {/* Background Logo Watermark - Removed for clarity as per user request */}
+
+            <div className="z-10 w-full max-w-7xl mx-auto px-4 pointer-events-none select-none flex flex-col items-center justify-center h-full relative">
+                {/* Modern Glow/Glass Effect Wrapper */}
+                <motion.div 
+                    initial={{ scale: 0.8, opacity: 0, filter: "blur(10px)" }}
+                    animate={{ scale: 1, opacity: 1, filter: "blur(0px)" }}
+                    transition={{ duration: 2.5, ease: "easeOut" }}
+                    className="relative flex justify-center items-center"
                 >
-                    RITTER DER <br/> <span className="text-transparent bg-clip-text bg-gradient-to-b from-silver to-void">WÜRFELRUNDE</span>
-                </motion.h1>
+                    {/* Performance optimized glow: Static radial gradient instead of dynamic drop-shadow */}
+                    <div 
+                        className="absolute inset-0 bg-[radial-gradient(circle,rgba(102,252,241,0.2)_0%,transparent_70%)] opacity-60 blur-3xl"
+                        style={{ pointerEvents: 'none', transform: 'scale(1.2)' }}
+                    />
+
+                    <img 
+                        src="/hero-logo.png" 
+                        alt="Ritter der Würfelrunde" 
+                        className="relative z-10 w-full max-w-[1600px] h-auto object-contain translate-x-[5%] md:translate-x-[8%] transform scale-110 md:scale-155"
+                        style={{ filter: 'none' }} // Ensure no drop-shadow
+                    />
+                    
+                </motion.div>
 
                 <motion.div
                    initial={{ opacity: 0 }}
                    animate={{ opacity: 1 }}
                    transition={{ duration: 1, delay: 1 }}
-                   className="mt-8"
+                   className="mt-12 md:mt-24"
                 >
-                     <p className="text-silver/60 font-tactical max-w-lg mx-auto text-center">
+                     <p className="text-silver/60 font-tactical max-w-lg mx-auto text-center text-sm md:text-base tracking-wider">
                         Der Verein für alle TableTop-Gamer in Wiesbaden und Umgebung.
                      </p>
                 </motion.div>
             </div>
-
-            {/* Scroll indicator */}
-            <motion.div 
-                className="absolute bottom-10 z-10 flex flex-col items-center gap-2"
-                animate={{ y: [0, 10, 0] }}
-                transition={{ repeat: Infinity, duration: 2 }}
-            >
-                <span className="text-[10px] text-neon font-tactical tracking-widest">SCROLL TO ENGAGE</span>
-                <div className="w-px h-12 bg-gradient-to-b from-neon to-transparent" />
-            </motion.div>
         </section>
     );
 };
