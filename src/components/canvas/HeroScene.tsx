@@ -1,9 +1,8 @@
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas } from '@react-three/fiber';
 import { Float, PerspectiveCamera } from '@react-three/drei';
-import { useRef, useMemo, useState, useEffect } from 'react';
-import * as THREE from 'three';
+import { useState, useEffect } from 'react';
 
-const Terrain = () => {
+{/* const Terrain = () => {
     const meshRef = useRef<THREE.Mesh>(null);
     
     // Generate height data
@@ -53,7 +52,7 @@ const Terrain = () => {
             position={[0, -2, -5]}
         />
     );
-};
+}; */}
 
 const Debris = () => {
     const [debrisData, setDebrisData] = useState<{position: [number, number, number], scale: number}[]>([]);
@@ -95,7 +94,7 @@ export const HeroScene = () => {
                 <pointLight position={[10, 10, 10]} intensity={1} color="#66fcf1" />
                 <pointLight position={[-10, -10, -10]} intensity={0.5} color="#8b0000" />
                 
-                <Terrain />
+                {/* <Terrain /> */}
                 <Debris />
                 
                 <fog attach="fog" args={['#0b0c10', 5, 20]} />
