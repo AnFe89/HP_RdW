@@ -145,7 +145,7 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
             </div>
 
             {/* HUD Overlay */}
-            <div className="absolute bottom-2 right-2 md:bottom-4 md:right-4 text-[9px] md:text-[10px] font-mono text-[#66fcf1]/80 border-l border-t border-[#66fcf1]/40 p-2 bg-black/80 backdrop-blur-md z-20">
+            <div className="absolute bottom-2 right-2 md:bottom-4 md:right-4 text-[9px] md:text-[10px] font-mono text-[#66fcf1]/80 border-l border-t border-[#66fcf1]/40 p-2 bg-black/90 z-20">
                 <div>GALACTIC COORDS: 40.999 // 12.451</div>
                 <div>SECTOR THREAT LEVEL: VERMILLION</div>
             </div>

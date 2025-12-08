@@ -1,15 +1,12 @@
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { motion } from 'framer-motion';
 import { HeroScene } from '../components/canvas/HeroScene';
 
 
 export const Hero = () => {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { margin: "0px 0px 200px 0px" }); // Unmounts when 200px below viewport
-
     return (
-        <section ref={ref} className="relative w-full h-screen overflow-hidden flex flex-col items-center justify-center">
-            {isInView && <HeroScene />}
+        <section className="relative w-full h-screen overflow-hidden flex flex-col items-center justify-center">
+            {/* Always render scene to persist state */}
+            <HeroScene />
       
             <div className="z-10 text-center space-y-4 mix-blend-difference pointer-events-none">
                 <motion.h1 
