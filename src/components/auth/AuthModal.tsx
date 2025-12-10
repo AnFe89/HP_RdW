@@ -152,8 +152,8 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                                          <button onClick={handleLogout} className="w-full border-2 border-[#2c1810] text-[#2c1810] font-bold font-medieval py-3 hover:bg-[#2c1810] hover:text-parchment transition-colors uppercase tracking-widest">
                                             ABREISEN (LOGOUT)
                                          </button>
-                                         <button onClick={handleDelete} className="w-full border-2 border-crimson text-crimson font-bold font-medieval py-3 hover:bg-crimson hover:text-white transition-colors uppercase tracking-widest">
-                                            ENDEHREN (LÖSCHEN)
+                                         <button onClick={handleDelete} className="w-full text-xs py-2 text-crimson/50 hover:text-crimson font-bold font-medieval transition-colors uppercase tracking-widest mt-2 hover:bg-crimson/5 rounded-sm">
+                                            ENTEHREN (KONTO LÖSCHEN)
                                          </button>
                                     </div>
                                 ) : (
