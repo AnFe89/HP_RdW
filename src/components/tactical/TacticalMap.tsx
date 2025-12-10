@@ -32,7 +32,7 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
             {/* Floor Plan Background */}
             <div className="absolute inset-0 z-0 opacity-90" 
                  style={{ 
-                     backgroundImage: 'url("/rectangular-hall.png")', 
+                     backgroundImage: 'url("/realistic-hall.png")', 
                      backgroundSize: 'cover',
                      backgroundPosition: 'center'
                  }} 
@@ -67,11 +67,23 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
                             >
                                 {/* Table Surface (Wood) */}
                                 <div className={clsx(
-                                    "absolute inset-0 rounded-sm border-2",
+                                    "absolute inset-0 rounded-sm border-2 overflow-hidden",
                                     isSelected ? "border-gold bg-[#3d2316]" : "border-[#1a120b] bg-[#2c1810]"
                                 )}>
                                     {/* Wood Grain Texture opacity */}
                                      <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')]" />
+                                     
+                                     {/* DECORATION: Table Map / Game Mat */}
+                                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[70%] bg-parchment/10 rounded-sm border border-white/5 rotate-1">
+                                          {/* Simulate grid lines */}
+                                          <div className="w-full h-full opacity-20" style={{ backgroundImage: 'linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)', backgroundSize: '10px 10px' }} />
+                                     </div>
+
+                                     {/* DECORATION: Random Clutter (Mugs, Dice) - visually simulated with simple shapes */}
+                                     <div className="absolute top-2 left-2 w-2 h-2 rounded-full bg-[#8b4513] shadow-sm border border-black/20" /> {/* Mug */}
+                                     <div className="absolute bottom-2 right-4 w-1.5 h-1.5 bg-white shadow-sm rotate-12 opacity-80" /> {/* Dice */}
+                                     <div className="absolute top-3 right-3 w-4 h-5 bg-parchment/60 shadow-sm -rotate-6 rounded-[1px]" /> {/* Paper */}
+
                                 </div>
                                 
                                 {/* Table Cloth / Runner (Color coded by status?) - Optional, keeping simple wood for now */}
