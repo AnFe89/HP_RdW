@@ -45,7 +45,7 @@ export const Hero = () => {
                     <img 
                         src="/hero-logo.png" 
                         alt="Ritter der Würfelrunde" 
-                        className="relative z-10 w-full max-w-[650px] md:max-w-[1000px] h-auto object-contain drop-shadow-[0_0_25px_rgba(197,160,89,0.3)] translate-x-4 md:translate-x-8"
+                        className="relative z-10 w-full max-w-[650px] md:max-w-[1000px] h-auto object-contain drop-shadow-[0_0_25px_rgba(197,160,89,0.3)] translate-x-4 md:translate-x-8 scale-125 md:scale-100 origin-center"
                     />
                 </motion.div>
 
