@@ -89,12 +89,29 @@ export const Services = () => {
 
   useEffect(() => {
     initData();
-    const subscription = supabase.channel('reservations')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'reservations' }, () => {
-            initData();
-        })
+
+    // Realtime Subscription
+    const channel = supabase.channel('public:reservations')
+        .on(
+            'postgres_changes', 
+            { event: '*', schema: 'public', table: 'reservations' }, 
+            () => {
+                initData();
+            }
+        )
         .subscribe();
-    return () => { subscription.unsubscribe(); };
+
+    // Refetch on window focus (tab switch)
+    const handleFocus = () => {
+        initData();
+    };
+
+    window.addEventListener('focus', handleFocus);
+
+    return () => { 
+        supabase.removeChannel(channel);
+        window.removeEventListener('focus', handleFocus);
+    };
   }, [initData, isLoggedIn]);
 
   const handleReservation = async () => {
