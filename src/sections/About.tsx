@@ -27,7 +27,7 @@ export const About = () => {
                             Unsere Tore öffnen sich jeden <span className="font-bold text-[#8b4513]">Donnerstag um 18:00 Uhr</span> im 
                             <br/>
                             <span className="font-medieval text-2xl text-[#8b4513] block mt-2 mb-1">PHANTASOS STUDIO</span>
-                            <span className="italic text-base">Schloßbergstraße 11, 65201 Wiesbaden</span>
+                            <span className="italic text-base">Schoßbergstraße 11, 65201 Wiesbaden</span>
                         </p>
 
                         <p>

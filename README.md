@@ -13,19 +13,26 @@ Dies ist das offizielle Web-Portal für den **Ritter der Würfelrunde** Tabletop
 
 ### 1. Das Tor (Landing)
 
-- **Atmosphäre**: Ein lebendiges, mittelalterliches Erlebnis mit 3D-Würfelanimationen und majestätischer Musik.
+- **Atmosphäre**: Ein lebendiges, mittelalterliches Erlebnis mit 3D-Würfelanimationen und majesticer Musik.
 - **Design**: "Ink on Parchment" (Tinte auf Pergament) - Helle, freundliche Optik mit Holztexturen, goldenen Akzenten und authentischen Schriftarten (`Cinzel` & `Lato`).
-- **Funktion**: Das Eingangsportal, das Besucher willkommen heißt und den Weg in die inneren Bereiche weist.
+- **Funktion**: Das Eingangsportal, das Besucher willkommen heißt.
 
-### 2. Die Tafelrunde (Reservierungen)
+### 2. Wir über uns
 
-- **Interaktive Karte**: Eine interaktive Karte ("TacticalMap"), die den Saal mit 6 massiven Eichentischen zeigt.
+- **Information**: Vorstellung des Vereins, Treffpunkt (Phantasos Studio) und Zeiten (Donnerstags 18:00).
+- **Stil**: Persönliche Ansprache ("Du"), die neue Spieler willkommen heißt.
+
+### 3. Die Tafelrunde (Tischreservierung)
+
+- **Interaktive Karte**: Eine interaktive Karte ("TacticalMap"), die den Saal mit 6 Tischen zeigt.
+- **Realismus & Taktik**:
+  - Tische zeigen dynamisch das aktive Spielsystem an (**Warhammer 40k** Logo oder **Kill Team** Icon).
+  - Visuelle Details wie Spielmatten und Würfel auf leeren Tischen.
 - **Platzwahl**:
   - **Freie Plätze**: Werden durch leere Stühle symbolisiert.
-  - **Belegte Plätze**: Werden durch goldene Siegel oder gefüllte Kelche markiert.
+  - **Belegte Plätze**: Werden durch goldene Markierungen angezeigt.
 - **Zugangskontrolle**:
   - **Eingeschränkt**: Nur vereidigte **Mitglieder** und **Admins** können reservieren.
-  - **Gast-Ansicht**: Nicht eingeloggte Besucher sehen einen vereinfachten Login-Prompt statt einer "Zugriff verweigert"-Warnung.
   - **Privilegien**:
     - **Mitglieder** können Plätze an den Tischen reservieren.
     - **Admins** verwalten die Sitzordnung.
