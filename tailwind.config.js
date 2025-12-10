@@ -4,11 +4,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Semantic Names (New)
-        wood: "#2a1b12", // Was #1a120b (Black-Brown) -> Now Dark Brown
-        "wood-light": "#4a3022", // Was #2c1810 -> Now Medium Brown
-        parchment: "#d4c5a9",
-        gold: "#c5a059",
+        // Semantic Names (New - Light/Modern Theme)
+        wood: "#2a1b12", // Dark Brown (for text/accents)
+        "wood-light": "#4a3022", // Medium Brown
+        parchment: "#f8f4e3", // Very Light Paper (Main BG)
+        "parchment-dark": "#e3dcc2", // Darker Paper (Cards/Secondary)
+        ink: "#1a120b", // Almost Black (Main Text)
+        gold: "#c5a059", // Muted Gold (Modern)
         "gold-light": "#e5c07b",
         crimson: "#8b0000",
 

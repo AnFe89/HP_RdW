@@ -25,7 +25,7 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
     ];
 
     return (
-        <div className="w-full h-full min-h-[500px] md:min-h-[600px] bg-[#1a120b] relative overflow-hidden border-8 border-[#2c1810] rounded-sm shadow-2xl">
+        <div className="w-full h-full min-h-[500px] md:min-h-[600px] bg-parchment-dark relative overflow-hidden border-8 border-wood rounded-sm shadow-2xl">
             {/* Floor Plan Background */}
             <div className="absolute inset-0 z-0 opacity-90" 
                  style={{ 

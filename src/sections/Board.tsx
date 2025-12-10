@@ -3,21 +3,21 @@
 const BOARD_MEMBERS = [
   {
     name: "GROSSMEISTER JAN",
-    role: "VORSITZENDER",
+    role: "1. VORSITZENDER",
     description: "Führt den Orden mit eiserner Hand und strategischem Weitblick. Seine Erfahrung in Logistik und Führung sichert das Überleben des Clubs in turbulenten Zeiten.",
-    image: "/medieval-board-jan.png",
+    image: "/board-chair-1.png",
   },
   {
     name: "MEISTER SASCHA",
-    role: "SCHATZMEISTER",
+    role: "2. VORSITZENDER",
     description: "Hüter der Ressourcen und Meister der Münze. Seine wachsamen Augen stellen sicher, dass die Schatzkammer gefüllt und die Ausgaben weise getätigt sind.",
-    image: "/medieval-board-sascha.png",
+    image: "/board-chair-2.png",
   },
   {
     name: "KANZLER RAPHAEL",
-    role: "SCHRIFTFÜHRER",
+    role: "3. VORSITZENDER",
     description: "Dokumentiert jeden Sieg und unterzeichnet jedes Dekret. Seine Protokolle sind Gesetz und dienen als Fundament für die Ordnung im Reich.",
-    image: "/medieval-board-raphael.png",
+    image: "/board-chair-3.png",
   }
 ];
 

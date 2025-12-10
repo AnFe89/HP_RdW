@@ -42,11 +42,11 @@ export const Layout = ({ children }: LayoutProps) => {
            }}
       />
 
-      {/* Vignette - Lighter/Warmer Dark Wood Tone (Opacity Reduced) */}
-      <div className="fixed inset-0 pointer-events-none z-[40] bg-[radial-gradient(circle_at_center,transparent_0%,rgba(42,27,18,0.6)_120%)]" />
+      {/* Vignette - Very Subtle / Removed for Modern Look */}
+      <div className="fixed inset-0 pointer-events-none z-[40] bg-[radial-gradient(circle_at_center,transparent_0%,rgba(42,27,18,0.1)_120%)]" />
 
       {/* Main Content */}
-      <main className="relative z-10 w-full min-h-screen bg-wood text-parchment selection:bg-gold selection:text-wood">
+      <main className="relative z-10 w-full min-h-screen bg-parchment text-ink selection:bg-gold selection:text-white">
         {children}
       </main>
     </>

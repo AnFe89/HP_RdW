@@ -6,8 +6,8 @@
 
 @layer base {
   html {
-    @apply bg-wood text-parchment font-sans scroll-smooth;
-    background-color: #1a120b;
+    @apply bg-parchment text-ink font-sans scroll-smooth;
+    background-color: #f8f4e3;
   }
 
   body {
