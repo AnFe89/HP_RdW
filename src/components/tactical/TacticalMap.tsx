@@ -6,7 +6,7 @@ interface TacticalMapProps {
     onSelectSector: (id: number) => void;
     currentMode: '40k' | 'killteam';
     selectedSector: number | null;
-    occupied: Record<number, number>;
+    occupied: Record<number, { count: number, mode: string }>;
 }
 
 
@@ -44,9 +44,13 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
             {/* Tables Container */}
             <div className="relative z-10 w-full h-full">
                 {tables.map((table) => {
-                    const count = occupied[table.id] || 0;
-                    const capacity = currentMode === '40k' ? 2 : 4;
-                    const isFull = count >= capacity;
+                    const data = occupied[table.id] || { count: 0, mode: '40k' };
+                    const count = data.count;
+                    const mode = data.mode || '40k';
+                    const capacity = currentMode === '40k' ? 2 : 4; // This is capacity for *current selection*, maybe irrelevant for icon, but relevant for fullness
+                    // Actually capacity depends on the TABLE's mode if occupied, but let's stick to simple logic for visual
+                    
+                    const isFull = count >= (mode === '40k' ? 2 : 4);
                     const isSelected = selectedSector === table.id;
                     
                     return (
@@ -60,7 +64,7 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
                             <motion.div
                                 className={clsx(
                                     "relative flex items-center justify-center transition-all duration-300 shadow-2xl skew-x-1",
-                                    "w-32 h-16 md:w-48 md:h-24", // Rectangular tables
+                                    "w-24 h-12 sm:w-32 sm:h-16 md:w-48 md:h-24", // Responsive sizing
                                     isSelected ? "scale-110 drop-shadow-[0_0_15px_rgba(255,215,0,0.5)]" : "hover:scale-105"
                                 )}
                                 whileHover={{ scale: 1.05 }}
@@ -79,20 +83,27 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
                                           <div className="w-full h-full opacity-20" style={{ backgroundImage: 'linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)', backgroundSize: '10px 10px' }} />
                                      </div>
 
-                                     {/* DECORATION: Random Clutter (Mugs, Dice) - visually simulated with simple shapes */}
-                                     <div className="absolute top-2 left-2 w-2 h-2 rounded-full bg-[#8b4513] shadow-sm border border-black/20" /> {/* Mug */}
-                                     <div className="absolute bottom-2 right-4 w-1.5 h-1.5 bg-white shadow-sm rotate-12 opacity-80" /> {/* Dice */}
-                                     <div className="absolute top-3 right-3 w-4 h-5 bg-parchment/60 shadow-sm -rotate-6 rounded-[1px]" /> {/* Paper */}
+                                     {/* GAME MODE ICON (If Occupied) */}
+                                     {/* Handled in shared container below */}
+
+                                     {/* DECORATION: Clutter only if NOT occupied by icon to avoid noise */}
+                                     {count === 0 && ( 
+                                        <>
+                                            <div className="absolute top-2 left-2 w-2 h-2 rounded-full bg-[#8b4513] shadow-sm border border-black/20" /> 
+                                            <div className="absolute bottom-2 right-4 w-1.5 h-1.5 bg-white shadow-sm rotate-12 opacity-80" /> 
+                                            <div className="absolute top-3 right-3 w-4 h-5 bg-parchment/60 shadow-sm -rotate-6 rounded-[1px]" />
+                                        </>
+                                     )}
 
                                 </div>
                                 
-                                {/* Table Cloth / Runner (Color coded by status?) - Optional, keeping simple wood for now */}
+                                {/* Table Cloth / Runner */}
                                 <div className={clsx(
                                     "absolute inset-x-8 inset-y-0 opacity-80",
                                     isFull ? "bg-crimson/20" : count > 0 ? "bg-gold/10" : "bg-transparent"
                                 )} />
 
-                                {/* Chairs / Capacity Indicators */}
+                                {/* Chairs */}
                                 <div className={clsx(
                                     "absolute flex gap-4 w-full justify-center",
                                     "-top-4" // Chairs above
@@ -117,13 +128,25 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
                                     ))}
                                 </div>
 
-                                {/* Label on Table */}
-                                <span className={clsx(
-                                    "relative z-10 font-medieval font-bold tracking-widest text-xs md:text-sm shadow-black drop-shadow-md",
-                                    isSelected ? "text-gold" : "text-parchment/70"
-                                )}>
-                                    {table.label}
-                                </span>
+                                {/* CONTENT CONTAINER: Label + Icon */}
+                                <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none p-0.5">
+                                    {/* Label */}
+                                    <span className={clsx(
+                                        "font-medieval font-bold tracking-widest text-[10px] md:text-sm drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] leading-none mb-0.5 md:mb-1",
+                                        isSelected ? "text-gold" : "text-parchment"
+                                    )}>
+                                        {table.label}
+                                    </span>
+
+                                    {/* Icon */}
+                                    {count > 0 && (
+                                        <img 
+                                            src={mode === 'killteam' ? '/marker-kt.png' : '/marker-40k.png'} 
+                                            alt={mode}
+                                            className="w-4 h-4 md:w-10 md:h-10 object-contain opacity-60 drop-shadow-md mix-blend-overlay mt-0.5 md:mt-1"
+                                        />
+                                    )}
+                                </div>
                             </motion.div>
                         </div>
                     );

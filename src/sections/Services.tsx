@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TacticalMap } from '../components/tactical/TacticalMap';
 import { AuthModal } from '../components/auth/AuthModal';
@@ -206,10 +206,7 @@ export const Services = () => {
       }
   };
 
-  const occupiedCounts = useMemo(() => 
-    Object.fromEntries(Object.entries(occupiedData).map(([k, v]) => [k, v.count])), 
-    [occupiedData]
-  );
+
 
   return (
     <section className="relative w-full min-h-screen py-10 md:py-20 px-4 md:px-10 flex flex-col gap-6 md:gap-10 bg-wood border-y-4 border-wood-light shadow-[0_0_50px_rgba(0,0,0,0.8)]">
@@ -231,7 +228,7 @@ export const Services = () => {
                     onSelectSector={setSelectedSector} 
                     selectedSector={selectedSector}
                     currentMode={mode}
-                    occupied={occupiedCounts}
+                    occupied={occupiedData}
                  />
             </div>
 
