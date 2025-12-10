@@ -1,99 +1,97 @@
-# ⚔️ Ritter der Würfelrunde - Command Center
+# ⚔️ Ritter der Würfelrunde - Die Tafelrunde
 
-> "In the grim darkness of the far future, there is only war... and scheduling conflicts."
+> "In einer Zeit uralter Legenden und heldenhafter Taten..."
 
-This is the official web portal for the **Ritter der Würfelrunde** Tabletop Club in Wiesbaden. It serves as a tactical hub for operatives (members) to reserve tables, check mission briefings (news), and manage their service records (accounts).
+Dies ist das offizielle Web-Portal für den **Ritter der Würfelrunde** Tabletop Club in Wiesbaden. Es dient als zentrale Halle für Ritter (Mitglieder), um Plätze an der Tafel zu reservieren, Neuigkeiten vom Herold zu empfangen und ihren Dienst für den Orden zu verwalten.
 
-## 📡 Deployment Status
+## 📡 Status des Königreichs
 
-**Live Operations:** [Vercel Deployment](https://hprdw.vercel.app)
-**Repository:** [GitHub](https://github.com/AnFe89/HP_RdW)
+**Live-Betrieb:** [Vercel Deployment](https://hprdw.vercel.app)
+**Schatzkammer (Code):** [GitHub](https://github.com/AnFe89/HP_RdW)
 
-## 🛡️ Key Features
+## 🛡️ Die Hallen des Ordens
 
-### 1. The Command Center (Landing)
+### 1. Das Tor (Landing)
 
-- **Tech**: React Three Fiber, Custom Shaders.
-- **Visuals**: A procedural 3D wireframe topographic map that reacts to mouse movement.
-- **Design**: Modern "Glassmorphism" UI with frosted glass panels, neon accents, and responsive animations.
-- **Immersion**: Deep void colors, glitch effects, and military-grade typography.
+- **Atmosphäre**: Ein lebendiges, mittelalterliches Erlebnis mit 3D-Würfelanimationen und majestätischer Musik.
+- **Design**: "Ink on Parchment" (Tinte auf Pergament) - Helle, freundliche Optik mit Holztexturen, goldenen Akzenten und authentischen Schriftarten (`Cinzel` & `Lato`).
+- **Funktion**: Das Eingangsportal, das Besucher willkommen heißt und den Weg in die inneren Hallen weist.
 
-### 2. The War Room (Reservations)
+### 2. Die Tafelrunde (Reservierungen)
 
-- **Galaxy Map**: A 2D schematized view of the gaming floor (Galaxy Map) with sector status.
-- **Real-time Intel**: Live reservation status fetched from Supabase.
-- **Secure Access**:
-  - **Restricted Sector Protocol**: Only fully authorized **Operatives** (Members) and **Commanders** (Admins) can view the tactical map.
-  - **Unauthorized Personnel** (Guests) are greeted with a "Restricted Sector" warning screen.
-  - **Identity Protocol**:
-    - **Operatives** (Member) can reserve Sectors.
-    - **Commanders** (Admins) override protocols and can reserve any sector.
+- **Königssaal**: Eine interaktive Karte ("TacticalMap"), die den Großen Saal mit 6 massiven Eichentischen zeigt.
+- **Platzwahl**:
+  - **Freie Plätze**: Werden durch leere Stühle symbolisiert.
+  - **Belegte Plätze**: Werden durch goldene Siegel oder gefüllte Kelche markiert.
+- **Zugangskontrolle**:
+  - **Zutritt Verwehrt**: Nur vereidigte **Ritter** (Mitglieder) und die **Königsgarde** (Admins) haben Zutritt. Unbefugte (Gäste) werden abgewiesen.
+  - **Privilegien**:
+    - **Ritter** können Plätze an den Tischen für sich beanspruchen.
+    - **Königsgarde** verwaltet die Sitzordnung mit absoluter Autorität.
 
-### 3. The Command Bridge (Admin)
+### 3. Der Thronsaal (Admin)
 
-- **Secure Access**: Protected route (`/admin`) visible only to users with `role: admin`.
-- **Propaganda Machine**:
-  - Full **Rich Text Editor** (Markdown) for news.
-  - **Image Upload** via Supabase Storage.
-  - Create, Update, and Delete signals.
-- **Personnel Files**:
-  - Promote recruits (Guests) to Operatives (Members).
-  - **Inquisitor Protocol**: Only the designated "Lord Inquisitor" can appoint or remove Commanders (Admins).
-- **Mobile Optimized**: Fully tactical ready on smartphones with adaptive UI.
+- **Geschützter Bereich**: Nur zugänglich für die Führungsebene (`role: admin`).
+- **Herold-System (News)**:
+  - Verfassen von Dekreten und Neuigkeiten mittelsMarkdown-Editor.
+  - Hochladen von Illustrationen und Kartenmaterial.
+- **Heeresschau (User Management)**:
+  - Beförderung von **Knechten** (Gästen) zu **Rittern** (Mitgliedern).
+  - **Großmeister-Protokoll**: Nur der "Großmeister" kann Mitglieder in die Königsgarde berufen.
 
-### 4. Operative Management
+### 4. Mitgliederverwaltung
 
-- **Codename System**: Usernames enforced via database unique constraints.
-- **Flexible Identification**: Login with either **Email** or **Codename** (Username).
-- **Secure Access**: Passwordless Magic Link & Email login.
-- **Right to be Forgotten**: GDPR-compliant "Delete Identity" feature cleans up all traces.
+- **Wappen-Name**: Eindeutige Identifikation durch Nutzernamen.
+- **Flexibler Zugang**: Einlass gewährt durch **Email** oder **Wappen-Name**.
+- **Sicherer Briefverkehr**: Passwortloser Zugang via Magic Link.
+- **Recht auf Vergessen**: Vollständige Löschung der Akte auf Wunsch (DSGVO-konform).
 
-## 🏗️ Tech Stack
+## 🏗️ Das Fundament (Tech Stack)
 
-- **Core**: React (Vite), TypeScript
-- **Styling**: Tailwind CSS, Framer Motion
-- **3D Engine**: React Three Fiber (R3F), Drei
+- **Kern**: React (Vite), TypeScript
+- **Stil**: Tailwind CSS (Custom Wood/Parchment/Gold Theme), Framer Motion
+- **3D-Kunst**: React Three Fiber (R3F), Drei, GLSL Shaders
 - **Backend**: Supabase (PostgreSQL, Auth, Realtime)
 
-## 🛠️ Setup for Local Development
+## 🛠️ Aufbau der Schmiede (Lokal)
 
-1. **Clone the repository**
+1. **Die Pläne beschaffen**
 
    ```bash
    git clone https://github.com/AnFe89/HP_RdW.git
    cd hp-ritter-der-wuerfelrunde
    ```
 
-2. **Install Supply Lines**
+2. **Werkzeuge sammeln**
 
    ```bash
    npm install
    ```
 
-3. **Configure Tech-Priest Protocols (.env)**
-   Create a `.env` file with your Supabase credentials:
+3. **Geheimnisse der Alchemisten (.env)**
+   Erstelle eine `.env` Datei mit den Schlüsseln zum Supabase-Reich:
 
    ```env
-   VITE_SUPABASE_URL=your_supabase_url
-   VITE_SUPABASE_KEY=your_supabase_anon_key
+   VITE_SUPABASE_URL=deine_supabase_url
+   VITE_SUPABASE_KEY=dein_supabase_anon_key
    ```
 
-4. **Ignite Engine**
+4. **Das Feuer entfachen**
    ```bash
    npm run dev
    ```
 
-## 📜 Development Guidelines
+## 📜 Kodex der Erbauer
 
-### Mobile First Policy
+### "Mobile First" Doktrin
 
-Every new section or page added to the application **must** be fully optimized for mobile devices. Ensure:
+Jede neue Halle oder Kammer muss auch auf kleinen Schriftrollen (Smartphones) lesbar sein.
 
-- Components stack vertically on small screens.
-- Images scale correctly without overflow.
-- Touch targets are accessible.
+- Inhalte müssen sich vertikal stapeln.
+- Bilder dürfen den Rahmen nicht sprengen.
+- Schaltflächen müssen groß genug für einen Daumen sein.
 
-## © Copyright
+## © Siegel
 
 **Ritter der Würfelrunde © 2026**
-_Imperial Thought of the Day: Victory needs no explanation, defeat allows none._
+_Gedanke des Tages: Der Würfel ist gefallen._
