@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { Layout } from './components/Layout';
 import { Hero } from './sections/Hero';
 import { Services } from './sections/Services';
+import { About } from './sections/About';
 import { News } from './sections/News';
 import { Board } from './sections/Board';
 import { Footer } from './components/Footer';
@@ -25,6 +26,7 @@ function App() {
           <>
             <Suspense fallback={null}>
                 <Hero />
+                <About />
                 <Services />
             </Suspense>
             <News />

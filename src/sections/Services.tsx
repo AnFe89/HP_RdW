@@ -218,7 +218,7 @@ export const Services = () => {
 
       {/* Header */}
       <h2 className="text-3xl md:text-6xl font-medieval text-parchment text-center tracking-widest drop-shadow-md border-b-2 border-gold/30 pb-6 w-full max-w-4xl mx-auto">
-        PLATZRESERVIERUNG
+        TISCHRESERVIERUNG
       </h2>
 
       {/* ACCESS CONTROL */}
