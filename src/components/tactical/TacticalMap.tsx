@@ -14,14 +14,17 @@ interface TacticalMapProps {
 export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, occupied }: TacticalMapProps) => {
     
     // Circular Layout for "Round Table" Theme
-    // Center is approx 50% 50%. Radius ~30%.
+    // Grid Layout: 2 Rows of 3 Tables
     const tables = [
-        { id: 1, label: "Tafel 1", x: "50%", y: "20%", rotation: 0 },   // Top
-        { id: 2, label: "Tafel 2", x: "80%", y: "35%", rotation: 0 },   // Top Right
-        { id: 3, label: "Tafel 3", x: "80%", y: "65%", rotation: 0 },   // Bottom Right
-        { id: 4, label: "Tafel 4", x: "50%", y: "80%", rotation: 0 },   // Bottom
-        { id: 5, label: "Tafel 5", x: "20%", y: "65%", rotation: 0 },   // Bottom Left
-        { id: 6, label: "Tafel 6", x: "20%", y: "35%", rotation: 0 },   // Top Left
+        // Row 1
+        { id: 1, label: "Tisch 1", x: "20%", y: "30%", rotation: 0 },
+        { id: 2, label: "Tisch 2", x: "50%", y: "30%", rotation: 0 },
+        { id: 3, label: "Tisch 3", x: "80%", y: "30%", rotation: 0 },
+        
+        // Row 2
+        { id: 4, label: "Tisch 4", x: "20%", y: "70%", rotation: 0 },
+        { id: 5, label: "Tisch 5", x: "50%", y: "70%", rotation: 0 },
+        { id: 6, label: "Tisch 6", x: "80%", y: "70%", rotation: 0 },
     ];
 
     return (
@@ -29,7 +32,7 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
             {/* Floor Plan Background */}
             <div className="absolute inset-0 z-0 opacity-90" 
                  style={{ 
-                     backgroundImage: 'url("/arthur-hall-bg.png")', 
+                     backgroundImage: 'url("/rectangular-hall.png")', 
                      backgroundSize: 'cover',
                      backgroundPosition: 'center'
                  }} 
