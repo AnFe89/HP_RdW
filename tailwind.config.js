@@ -1,26 +1,39 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
-        'void': '#0b0c10',
-        'silver': '#c5c6c7',
-        'neon': '#66fcf1',
-        'alert': '#8b0000',
-        'glass': 'rgba(31, 40, 51, 0.7)',
+        // Semantic Names (New)
+        wood: "#2a1b12", // Was #1a120b (Black-Brown) -> Now Dark Brown
+        "wood-light": "#4a3022", // Was #2c1810 -> Now Medium Brown
+        parchment: "#d4c5a9",
+        gold: "#c5a059",
+        "gold-light": "#e5c07b",
+        crimson: "#8b0000",
+
+        // Legacy Mappings (for smooth migration)
+        void: "#2a1b12", // Updated to new wood
+        silver: "#d4c5a9", 
+        neon: "#c5a059", 
+        alert: "#8b0000", 
+        glass: "rgba(42, 27, 18, 0.8)", // Updated to new wood
       },
       fontFamily: {
-        'military': ['"Black Ops One"', 'cursive'],
-        'tactical': ['"Share Tech Mono"', 'monospace'],
+        // New Fonts
+        medieval: ['"Cinzel"', "serif"],
+        sans: ['"Lato"', "sans-serif"],
+
+        // Legacy Mappings
+        military: ['"Cinzel"', "serif"], // Was Black Ops One
+        tactical: ['"Lato"', "sans-serif"], // Was Share Tech Mono
       },
       backgroundImage: {
-        'grid-pattern': "linear-gradient(to right, #1f2833 1px, transparent 1px), linear-gradient(to bottom, #1f2833 1px, transparent 1px)",
+        "grid-pattern": "none", // Remove sci-fi grid
+        "paper-texture":
+          "url('https://www.transparenttextures.com/patterns/aged-paper.png')", // Placeholder for texture
       },
     },
   },
   plugins: [],
-}
+};

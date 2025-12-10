@@ -35,18 +35,18 @@ export const Layout = ({ children }: LayoutProps) => {
     <>
 
       
-      {/* Noise Overlay */}
-      <div className="fixed inset-0 pointer-events-none z-[50] opacity-[0.05]"
+      {/* Noise Overlay - Keeping for texture, but could be replaced with paper image */}
+      <div className="fixed inset-0 pointer-events-none z-[50] opacity-[0.08] mix-blend-overlay"
            style={{
-             backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.5'/%3E%3C/svg%3E")`
+             backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E")`
            }}
       />
 
-      {/* Vignette */}
-      <div className="fixed inset-0 pointer-events-none z-[40] bg-[radial-gradient(circle_at_center,transparent_0%,#0b0c10_130%)]" />
+      {/* Vignette - Lighter/Warmer Dark Wood Tone (Opacity Reduced) */}
+      <div className="fixed inset-0 pointer-events-none z-[40] bg-[radial-gradient(circle_at_center,transparent_0%,rgba(42,27,18,0.6)_120%)]" />
 
       {/* Main Content */}
-      <main className="relative z-10 w-full min-h-screen">
+      <main className="relative z-10 w-full min-h-screen bg-wood text-parchment selection:bg-gold selection:text-wood">
         {children}
       </main>
     </>

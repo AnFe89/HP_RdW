@@ -1,35 +1,35 @@
-import { GlitchText } from '../components/ui/GlitchText';
+
 
 const BOARD_MEMBERS = [
   {
-    name: "CHAPTER MASTER JAN",
+    name: "GROSSMEISTER JAN",
     role: "VORSITZENDER",
-    description: "Führt den Orden mit eiserner Hand und strategischem Weitblick. Seine Erfahrung in Logistik und Führung sichert das Überleben des Clubs in den finsteren Zeiten des 3. Jahrtausends.",
-    image: "/board-member-1.png",
-    id: "ALPHA-01"
+    description: "Führt den Orden mit eiserner Hand und strategischem Weitblick. Seine Erfahrung in Logistik und Führung sichert das Überleben des Clubs in turbulenten Zeiten.",
+    image: "/medieval-board-jan.png",
   },
   {
-    name: "TECH-ADEPT SASCHA",
+    name: "MEISTER SASCHA",
     role: "SCHATZMEISTER",
-    description: "Hüter der Ressourcen und Meister der Buchhaltung. Seine binären Gebete stellen sicher, dass die Kassen gefüllt und die Ausgaben effizient alloziert sind.",
-    image: "/board-member-2.png",
-    id: "BETA-02"
+    description: "Hüter der Ressourcen und Meister der Münze. Seine wachsamen Augen stellen sicher, dass die Schatzkammer gefüllt und die Ausgaben weise getätigt sind.",
+    image: "/medieval-board-sascha.png",
   },
   {
-    name: "COMMISSAR RAPHAEL",
+    name: "KANZLER RAPHAEL",
     role: "SCHRIFTFÜHRER",
-    description: "Dokumentiert jeden Sieg und jede Niederlage. Seine Protokolle sind legendär und dienen als moralisches Fundament für alle Mitglieder. Abweichungen werden nicht geduldet.",
-    image: "/board-member-3.png",
-    id: "GAMMA-03"
+    description: "Dokumentiert jeden Sieg und unterzeichnet jedes Dekret. Seine Protokolle sind Gesetz und dienen als Fundament für die Ordnung im Reich.",
+    image: "/medieval-board-raphael.png",
   }
 ];
 
 export const Board = () => {
   return (
-    <section className="relative w-full py-20 px-4 bg-void/95 border-t border-silver/10">
-      <div className="max-w-6xl mx-auto">
-        <h2 className="text-4xl md:text-5xl font-military text-white mb-20 text-center">
-            <GlitchText text="DER VORSTAND" />
+    <section className="relative w-full py-20 px-4 bg-[#1a120b] border-t-4 border-[#2c1810]">
+       {/* Background Patterns */}
+       <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: "url('https://www.transparenttextures.com/patterns/black-scales.png')" }} />
+
+      <div className="max-w-6xl mx-auto relative z-10">
+        <h2 className="text-4xl md:text-5xl font-medieval text-parchment mb-20 text-center drop-shadow-lg">
+            DER HOHE RAT
         </h2>
 
         <div className="flex flex-col gap-24">
@@ -42,41 +42,38 @@ export const Board = () => {
             >
               {/* Image Container */}
               <div className="w-full md:w-1/3 relative group">
-                <div className="absolute inset-0 bg-neon/20 blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-500" />
-                <div className="relative aspect-[3/4] overflow-hidden border-2 border-silver/20 bg-black">
+                <div className="absolute inset-0 bg-gold/20 blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-500" />
+                <div className="relative aspect-[3/4] overflow-hidden border-8 border-[#2c1810] rounded-sm shadow-2xl">
                    <img 
                     src={member.image} 
                     alt={member.name}
-                    className="w-full h-full object-cover filter grayscale hover:grayscale-0 transition-all duration-500"
+                    className="w-full h-full object-cover sepia-[.3] group-hover:sepia-0 transition-all duration-500"
                    />
-                   <div className="absolute inset-0 ring-1 ring-inset ring-neon/20 pointer-events-none" />
                    
-                   {/* Tactical Corners */}
-                   <div className="absolute top-0 left-0 w-4 h-4 border-l-2 border-t-2 border-neon" />
-                   <div className="absolute bottom-0 right-0 w-4 h-4 border-r-2 border-b-2 border-neon" />
+                   {/* Frame Corners */}
+                   <div className="absolute top-0 left-0 w-8 h-8 border-l-4 border-t-4 border-gold" />
+                   <div className="absolute top-0 right-0 w-8 h-8 border-r-4 border-t-4 border-gold" />
+                   <div className="absolute bottom-0 left-0 w-8 h-8 border-l-4 border-b-4 border-gold" />
+                   <div className="absolute bottom-0 right-0 w-8 h-8 border-r-4 border-b-4 border-gold" />
                 </div>
               </div>
 
               {/* Text Container */}
-              <div className="w-full md:w-2/3 space-y-4">
-                <div className="flex items-center gap-3 mb-2">
-                    <span className="w-2 h-2 bg-neon rounded-full animate-pulse" />
-                    <span className="text-neon/80 font-mono text-sm tracking-widest">{member.role}</span>
+              <div className="w-full md:w-2/3 space-y-4 text-center md:text-left">
+                <div className="flex items-center gap-3 mb-2 justify-center md:justify-start">
+                    <span className="w-2 h-2 bg-gold rotate-45" />
+                    <span className="text-gold/80 font-medieval text-sm tracking-widest uppercase">{member.role}</span>
+                    <span className="w-2 h-2 bg-gold rotate-45" />
                 </div>
                 
-                <h3 className="text-3xl font-military text-silver">
+                <h3 className="text-3xl font-medieval text-parchment border-b border-gold/30 pb-2 inline-block">
                     {member.name}
                 </h3>
                 
-                <p className="text-silver/70 font-tactical text-lg leading-relaxed max-w-2xl border-l-2 border-neon/30 pl-6 py-2 bg-gradient-to-r from-neon/5 to-transparent">
-                    {member.description}
+                <p className="text-parchment/70 font-sans text-lg leading-relaxed max-w-2xl italic">
+                    "{member.description}"
                 </p>
                 
-                <div className="flex gap-2 text-xs text-silver/30 font-mono pt-4">
-                    <span>ID: {member.id}</span>
-                    <span>//</span>
-                    <span>AUTHORIZATION: ALPHA</span>
-                </div>
               </div>
             </div>
           ))}

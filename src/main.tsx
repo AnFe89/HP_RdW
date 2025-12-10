@@ -3,8 +3,8 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 
 // Dynamic import wrapper to catch load errors (like Avast blocking chunks)
-function Bootstrap() {
-  const [App, setApp] = useState<any>(null);
+export function Bootstrap() {
+  const [App, setApp] = useState<React.ComponentType | null>(null);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
@@ -18,14 +18,15 @@ function Bootstrap() {
 
   if (error) {
     return (
-      <div className="p-10 text-red-500 font-mono">
-        <h1 className="text-2xl font-bold mb-4">SYSTEM FAILURE</h1>
-        <p>Could not load application modules.</p>
-        <div className="p-4 bg-gray-900 mt-4 rounded border border-red-900">
+      <div className="p-10 text-crimson font-medieval min-h-screen bg-[#1a120b] flex flex-col items-center justify-center text-center">
+        <h1 className="text-4xl font-bold mb-4 drop-shadow-md">FLUCH DER TECHNIK</h1>
+        <p className="text-parchment font-sans text-lg">Die Pforten konnten nicht geöffnet werden.</p>
+        <div className="p-6 bg-[#2c1810] mt-6 rounded-sm border-2 border-crimson shadow-xl max-w-lg">
+            <p className="font-mono text-sm text-parchment/70 mb-2">FEHLERPROTOKOLL:</p>
             {error.message}
         </div>
-        <p className="mt-4 text-sm text-gray-500">
-            Diagnosis: An antivirus (Avast) or network blocker may be preventing the 3D engine from loading.
+        <p className="mt-6 text-sm text-gold/60 font-serif italic max-w-md">
+            Möglicherweise blockiert ein Drache (Antivirus/Netzwerk) den Zugang zum Königreich.
         </p>
       </div>
     );
@@ -33,8 +34,8 @@ function Bootstrap() {
 
   if (!App) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#0b0c10] text-[#66fcf1] font-mono">
-        INITIALIZING SYSTEMS...
+      <div className="flex h-screen items-center justify-center bg-[#1a120b] text-gold font-medieval text-2xl tracking-widest animate-pulse">
+        DIE TORE WERDEN GEÖFFNET...
       </div>
     );
   }

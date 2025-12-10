@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TacticalMap } from '../components/tactical/TacticalMap';
 import { AuthModal } from '../components/auth/AuthModal';
-import { GlitchText } from '../components/ui/GlitchText';
 import { supabase } from '../lib/supabase';
 
 export const Services = () => {
@@ -31,9 +30,6 @@ export const Services = () => {
     const daysUntil = (4 - day + 7) % 7;
     
     // Standard Reset: 23:59 Thursday.
-    // Logic: If it's Thursday (daysUntil=0), we keep it 0 until midnight.
-    // Once day becomes Friday (5), daysUntil becomes 6 (matches next week).
-    
     const nextThursday = new Date(d);
     nextThursday.setDate(d.getDate() + daysUntil);
     nextThursday.setHours(18, 0, 0, 0);
@@ -42,22 +38,20 @@ export const Services = () => {
 
   // Map of table_id -> { count, mode, names: string[] }
   const [occupiedData, setOccupiedData] = useState<Record<number, { count: number, mode: string, names: string[] }>>({});
-  const [userReservations, setUserReservations] = useState<number[]>([]); // Track ALL user's tables, though limited to 1 per table logic
+  const [userReservations, setUserReservations] = useState<number[]>([]); 
   const [userRole, setUserRole] = useState<string>('guest');
-  const [gameDate] = useState<Date>(getNextGameNight()); // Initialize directly
+  const [gameDate] = useState<Date>(getNextGameNight());
 
   const isBookingWindowOpen = () => {
       const now = new Date();
       // Window opens: Friday of PREVIOUS week.
       const windowOpen = new Date(gameDate);
-      windowOpen.setDate(gameDate.getDate() - 6); // Friday before Thursday
+      windowOpen.setDate(gameDate.getDate() - 6); 
       windowOpen.setHours(0, 0, 0, 0);
 
       return now >= windowOpen && now < gameDate;
   };
 
-  // Fetch status & profile on load
-  // Wrapped in useCallback to satisfy linter and ensure stability
   const initData = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser();
     
@@ -69,14 +63,12 @@ export const Services = () => {
     }
 
     // 2. Fetch Reservations for NEXT GAME NIGHT only
-    // Join with profiles to get usernames
     const { data } = await supabase.from('reservations')
         .select('table_id, user_id, game_mode, profiles(username)')
         .gte('start_time', new Date(gameDate.getTime() - 1000).toISOString())
         .lte('start_time', new Date(gameDate.getTime() + 1000).toISOString());
     
     if (data) {
-        // Count reservations per table and track mode
         const tableData: Record<number, { count: number, mode: string, names: string[] }> = {};
         data.forEach(r => {
             if (!tableData[r.table_id]) {
@@ -97,14 +89,11 @@ export const Services = () => {
 
   useEffect(() => {
     initData();
-
-    // Realtime currently just refreshes simplistic view
     const subscription = supabase.channel('reservations')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'reservations' }, () => {
             initData();
         })
         .subscribe();
-
     return () => { subscription.unsubscribe(); };
   }, [initData, isLoggedIn]);
 
@@ -115,43 +104,39 @@ export const Services = () => {
       }
 
       if (userRole !== 'member' && userRole !== 'admin') {
-          alert("ACCESS DENIED. MEMBERSHIP REQUIRED.");
+          alert("NUR FÜR MITGLIEDER DES ORDENS (MEMBERS ONLY).");
           return;
       }
 
       if (!isBookingWindowOpen()) {
-          alert("TACTICAL WINDOW CLOSED. BOOKING OPENS FRIDAY 00:00.");
+          alert("DIE TORE WERDEN ERST AM FREITAG GEÖFFNET (BOOKING OPENS FRIDAY).");
           return;
       }
       
       if (!selectedSector) return;
 
-      // Rule: Max 2 Players per table (40k) or 4 (KillTeam)
-      const tableInfo = occupiedData[selectedSector] || { count: 0, mode: mode, names: [] }; // Default to current mode if empty
+      const tableInfo = occupiedData[selectedSector] || { count: 0, mode: mode, names: [] };
       const currentCount = tableInfo.count;
       
-      // Rule: Mixed Modes NOT allowed
       if (currentCount > 0 && tableInfo.mode !== mode) {
-          alert(`INCOMPATIBLE COMBAT SYSTEM. SECTOR CONFIGURED FOR ${tableInfo.mode.toUpperCase()}.`);
+          alert(`INKOMPATIBLE SCHLACHTORDNUNG. TISCH IST FÜR ${tableInfo.mode.toUpperCase()} GERÜSTET.`);
           return;
       }
 
       const capacity = mode === '40k' ? 2 : 4; 
 
-      // CHECK: Does User already have a reservation anywhere? (Admins included)
       if (userReservations.length > 0) {
-          alert("TACTICAL ERROR: YOU ARE ALREADY DEPLOYED TO A SECTOR. CANCEL EXISTING ORDER TO REDEPLOY.");
+          alert("IHR SEID BEREITS FÜR EINE SCHLACHT EINGETRAGEN.");
           return;
       }
 
       if (currentCount >= capacity) {
-          alert("SECTOR FULL. CAPACITY REACHED.");
+          alert("DIESER TISCH IST BEREITS VOLL BESETZT.");
           return;
       }
 
-      // Rule: User can only book 1 slot per table
       if (userReservations.includes(selectedSector)) {
-          alert("YOU ARE ALREADY DEPLOYED IN THIS SECTOR.");
+          alert("IHR HABT DIESEN PLATZ BEREITS RESERVIERT.");
           return;
       }
 
@@ -171,10 +156,9 @@ export const Services = () => {
       });
 
       if (error) {
-          alert("ERROR: " + error.message);
+          alert("FEHLER BEI DER RESERVIERUNG: " + error.message);
       } else {
-          alert(`SECTOR SECURED FOR ${gameNight.toLocaleDateString()}. GLORY TO THE EMPIRE.`);
-          // Optimistic update
+          alert(`PLATZ GESICHERT FÜR ${gameNight.toLocaleDateString()}. FÜR DEN KÖNIG!`);
           setUserReservations([...userReservations, selectedSector]);
           
           setOccupiedData(prev => ({
@@ -182,11 +166,10 @@ export const Services = () => {
               [selectedSector]: {
                   count: (prev[selectedSector]?.count || 0) + 1,
                   mode: mode,
-                  names: prev[selectedSector]?.names || [] // Ideally we'd add "YOU" or handle it, but initData syncs fast
+                  names: prev[selectedSector]?.names || [] 
               }
           }));
-
-          initData(); // Sync with server
+          initData(); 
       }
   };
 
@@ -201,12 +184,11 @@ export const Services = () => {
         .eq('user_id', user.id); 
 
       if (error) {
-          alert("ERROR CANCELLING: " + error.message);
+          alert("FEHLER: " + error.message);
       } else {
-          alert("SECTOR RELEASED.");
+          alert("RESERVIERUNG AUFGEHOBEN.");
           setUserReservations(userReservations.filter(id => id !== selectedSector));
           
-          // Optimistic Update for count
           setOccupiedData(prev => {
               const current = prev[selectedSector];
               if (!current) return prev;
@@ -215,13 +197,12 @@ export const Services = () => {
                   ...prev,
                   [selectedSector]: {
                       count: newCount,
-                      mode: newCount === 0 ? '40k' : current.mode, // Reset mode if empty (default to 40k or keep current)
-                      names: current.names // We don't filter hypothetically here easily, we rely on initData
+                      mode: newCount === 0 ? '40k' : current.mode, 
+                      names: current.names
                   }
               };
           });
-          
-          initData(); // Sync with server
+          initData(); 
       }
   };
 
@@ -231,102 +212,92 @@ export const Services = () => {
   );
 
   return (
-    <section className="relative w-full min-h-screen py-10 md:py-20 px-4 md:px-10 flex flex-col gap-6 md:gap-10 bg-[#0b0c10] z-20 border-y border-[#c5c6c7]/20 shadow-[0_0_50px_rgba(0,0,0,0.8)]">
+    <section className="relative w-full min-h-screen py-10 md:py-20 px-4 md:px-10 flex flex-col gap-6 md:gap-10 bg-wood border-y-4 border-wood-light shadow-[0_0_50px_rgba(0,0,0,0.8)]">
       
       <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
 
       {/* Header */}
-      <h2 className="text-2xl md:text-6xl font-military text-white text-center tracking-widest drop-shadow-[0_0_15px_rgba(102,252,241,0.3)]">
-        TISCHRESERVIERUNGEN
+      <h2 className="text-3xl md:text-6xl font-medieval text-parchment text-center tracking-widest drop-shadow-md border-b-2 border-gold/30 pb-6 w-full max-w-4xl mx-auto">
+        DIE TAFELRUNDE
       </h2>
 
       {/* ACCESS CONTROL */}
       {isLoggedIn && (userRole === 'member' || userRole === 'admin') ? (
-          <div className="flex flex-col md:flex-row gap-10 w-full">
-            {/* 2D Tactical Viewport */}
-            <div className="w-full md:w-2/3 h-[500px] md:h-[600px] border border-white/10 relative overflow-hidden bg-black/90 rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.5)]">
-            <div className="absolute top-4 left-4 z-10 font-tactical text-xs text-[#66fcf1] flex flex-col md:flex-row gap-2 md:gap-4 bg-black/80 p-2 rounded border border-white/5">
-                 <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 bg-[#66fcf1] rounded-full animate-pulse"/> 
-                    LIVE FEED
-                 </div>
-                 <div>
-                    STATUS: <span className="text-[#c5c6c7]">ACTIVE</span>
-                 </div>
+          <div className="flex flex-col md:flex-row gap-10 w-full max-w-7xl mx-auto">
+            
+            {/* Map Container */}
+            <div className="w-full md:w-2/3 h-[500px] md:h-[600px] relative">
+                 <TacticalMap 
+                    onSelectSector={setSelectedSector} 
+                    selectedSector={selectedSector}
+                    currentMode={mode}
+                    occupied={occupiedCounts}
+                 />
             </div>
-            
-            <TacticalMap 
-                onSelectSector={setSelectedSector} 
-                selectedSector={selectedSector}
-                currentMode={mode}
-                occupied={occupiedCounts}
-            />
-            
-            {/* Scanlines Overlay */}
-            <div className="absolute inset-0 pointer-events-none bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,#000000_3px)] opacity-10" />
-          </div>
 
-          {/* Control Panel */}
-          <div className="w-full md:w-1/3 flex flex-col gap-6 font-tactical">
-            {/* Member Area Link */}
+          {/* Control Panel (Scroll) */}
+          <div className="w-full md:w-1/3 flex flex-col gap-6">
+            
+            {/* Status Card (User) */}
             <div 
               onClick={() => setIsAuthOpen(true)}
-              className={`border p-6 transition-all duration-300 cursor-pointer group flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] rounded-2xl backdrop-blur-md
+              className={`border-2 p-6 transition-all duration-300 cursor-pointer group flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 shadow-lg rounded-sm bg-[#f5e6d3] text-[#2c1810]
                     ${isLoggedIn 
-                    ? "border-emerald-500/30 bg-emerald-900/10 text-emerald-400 hover:bg-emerald-900/20" 
-                    : "border-red-500/40 bg-red-900/10 text-red-100 shadow-[0_0_15px_rgba(239,68,68,0.2)] hover:bg-red-900/20 hover:border-red-500 hover:shadow-[0_0_25px_rgba(239,68,68,0.4)]"
+                    ? "border-gold/50" 
+                    : "border-crimson/50"
                 }`}
             >
-                 <span className="flex items-center gap-3 font-bold tracking-wider">
-                    <span className={`w-3 h-3 rounded-full shadow-[0_0_10px_currentColor] ${isLoggedIn ? 'bg-[#66fcf1]' : 'bg-red-500'}`} />
-                    {isLoggedIn ? "ACCESS GRANTED: COMMANDER" : "RESTRICTED AREA: IDENTIFY"}
+                 <span className="flex items-center gap-3 font-bold tracking-wider font-medieval">
+                    <span className={`w-3 h-3 rotate-45 border border-black/20 ${isLoggedIn ? 'bg-gold' : 'bg-crimson'}`} />
+                    {isLoggedIn ? "SEID GEGRÜSST, RITTER!" : "FREMDER!"}
                  </span>
-                 <span className={`text-sm font-bold transition-colors ${isLoggedIn ? "text-[#66fcf1]" : "group-hover:text-red-500"}`}>
-                    {isLoggedIn ? "ENTER DASHBOARD »" : "LOGIN SYSTEM »"}
+                 <span className="text-xs font-bold font-sans opacity-80 underline">
+                    {isLoggedIn ? "PROFIL ANSEHEN" : "IDENTIFIZIEREN"}
                  </span>
             </div>
 
-            <div className="border border-white/10 p-8 bg-black/80 relative group flex-1 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] rounded-3xl">
-                {/* Corner Accents */}
-                <div className="absolute -top-1 -left-1 w-2 h-2 border-l-2 border-t-2 border-[#66fcf1]" />
-                <div className="absolute -bottom-1 -right-1 w-2 h-2 border-r-2 border-b-2 border-[#66fcf1]" />
+            {/* Panel Content */}
+            <div className="border-4 border-[#2c1810] p-8 bg-[#1a120b] relative flex-1 shadow-2xl rounded-sm">
+                
+                {/* Decorative Corners */}
+                <div className="absolute top-2 left-2 w-4 h-4 border-l-2 border-t-2 border-gold" />
+                <div className="absolute top-2 right-2 w-4 h-4 border-r-2 border-t-2 border-gold" />
+                <div className="absolute bottom-2 left-2 w-4 h-4 border-l-2 border-b-2 border-gold" />
+                <div className="absolute bottom-2 right-2 w-4 h-4 border-r-2 border-b-2 border-gold" />
 
-                <h3 className="font-military text-lg md:text-2xl text-[#c5c6c7] mb-6 whitespace-nowrap overflow-hidden text-ellipsis">
-                    <GlitchText text="OPERATION: RESERVATION" />
+                <h3 className="font-medieval text-xl text-gold mb-6 border-b border-gold/20 pb-2 text-center">
+                    BEFEHLSSTAND
                 </h3>
 
                 {/* Mode Toggle */}
                 <div className="flex gap-4 mb-8">
                     <button 
                         onClick={() => setMode('40k')}
-                        className={`flex-1 py-3 border transition-all duration-300 font-bold tracking-wider relative overflow-hidden group rounded-xl
+                        className={`flex-1 py-3 border-2 transition-all duration-300 font-bold tracking-widest relative font-sans text-xs md:text-sm
                             ${mode === '40k' 
-                                ? 'bg-white/10 text-[#66fcf1] border-white/20 shadow-[0_4px_16px_0_rgba(102,252,241,0.1)]' 
-                                : 'border-white/5 text-silver/40 hover:border-white/20 hover:text-[#66fcf1]'
+                                ? 'bg-gold text-wood border-gold shadow-[0_0_15px_rgba(197,160,89,0.3)]' 
+                                : 'border-[#2c1810] bg-[#2c1810] text-parchment/60 hover:text-gold hover:border-gold/50'
                             }`}
                     >
-
                         WARHAMMER 40K
                     </button>
                     <button 
                         onClick={() => setMode('killteam')}
-                        className={`flex-1 py-3 border transition-all duration-300 font-bold tracking-wider relative overflow-hidden group rounded-xl
+                        className={`flex-1 py-3 border-2 transition-all duration-300 font-bold tracking-widest relative font-sans text-xs md:text-sm
                             ${mode === 'killteam' 
-                                ? 'bg-white/10 text-[#66fcf1] border-white/20 shadow-[0_4px_16px_0_rgba(102,252,241,0.1)]' 
-                                : 'border-white/5 text-silver/40 hover:border-white/20 hover:text-[#66fcf1]'
+                                ? 'bg-gold text-wood border-gold shadow-[0_0_15px_rgba(197,160,89,0.3)]' 
+                                : 'border-[#2c1810] bg-[#2c1810] text-parchment/60 hover:text-gold hover:border-gold/50'
                             }`}
                     >
-
                         KILL TEAM
                     </button>
                 </div>
 
                 {/* Sector Info */}
                 <div className="space-y-4 min-h-[150px]">
-                    {/* Global Status Info */}
-                    <div className="text-sm md:text-base font-bold text-[#c5c6c7] border-b border-[#c5c6c7]/30 pb-3 mb-4 tracking-wide flex justify-between">
-                        <div>NEXT DEP: <span className="text-[#66fcf1]">{gameDate?.toLocaleDateString()} @ 18:00</span></div>
-                        <div>ID: <span className={isLoggedIn && (userRole === 'member' || userRole === 'admin') ? "text-[#66fcf1]" : "text-red-500"}>{isLoggedIn ? (userRole === 'member' ? 'MEMBER' : userRole === 'admin' ? 'COMMANDER' : 'GUEST') : "UNKNOWN"}</span></div>
+                    <div className="text-sm font-bold text-parchment/60 border-b border-gold/10 pb-3 mb-4 tracking-wide flex justify-between font-sans">
+                        <div>TERMIN: <span className="text-gold">{gameDate?.toLocaleDateString()}</span></div>
+                        <div>RANG: <span className={isLoggedIn && (userRole === 'member' || userRole === 'admin') ? "text-gold" : "text-crimson"}>{isLoggedIn ? (userRole === 'member' ? 'RITTER' : userRole === 'admin' ? 'KÖNIGSGARDE' : 'KNACHTE') : "UNBEKANNT"}</span></div>
                     </div>
 
                     <AnimatePresence mode="wait">
@@ -337,33 +308,33 @@ export const Services = () => {
                                 exit={{ opacity: 0, x: -20 }}
                                 key={selectedSector}
                             >
-                                <div className="text-xl text-[#66fcf1] mb-2">SECTOR {selectedSector} SELECTED</div>
-                                <div className="text-sm text-[#c5c6c7]/60">
+                                <div className="text-xl text-gold mb-2 font-medieval">TISCH {selectedSector} AUSGEWÄHLT</div>
+                                <div className="text-sm text-parchment/70 font-sans">
                                     STATUS: <span className={
                                         (occupiedData[selectedSector]?.count || 0) >= ((occupiedData[selectedSector]?.mode || mode) === '40k' ? 2 : 4)
-                                            ? 'text-red-500' 
-                                            : 'text-green-500'
+                                            ? 'text-crimson font-bold' 
+                                            : 'text-emerald-500 font-bold'
                                     }>
-                                        {(occupiedData[selectedSector]?.count || 0) >= ((occupiedData[selectedSector]?.mode || mode) === '40k' ? 2 : 4) ? 'MAX CAPACITY' : 'AVAILABLE'}
+                                        {(occupiedData[selectedSector]?.count || 0) >= ((occupiedData[selectedSector]?.mode || mode) === '40k' ? 2 : 4) ? 'VOLL BESETZT' : 'VERFÜGBAR'}
                                     </span>
                                 </div>
-                                <div className="text-sm text-[#c5c6c7]/60 mt-2">
-                                    DEPLOYMENT: {occupiedData[selectedSector]?.count || 0} / {(occupiedData[selectedSector]?.mode || mode) === '40k' ? '2' : '4'} COMMANDERS
+                                <div className="text-sm text-parchment/50 mt-2 font-sans italic">
+                                    {occupiedData[selectedSector]?.count || 0} / {(occupiedData[selectedSector]?.mode || mode) === '40k' ? '2' : '4'} COMMANDERS
                                 </div>
                                 {occupiedData[selectedSector]?.count > 0 && (
-                                    <div className="text-xs text-[#66fcf1] mt-1 border-t border-[#66fcf1]/20 pt-1">
-                                        ACTIVE SYSTEM: {occupiedData[selectedSector]?.mode.toUpperCase()}
+                                    <div className="text-xs text-gold mt-1 border-t border-gold/20 pt-1 font-sans">
+                                        AKTIVES SZENARIO: {occupiedData[selectedSector]?.mode.toUpperCase()}
                                     </div>
                                 )}
                                 
-                                {/* Command Roster */}
+                                {/* Roster */}
                                 {occupiedData[selectedSector]?.names && occupiedData[selectedSector]?.names.length > 0 && (
-                                    <div className="mt-2 bg-[#66fcf1]/5 p-2 border border-[#66fcf1]/10 rounded-lg">
-                                        <div className="text-[10px] text-[#c5c6c7] mb-1">DEPLOYED COMMANDERS:</div>
+                                    <div className="mt-3 bg-[#2c1810]/50 p-3 border border-gold/20 rounded">
+                                        <div className="text-[10px] text-parchment/60 mb-1 uppercase tracking-wider">Anwesende Ritter:</div>
                                         <div className="space-y-1">
                                             {occupiedData[selectedSector]?.names.map((name, i) => (
-                                                <div key={i} className="text-xs text-[#66fcf1] font-mono tracking-wider">
-                                                    » {name.toUpperCase()}
+                                                <div key={i} className="text-xs text-gold font-sans tracking-wide">
+                                                    ⚔ {name}
                                                 </div>
                                             ))}
                                         </div>
@@ -373,74 +344,70 @@ export const Services = () => {
                                 {userReservations.includes(selectedSector) ? (
                                     <button 
                                         onClick={handleCancel}
-                                        className="mt-6 w-full py-4 bg-red-900/40 hover:bg-red-600/80 hover:text-white border border-red-500/50 transition-all uppercase tracking-widest text-sm font-bold shadow-[0_0_15px_rgba(239,68,68,0.3)] rounded-xl backdrop-blur-sm"
+                                        className="mt-6 w-full py-3 bg-crimson/20 hover:bg-crimson hover:text-white border border-crimson/50 transition-all uppercase tracking-widest text-sm font-bold shadow-lg rounded font-medieval"
                                     >
-                                        ABORT MISSION (CANCEL)
+                                        RÜCKZUG (STORNIEREN)
                                     </button>
                                 ) : (occupiedData[selectedSector]?.count > 0 && occupiedData[selectedSector]?.mode !== mode) ? (
-                                    <button disabled className="mt-6 w-full py-4 bg-black/20 text-red-500 border border-red-900/30 uppercase tracking-widest text-sm font-bold opacity-60 cursor-not-allowed rounded-xl">
-                                        SYSTEM MISMATCH ({occupiedData[selectedSector]?.mode.toUpperCase()})
+                                    <button disabled className="mt-6 w-full py-3 bg-black/20 text-crimson border border-crimson/30 uppercase tracking-widest text-sm font-bold opacity-60 cursor-not-allowed rounded font-medieval">
+                                        FALSCHES SZENARIO
                                     </button>
                                 ) : (occupiedData[selectedSector]?.count || 0) >= ((occupiedData[selectedSector]?.mode || mode) === '40k' ? 2 : 4) ? (
-                                    <button disabled className="mt-6 w-full py-4 bg-black/20 text-[#c5c6c7]/30 border border-[#1f2833] uppercase tracking-widest text-sm font-bold cursor-not-allowed rounded-xl">
-                                        SECTOR FULL
+                                    <button disabled className="mt-6 w-full py-3 bg-black/20 text-parchment/30 border border-wood-light uppercase tracking-widest text-sm font-bold cursor-not-allowed rounded font-medieval">
+                                        VOLL BESETZT
                                     </button>
                                 ) : (
                                     <button 
                                         onClick={handleReservation}
-                                        className={`mt-6 w-full py-4 uppercase tracking-widest text-sm font-bold flex items-center justify-center gap-2 group/btn transition-all duration-300 border shadow-[0_0_15px_rgba(0,0,0,0.5)] rounded-xl backdrop-blur-sm
+                                        className={`mt-6 w-full py-3 uppercase tracking-widest text-sm font-bold flex items-center justify-center gap-2 transition-all duration-300 border shadow-lg rounded font-medieval
                                             ${(!isLoggedIn || (userRole !== 'member' && userRole !== 'admin')) 
-                                                ? 'bg-white/5 text-[#c5c6c7] border-[#c5c6c7]/20 hover:bg-red-900/20 hover:border-red-500/50 hover:text-red-500' 
-                                                : 'bg-[#66fcf1]/10 border-[#66fcf1]/50 text-[#66fcf1] hover:bg-[#66fcf1]/20 hover:text-white hover:shadow-[0_0_25px_rgba(102,252,241,0.5)]'}
+                                                ? 'bg-wood-light text-parchment/40 border-wood-light cursor-not-allowed' 
+                                                : 'bg-gold/10 border-gold/60 text-gold hover:bg-gold hover:text-wood hover:shadow-[0_0_20px_rgba(197,160,89,0.4)]'}
                                         `}
                                     >
-                                        {!isLoggedIn && <span className="w-2 h-2 bg-red-500 rounded-full group-hover/btn:bg-red-500 group-hover/btn:shadow-[0_0_10px_red]" />}
-                                        {!isLoggedIn ? "LOGIN TO RESERVE" : (userRole !== 'member' && userRole !== 'admin') ? "MEMBERSHIP REQUIRED" : "INITIATE DEPLOYMENT SEQUENCE"}
+                                        {!isLoggedIn ? "ERST ANMELDEN" : (userRole !== 'member' && userRole !== 'admin') ? "NUR FÜR MITGLIEDER" : "PLATZ EINNEHMEN"}
                                     </button>
                                 )}
                             </motion.div>
                         ) : (
-                            <div className="text-[#66fcf1] flex items-center justify-center h-full animate-pulse flex-col text-center drop-shadow-[0_0_5px_rgba(102,252,241,0.5)]">
-                                <div className="font-military tracking-widest text-lg">&lt; SELECT SECTOR &gt;</div>
-                                <div className="text-xs mt-2 text-[#c5c6c7]">CLICK MAP TO TARGET</div>
+                            <div className="text-gold/50 flex items-center justify-center h-full flex-col text-center min-h-[200px]">
+                                <div className="font-medieval tracking-widest text-lg opacity-60">WÄHLT EINEN TISCH</div>
+                                <div className="text-xs mt-2 text-parchment/40 font-sans">KLICKT AUF DIE KARTE</div>
                             </div>
                         )}
                     </AnimatePresence>
                 </div>
             </div>
           </div>
-
           </div>
       ) : (
           /* RESTRICTED ACCESS VIEW */
-          <div className="relative w-full max-w-4xl mx-auto min-h-[500px] h-auto border border-red-900/50 bg-black/90 rounded-3xl flex flex-col items-center justify-center text-center p-8 overflow-hidden shadow-[0_0_50px_rgba(220,38,38,0.2)]">
-              {/* Scanlines caused by jamming */}
-              <div className="absolute inset-0 pointer-events-none bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,#ff0000_3px)] opacity-5 z-0" />
+          <div className="relative w-full max-w-4xl mx-auto min-h-[400px] border-4 border-[#2c1810] bg-[#1a120b] rounded-lg flex flex-col items-center justify-center text-center p-12 shadow-2xl">
               
               <div className="z-10 flex flex-col items-center gap-6">
-                  {/* Icon */}
-                  <div className="w-20 h-20 border-2 border-red-600 rounded-full flex items-center justify-center animate-pulse shadow-[0_0_30px_rgba(220,38,38,0.5)]">
-                       <span className="text-4xl text-red-600">⚠</span>
+                  {/* Wax Seal Icon */}
+                  <div className="w-24 h-24 rounded-full bg-crimson shadow-[inset_0_0_20px_rgba(0,0,0,0.5),0_5px_15px_rgba(0,0,0,0.5)] flex items-center justify-center border-4 border-[#500000] relative">
+                       <span className="text-5xl text-[#500000] font-medieval font-bold">✖</span>
                   </div>
 
                   <div className="space-y-2">
-                    <h3 className="text-3xl md:text-5xl font-military text-red-600 tracking-widest drop-shadow-[0_0_10px_rgba(220,38,38,0.8)]">
-                        RESTRICTED SECTOR
+                    <h3 className="text-3xl md:text-5xl font-medieval text-crimson tracking-widest drop-shadow-md">
+                        ZUTRITT VERWEHRT
                     </h3>
-                    <p className="font-mono text-red-400/80 tracking-wider text-sm md:text-base">
-                        // CLEARANCE INSUFFICIENT //
+                    <p className="font-sans text-parchment/60 tracking-wider text-sm md:text-base uppercase">
+                        KÖNIGLICHE GEMÄCHER - NUR FÜR EINGEWEIHTE
                     </p>
                   </div>
 
-                  <p className="max-w-md text-[#c5c6c7] text-sm">
-                      This tactical display is encrypted for authorized command personnel only. Imperial Identify Verification is required to access deployment protocols.
+                  <p className="max-w-md text-parchment/50 text-sm font-sans italic">
+                      Diese Räumlichkeiten sind den Rittern der Würfelrunde vorbehalten. Bittsteller müssen sich ausweisen.
                   </p>
 
                   <button 
                       onClick={() => setIsAuthOpen(true)}
-                      className="mt-4 px-8 py-3 bg-red-900/20 border border-red-600 text-red-500 hover:bg-red-600 hover:text-black font-military font-bold tracking-widest transition-all shadow-[0_0_20px_rgba(220,38,38,0.2)] hover:shadow-[0_0_30px_rgba(220,38,38,0.6)] rounded"
+                      className="mt-6 px-10 py-3 bg-[#2c1810] border-2 border-gold text-gold hover:bg-gold hover:text-[#2c1810] font-medieval font-bold tracking-widest transition-all shadow-lg rounded"
                   >
-                      IDENTIFY (LOGIN)
+                      SICH AUSWEISEN (LOGIN)
                   </button>
               </div>
           </div>

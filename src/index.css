@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Share+Tech+Mono&display=block");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Lato:wght@300;400;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -6,9 +6,8 @@
 
 @layer base {
   html {
-    @apply bg-void text-silver font-tactical scroll-smooth;
-    /* Debug fallback: If tailwind fails, this will be visible if CSS loads */
-    background-color: #0b0c10;
+    @apply bg-wood text-parchment font-sans scroll-smooth;
+    background-color: #1a120b;
   }
 
   body {
@@ -17,24 +16,24 @@
 
   /* Custom Scrollbar for Webkit */
   ::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-void;
+    @apply bg-wood-light;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-neon/20 rounded-full hover:bg-neon/40 transition-colors;
+    @apply bg-gold/40 rounded-sm hover:bg-gold/60 transition-colors border border-wood;
   }
 }
 
 @layer utilities {
   .text-glow {
-    text-shadow: 0 0 10px rgba(102, 252, 241, 0.5);
+    text-shadow: 0 0 10px rgba(197, 160, 89, 0.3); /* Gold glow instead of cyan */
   }
 
   .border-glow {
-    box-shadow: 0 0 15px rgba(102, 252, 241, 0.2);
+    box-shadow: 0 0 15px rgba(197, 160, 89, 0.15);
   }
 }

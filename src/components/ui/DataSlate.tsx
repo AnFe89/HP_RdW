@@ -10,7 +10,7 @@ interface DataSlateProps {
 }
 
 export const DataSlate = ({ title, date, category, summary, index }: DataSlateProps) => {
-  const [refId] = useState(() => Math.random().toString(36).substr(2, 9).toUpperCase());
+  const [refId] = useState(() => Math.random().toString(36).substr(2, 6).toUpperCase());
 
   return (
     <motion.div 
@@ -19,29 +19,33 @@ export const DataSlate = ({ title, date, category, summary, index }: DataSlatePr
       whileHover={{ y: -5, transition: { duration: 0.2 } }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5, ease: "easeOut", delay: index * 0.1 }}
-      className="relative p-4 md:p-6 border border-silver/10 hover:border-silver/30 bg-white/5 backdrop-blur-md transition-colors duration-300 group cursor-pointer w-full max-w-2xl rounded-2xl hover:shadow-[0_0_30px_rgba(102,252,241,0.1)]"
+      className="relative p-6 md:p-8 bg-[#f5e6d3] text-[#2c1810] shadow-[0_10px_30px_rgba(0,0,0,0.3)] transition-all duration-300 group cursor-pointer w-full max-w-2xl rounded-sm border border-[#d4c5a9]"
     >
-      <div className="absolute top-0 right-0 p-2 opacity-50 text-[10px] font-mono text-silver group-hover:text-neon">
-        // REF: {refId}
+      {/* Paper texture overlay */}
+      <div className="absolute inset-0 opacity-30 pointer-events-none mix-blend-multiply rounded-sm" style={{ backgroundImage: "url('https://www.transparenttextures.com/patterns/aged-paper.png')" }} />
+      
+      {/* Wax Seal / ID */}
+      <div className="absolute top-4 right-4 text-[10px] font-medieval text-[#2c1810]/40 group-hover:text-crimson/60 transition-colors">
+        REF: {refId}
       </div>
       
-      <div className="flex gap-4 items-baseline mb-2">
-        <span className="text-neon text-xs font-bold tracking-wider uppercase border border-neon/30 px-2 py-0.5 rounded-sm">
+      <div className="flex gap-4 items-baseline mb-3 relative z-10">
+        <span className="text-[#2c1810] text-xs font-bold tracking-widest uppercase border-b-2 border-gold pb-0.5">
             {category}
         </span>
-        <span className="text-silver/40 text-xs font-mono">{date}</span>
+        <span className="text-[#2c1810]/50 text-xs font-sans italic">{date}</span>
       </div>
       
-      <h3 className="text-xl md:text-2xl font-military text-silver group-hover:text-white transition-colors mb-2">
+      <h3 className="text-2xl md:text-3xl font-medieval text-[#2c1810] group-hover:text-crimson transition-colors mb-4 relative z-10">
         {title}
       </h3>
       
-      <p className="text-silver/70 font-tactical text-sm leading-relaxed max-w-xl">
+      <p className="text-[#2c1810]/80 font-serif text-base leading-relaxed max-w-xl relative z-10">
         {summary}
       </p>
 
-      {/* Hover decoration */}
-      <div className="absolute bottom-0 left-0 w-0 h-[1px] bg-neon group-hover:w-full transition-all duration-500" />
+      {/* Decorative footer line */}
+      <div className="absolute bottom-0 left-0 w-0 h-[3px] bg-gold group-hover:w-full transition-all duration-500 rounded-b-sm" />
     </motion.div>
   );
 };

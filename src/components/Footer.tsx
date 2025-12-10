@@ -1,13 +1,18 @@
 export const Footer = () => {
     return (
-        <footer className="w-full py-10 border-t border-silver/10 bg-black text-center font-tactical text-silver/40 text-xs">
-            <div className="flex flex-col items-center gap-4 mb-4">
-                <div className="w-8 h-8 rounded-full border border-silver/20 flex items-center justify-center">
+        <footer className="w-full py-10 border-t-4 border-[#2c1810] bg-[#1a120b] text-center font-medieval text-parchment/60 text-xs relative">
+            {/* Texture Overlay */}
+            <div className="absolute inset-0 opacity-10 pointer-events-none mix-blend-overlay" style={{ backgroundImage: "url('https://www.transparenttextures.com/patterns/wood-pattern.png')" }} />
+            
+            <div className="flex flex-col items-center gap-4 mb-4 relative z-10">
+                <div className="w-10 h-10 rounded-full border-2 border-gold/30 flex items-center justify-center text-gold shadow-[0_0_10px_rgba(255,215,0,0.1)]">
                     R
                 </div>
             </div>
-            <p>RITTER DER WÜRFELRUNDE © 2026</p>
-            <p className="mt-2 text-[10px]">IMPERIAL THOUGHT OF THE DAY: "VICTORY NEEDS NO EXPLANATION, DEFEAT ALLOWS NONE."</p>
+            <p className="relative z-10 tracking-widest">RITTER DER WÜRFELRUNDE © {new Date().getFullYear()}</p>
+            <p className="mt-4 text-[10px] text-gold/40 font-serif italic max-w-md mx-auto relative z-10">
+                "DER SIEG GEHÖRT DENEN, DIE AN IHRE SACHE GLAUBEN."
+            </p>
         </footer>
     )
 }
