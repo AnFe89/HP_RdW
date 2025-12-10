@@ -28,7 +28,7 @@ export const Hero = () => {
             {/* Content */}
             <motion.div 
                 style={{ opacity }}
-                className="relative z-10 w-full max-w-7xl mx-auto px-4 flex flex-col items-center justify-center h-full pointer-events-none select-none"
+                className="relative z-10 w-full max-w-7xl mx-auto px-4 flex flex-col items-center justify-center h-full pointer-events-none select-none pb-20"
             >
                 {/* Logo Container */}
                 <motion.div 
@@ -67,7 +67,7 @@ export const Hero = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.5, duration: 1 }}
-                className="absolute bottom-10 z-10 flex flex-col items-center gap-2 text-gold/70"
+                className="absolute bottom-4 z-20 flex flex-col items-center gap-2 text-gold/70"
             >
                 <span className="text-[10px] tracking-[0.3em] font-medieval uppercase text-shadow-sm">Scrollen</span>
                 <motion.div 

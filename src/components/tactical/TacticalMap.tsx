@@ -47,10 +47,12 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
                     const data = occupied[table.id] || { count: 0, mode: '40k' };
                     const count = data.count;
                     const mode = data.mode || '40k';
-                    const capacity = currentMode === '40k' ? 2 : 4; // This is capacity for *current selection*, maybe irrelevant for icon, but relevant for fullness
-                    // Actually capacity depends on the TABLE's mode if occupied, but let's stick to simple logic for visual
                     
-                    const isFull = count >= (mode === '40k' ? 2 : 4);
+                    // Logic: If table is occupied, show ITS capacity. If empty, show selected mode's capacity (preview).
+                    const effectiveMode = count > 0 ? mode : currentMode;
+                    const capacity = effectiveMode === '40k' ? 2 : 4;
+                    
+                    const isFull = count >= capacity;
                     const isSelected = selectedSector === table.id;
                     
                     return (
@@ -60,19 +62,29 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
                             style={{ left: table.x, top: table.y }}
                             onClick={() => onSelectSector(table.id)}
                         >
-                            {/* Table Visual */}
+                                {/* Table Visual */}
                             <motion.div
                                 className={clsx(
                                     "relative flex items-center justify-center transition-all duration-300 shadow-2xl skew-x-1",
                                     "w-24 h-12 sm:w-32 sm:h-16 md:w-48 md:h-24", // Responsive sizing
-                                    isSelected ? "scale-110 drop-shadow-[0_0_15px_rgba(255,215,0,0.5)]" : "hover:scale-105"
+                                    // Glow Logic: Selected -> Gold, Full -> Green, Default -> None/Hover
+                                    isSelected 
+                                        ? "scale-110 drop-shadow-[0_0_15px_rgba(255,215,0,0.5)]" 
+                                        : isFull 
+                                            ? "drop-shadow-[0_0_10px_rgba(34,197,94,0.6)]" // Green glow if full
+                                            : "hover:scale-105"
                                 )}
                                 whileHover={{ scale: 1.05 }}
                             >
                                 {/* Table Surface (Wood) */}
                                 <div className={clsx(
                                     "absolute inset-0 rounded-sm border-2 overflow-hidden",
-                                    isSelected ? "border-gold bg-[#3d2316]" : "border-[#1a120b] bg-[#2c1810]"
+                                    // Border Color: Selected -> Gold, Full -> Dark Green/Wood, Default -> Dark Wood
+                                    isSelected 
+                                        ? "border-gold bg-[#3d2316]" 
+                                        : isFull
+                                            ? "border-[#1a120b] bg-[#2c1810]" 
+                                            : "border-[#1a120b] bg-[#2c1810]"
                                 )}>
                                     {/* Wood Grain Texture opacity */}
                                      <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')]" />
@@ -97,11 +109,11 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
 
                                 </div>
                                 
-                                {/* Table Cloth / Runner */}
-                                <div className={clsx(
+                                {/* Table Cloth / Runner - REMOVED per user request */}
+                                {/* <div className={clsx(
                                     "absolute inset-x-8 inset-y-0 opacity-80",
                                     isFull ? "bg-crimson/20" : count > 0 ? "bg-gold/10" : "bg-transparent"
-                                )} />
+                                )} /> */}
 
                                 {/* Chairs */}
                                 <div className={clsx(
@@ -111,7 +123,10 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
                                      {[...Array(Math.ceil(capacity/2))].map((_, i) => (
                                         <div key={`top-${i}`} className={clsx(
                                             "w-6 h-6 rounded-full border border-black/30 shadow-sm transition-colors",
-                                            i < count ? (isFull ? "bg-crimson" : "bg-gold") : "bg-[#1a120b]"
+                                            // Green glow for full dots
+                                            i < count 
+                                                ? (isFull ? "bg-green-600 shadow-[0_0_8px_rgba(34,197,94,0.8)] border-green-400" : "bg-gold shadow-[0_0_5px_rgba(255,215,0,0.4)]") 
+                                                : "bg-[#1a120b]"
                                         )} />
                                     ))}
                                 </div>
@@ -122,8 +137,10 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
                                      {[...Array(Math.floor(capacity/2))].map((_, i) => (
                                         <div key={`bot-${i}`} className={clsx(
                                             "w-6 h-6 rounded-full border border-black/30 shadow-sm transition-colors",
-                                            // logic to fill bottom row after top row
-                                            (i + Math.ceil(capacity/2)) < count ? (isFull ? "bg-crimson" : "bg-gold") : "bg-[#1a120b]"
+                                            // Green glow for full dots
+                                            (i + Math.ceil(capacity/2)) < count 
+                                                ? (isFull ? "bg-green-600 shadow-[0_0_8px_rgba(34,197,94,0.8)] border-green-400" : "bg-gold shadow-[0_0_5px_rgba(255,215,0,0.4)]") 
+                                                : "bg-[#1a120b]"
                                         )} />
                                     ))}
                                 </div>
