@@ -344,7 +344,7 @@ export const Services = () => {
                                 {userReservations.includes(selectedSector) ? (
                                     <button 
                                         onClick={handleCancel}
-                                        className="mt-6 w-full py-3 bg-crimson/20 hover:bg-crimson text-white border border-crimson/50 transition-all uppercase tracking-widest text-sm font-bold shadow-lg rounded font-medieval"
+                                        className="mt-6 w-full py-3 bg-crimson/20 hover:bg-crimson text-white/70 hover:text-white border border-crimson/50 transition-all uppercase tracking-widest text-xs md:text-sm font-bold shadow-lg rounded font-medieval"
                                     >
                                         RESERVIERUNG STORNIEREN
                                     </button>
