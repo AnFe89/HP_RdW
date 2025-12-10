@@ -406,7 +406,7 @@ export const AdminDashboard = () => {
                                                         onChange={(e) => handleRoleUpdate(profile.id, e.target.value)}
                                                         disabled={currentUserId !== CHAPTER_MASTER_ID && profile.role === 'admin'}
                                                     >
-                                                        <option value="guest">KNACHTE (GAST)</option>
+                                                        <option value="guest">KNECHTE (GAST)</option>
                                                         <option value="member">RITTER (MITGLIED)</option>
                                                         {/* Only show/allow Admin option if I am Master or if the user is already admin */}
                                                         {(currentUserId === CHAPTER_MASTER_ID || profile.role === 'admin') && (

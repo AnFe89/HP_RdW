@@ -297,7 +297,7 @@ export const Services = () => {
                 <div className="space-y-4 min-h-[150px]">
                     <div className="text-sm font-bold text-parchment/60 border-b border-gold/10 pb-3 mb-4 tracking-wide flex justify-between font-sans">
                         <div>TERMIN: <span className="text-gold">{gameDate?.toLocaleDateString()}</span></div>
-                        <div>RANG: <span className={isLoggedIn && (userRole === 'member' || userRole === 'admin') ? "text-gold" : "text-crimson"}>{isLoggedIn ? (userRole === 'member' ? 'RITTER' : userRole === 'admin' ? 'KÖNIGSGARDE' : 'KNACHTE') : "UNBEKANNT"}</span></div>
+                        <div>RANG: <span className={isLoggedIn && (userRole === 'member' || userRole === 'admin') ? "text-gold" : "text-crimson"}>{isLoggedIn ? (userRole === 'member' ? 'RITTER' : userRole === 'admin' ? 'KÖNIGSGARDE' : 'KNECHTE') : "UNBEKANNT"}</span></div>
                     </div>
 
                     <AnimatePresence mode="wait">
