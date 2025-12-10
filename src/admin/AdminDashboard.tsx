@@ -137,15 +137,15 @@ export const AdminDashboard = () => {
         }
     };
 
-    if (loading) return <div className="text-gold p-10 font-medieval text-center text-2xl animate-pulse">DAS SIEGEL WIRD ÜBERPRÜFT...</div>;
+    if (loading) return <div className="text-gold p-10 font-medieval text-center text-2xl animate-pulse">LADEN...</div>;
     
     if (!isAdmin) {
         return (
             <div className="min-h-screen pt-24 px-4 flex flex-col items-center justify-center text-center bg-[#1a120b]">
-                <h1 className="text-4xl text-crimson font-medieval mb-4 drop-shadow-md">ZUTRITT VERWEHRT</h1>
+                <h1 className="text-4xl text-crimson font-medieval mb-4 drop-shadow-md">ZUGRIFF VERWEIGERT</h1>
                 <p className="text-parchment font-sans mb-8 max-w-lg">
-                    DIESE HALLE IST NUR DEM HOHEN RAT VORBEHALTEN.<br/>
-                    KEHRT UM, EHE DER KERKER EUCH ERWARTET.
+                    DIESER BEREICH IST NUR HÖHEREN RÄNGEN VORBEHALTEN.<br/>
+                    BITTE WENDET EUCH AN EINEN ADMINISTRATOR.
                 </p>
                 <div className="w-16 h-16 rounded-full bg-crimson flex items-center justify-center shadow-lg border-2 border-wood">
                     X
@@ -158,9 +158,9 @@ export const AdminDashboard = () => {
         <div className="min-h-screen pt-24 px-4 pb-20 bg-wood">
             <div className="max-w-6xl mx-auto">
                 <h1 className="text-4xl md:text-5xl font-medieval text-center mb-10 text-parchment drop-shadow-lg border-b-2 border-gold/30 pb-6 w-full mx-auto max-w-3xl">
-                    <span className="block">THRONSAAL</span>
+                    <span className="block">ADMIN-BEREICH</span>
                     <span className="block text-sm font-sans text-gold mt-4 tracking-widest uppercase">
-                        {currentUserId === CHAPTER_MASTER_ID ? 'WILLKOMMEN, MEIN KÖNIG' : 'WILLKOMMEN, EDLER RATHERR'}
+                        {currentUserId === CHAPTER_MASTER_ID ? 'WILLKOMMEN, MEIN KÖNIG' : 'WILLKOMMEN'}
                     </span>
                 </h1>
 
@@ -170,13 +170,13 @@ export const AdminDashboard = () => {
                         onClick={() => setActiveTab('decrees')}
                         className={`px-4 sm:px-8 py-3 sm:py-4 font-bold tracking-widest transition-all w-full sm:w-auto font-medieval text-lg ${activeTab === 'decrees' ? 'text-wood bg-gold shadow-inner' : 'text-parchment/60 hover:text-gold hover:bg-[#2c1810]/50'}`}
                     >
-                        DEKRETE & VERKÜNDIGUNGEN
+                        NEUIGKEITEN & VERWALTUNG
                     </button>
                     <button 
                         onClick={() => setActiveTab('knights')}
                         className={`px-4 sm:px-8 py-3 sm:py-4 font-bold tracking-widest transition-all w-full sm:w-auto font-medieval text-lg ${activeTab === 'knights' ? 'text-wood bg-gold shadow-inner' : 'text-parchment/60 hover:text-gold hover:bg-[#2c1810]/50'}`}
                     >
-                        HEERESSCHAU (MITGLIEDER)
+                        MITGLIEDERLISTE
                     </button>
                 </div>
 
@@ -189,11 +189,11 @@ export const AdminDashboard = () => {
                             <div className="absolute inset-0 opacity-20 pointer-events-none mix-blend-multiply" style={{ backgroundImage: "url('https://www.transparenttextures.com/patterns/aged-paper.png')" }} />
                             
                             <h3 className="text-xl text-[#2c1810] font-medieval mb-6 relative z-10 border-b border-[#2c1810]/20 pb-2">
-                                {editingId ? `DEKRET ÜBERARBEITEN` : 'NEUES DEKRET VERFASSEN'}
+                                {editingId ? `EINTAG BEARBEITEN` : 'NEUER EINTRAG'}
                             </h3>
                             <form onSubmit={handleAddNews} className="space-y-4 relative z-10">
                                 <div>
-                                    <label className="block text-xs font-bold font-sans text-[#2c1810]/70 mb-1 uppercase">TITEL DES DEKRETS</label>
+                                    <label className="block text-xs font-bold font-sans text-[#2c1810]/70 mb-1 uppercase">TITEL</label>
                                     <input 
                                         type="text" 
                                         className="w-full bg-[#faebd7] border border-[#8b4513]/30 p-2 text-[#2c1810] focus:border-[#8b4513] outline-none font-medieval placeholder-[#2c1810]/30"
@@ -302,7 +302,7 @@ export const AdminDashboard = () => {
                                     </div>
                                 <div className="flex gap-2">
                                     <button type="submit" className="flex-1 py-3 bg-[#2c1810] text-gold border border-gold hover:bg-gold hover:text-[#2c1810] font-bold font-medieval tracking-widest transition-all shadow-lg rounded-sm">
-                                        {editingId ? 'DEKRET AKTUALISIEREN' : 'VERKÜNDEN'}
+                                        {editingId ? 'SPEICHERN' : 'VERÖFFENTLICHEN'}
                                     </button>
                                     {editingId && (
                                         <button 
@@ -326,7 +326,7 @@ export const AdminDashboard = () => {
                                         <h4 className="text-parchment font-medieval text-lg">{item.title}</h4>
                                         <p className="text-parchment/60 text-sm mt-2 line-clamp-2 font-serif italic">{item.summary}</p>
                                     </div>
-                                    <div className="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div className="flex flex-col gap-2 opacity-100 transition-opacity">
                                         <button 
                                             onClick={() => startEdit(item)}
                                             className="text-gold hover:text-white text-xs font-bold tracking-wider text-right font-sans"
@@ -337,7 +337,7 @@ export const AdminDashboard = () => {
                                             onClick={() => handleDeleteNews(item.id)}
                                             className="text-crimson hover:text-red-400 text-xs font-bold tracking-wider text-right font-sans"
                                         >
-                                            [VERBRENNEN]
+                                            [LÖSCHEN]
                                         </button>
                                     </div>
                                 </div>
@@ -349,7 +349,7 @@ export const AdminDashboard = () => {
                 {activeTab === 'knights' && (
                     <div className="space-y-4">
                         <div className="flex justify-between items-center">
-                            <h3 className="text-xl text-parchment font-medieval drop-shadow-md">RITTER DES ORDENS ({profiles.length})</h3>
+                            <h3 className="text-xl text-parchment font-medieval drop-shadow-md">REGISTRIERTE BENUTZER ({profiles.length})</h3>
                             <button 
                                 onClick={() => { setLoading(true); fetchData(); setLoading(false); }}
                                 className="px-4 py-2 bg-[#2c1810] border border-gold text-gold hover:bg-gold hover:text-[#2c1810] font-bold font-sans text-xs tracking-wider transition-all shadow-md"
@@ -360,64 +360,66 @@ export const AdminDashboard = () => {
 
                         {profiles.length === 0 ? (
                             <div className="bg-[#f5e6d3] p-8 rounded-sm border-2 border-[#2c1810] text-center shadow-lg">
-                                <h4 className="text-crimson font-medieval font-bold mb-2 text-xl">KEINE RITTER GEFUNDEN</h4>
+                                <h4 className="text-crimson font-medieval font-bold mb-2 text-xl">KEINE BENUTZER GEFUNDEN</h4>
                                 <p className="text-[#2c1810]/60 text-sm font-sans max-w-lg mx-auto italic">
-                                    Die Hallen sind leer.
+                                    Die Liste ist leer.
                                 </p>
                             </div>
                         ) : (
                             <div className="bg-[#f5e6d3] rounded-sm overflow-hidden border-4 border-[#2c1810] shadow-2xl relative">
                                 <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: "url('https://www.transparenttextures.com/patterns/wood-pattern.png')" }} />
-                                <table className="w-full text-left relative z-10">
-                                    <thead className="bg-[#2c1810] text-xs font-medieval text-gold tracking-widest uppercase">
-                                        <tr>
-                                            <th className="p-4">NAME</th>
-                                            <th className="p-4">POST / STAND</th>
-                                            <th className="p-4">EID GELEISTET AM</th>
-                                            <th className="p-4">RANG</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-[#2c1810]/20">
-                                        {profiles.map(profile => (
-                                            <tr key={profile.id} className="hover:bg-[#2c1810]/5 transition-colors">
-                                                <td className="p-4">
-                                                    <span className="text-[#2c1810] font-bold font-medieval text-lg">{profile.username}</span>
-                                                    <div className="text-[10px] text-[#2c1810]/40 font-mono">ID: {profile.id.substring(0,8)}...</div>
-                                                </td>
-                                                <td className="p-4">
-                                                    <div className="text-[#2c1810] text-sm font-sans">{profile.email || "N/A"}</div>
-                                                    {profile.email_confirmed_at ? (
-                                                        <span className="text-[10px] text-emerald-800 font-bold font-sans bg-emerald-200/50 px-1 rounded border border-emerald-500/30">BESTÄTIGT</span>
-                                                    ) : (
-                                                        <span className="text-[10px] text-amber-800 font-bold font-sans bg-amber-200/50 px-1 rounded border border-amber-500/30">AUSSTEHEND</span>
-                                                    )}
-                                                </td>
-                                                <td className="p-4 text-[#2c1810]/70 text-sm font-sans italic">
-                                                    {new Date(profile.created_at).toLocaleDateString()}
-                                                </td>
-                                                <td className="p-4">
-                                                    <select 
-                                                        className={`bg-[#faebd7] border-2 p-2 text-xs font-bold font-sans outline-none cursor-pointer rounded shadow-sm
-                                                            ${profile.role === 'admin' ? 'border-crimson text-crimson' : 
-                                                              profile.role === 'member' ? 'border-gold text-[#2c1810]' : 'border-[#2c1810]/20 text-[#2c1810]/50'}
-                                                            ${(currentUserId !== CHAPTER_MASTER_ID && profile.role === 'admin') ? 'opacity-50 cursor-not-allowed' : ''}  
-                                                        `}
-                                                        value={profile.role}
-                                                        onChange={(e) => handleRoleUpdate(profile.id, e.target.value)}
-                                                        disabled={currentUserId !== CHAPTER_MASTER_ID && profile.role === 'admin'}
-                                                    >
-                                                        <option value="guest">KNECHTE (GAST)</option>
-                                                        <option value="member">RITTER (MITGLIED)</option>
-                                                        {/* Only show/allow Admin option if I am Master or if the user is already admin */}
-                                                        {(currentUserId === CHAPTER_MASTER_ID || profile.role === 'admin') && (
-                                                            <option value="admin">KÖNIGSGARDE (ADMIN)</option>
-                                                        )}
-                                                    </select>
-                                                </td>
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-left relative z-10 whitespace-nowrap">
+                                        <thead className="bg-[#2c1810] text-xs font-medieval text-gold tracking-widest uppercase">
+                                            <tr>
+                                                <th className="p-4">NAME</th>
+                                                <th className="p-4">EMAIL / STATUS</th>
+                                                <th className="p-4">REGISTRIERT AM</th>
+                                                <th className="p-4">RANG</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody className="divide-y divide-[#2c1810]/20">
+                                            {profiles.map(profile => (
+                                                <tr key={profile.id} className="hover:bg-[#2c1810]/5 transition-colors">
+                                                    <td className="p-4">
+                                                        <span className="text-[#2c1810] font-bold font-medieval text-lg">{profile.username}</span>
+                                                        <div className="text-[10px] text-[#2c1810]/40 font-mono">ID: {profile.id.substring(0,8)}...</div>
+                                                    </td>
+                                                    <td className="p-4">
+                                                        <div className="text-[#2c1810] text-sm font-sans">{profile.email || "N/A"}</div>
+                                                        {profile.email_confirmed_at ? (
+                                                            <span className="text-[10px] text-emerald-800 font-bold font-sans bg-emerald-200/50 px-1 rounded border border-emerald-500/30">BESTÄTIGT</span>
+                                                        ) : (
+                                                            <span className="text-[10px] text-amber-800 font-bold font-sans bg-amber-200/50 px-1 rounded border border-amber-500/30">AUSSTEHEND</span>
+                                                        )}
+                                                    </td>
+                                                    <td className="p-4 text-[#2c1810]/70 text-sm font-sans italic">
+                                                        {new Date(profile.created_at).toLocaleDateString()}
+                                                    </td>
+                                                    <td className="p-4">
+                                                        <select 
+                                                            className={`bg-[#faebd7] border-2 p-2 text-xs font-bold font-sans outline-none cursor-pointer rounded shadow-sm
+                                                                ${profile.role === 'admin' ? 'border-crimson text-crimson' : 
+                                                                  profile.role === 'member' ? 'border-gold text-[#2c1810]' : 'border-[#2c1810]/20 text-[#2c1810]/50'}
+                                                                ${(currentUserId !== CHAPTER_MASTER_ID && profile.role === 'admin') ? 'opacity-50 cursor-not-allowed' : ''}  
+                                                            `}
+                                                            value={profile.role}
+                                                            onChange={(e) => handleRoleUpdate(profile.id, e.target.value)}
+                                                            disabled={currentUserId !== CHAPTER_MASTER_ID && profile.role === 'admin'}
+                                                        >
+                                                            <option value="guest">GAST</option>
+                                                            <option value="member">MITGLIED</option>
+                                                            {/* Only show/allow Admin option if I am Master or if the user is already admin */}
+                                                            {(currentUserId === CHAPTER_MASTER_ID || profile.role === 'admin') && (
+                                                                <option value="admin">ADMIN</option>
+                                                            )}
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         )}
                     </div>

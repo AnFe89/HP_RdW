@@ -104,12 +104,12 @@ export const Services = () => {
       }
 
       if (userRole !== 'member' && userRole !== 'admin') {
-          alert("NUR FÜR MITGLIEDER DES ORDENS (MEMBERS ONLY).");
+          alert("NUR FÜR MITGLIEDER.");
           return;
       }
 
       if (!isBookingWindowOpen()) {
-          alert("DIE TORE WERDEN ERST AM FREITAG GEÖFFNET (BOOKING OPENS FRIDAY).");
+          alert("BUCHUNG ERST AB FREITAG MÖGLICH.");
           return;
       }
       
@@ -119,14 +119,14 @@ export const Services = () => {
       const currentCount = tableInfo.count;
       
       if (currentCount > 0 && tableInfo.mode !== mode) {
-          alert(`INKOMPATIBLE SCHLACHTORDNUNG. TISCH IST FÜR ${tableInfo.mode.toUpperCase()} GERÜSTET.`);
+          alert(`INKOMPATIBLER MODUS. TISCH IST FÜR ${tableInfo.mode.toUpperCase()} KONFIGURIERT.`);
           return;
       }
 
       const capacity = mode === '40k' ? 2 : 4; 
 
       if (userReservations.length > 0) {
-          alert("IHR SEID BEREITS FÜR EINE SCHLACHT EINGETRAGEN.");
+          alert("DU HAST BEREITS EINEN TISCH RESERVIERT.");
           return;
       }
 
@@ -158,7 +158,7 @@ export const Services = () => {
       if (error) {
           alert("FEHLER BEI DER RESERVIERUNG: " + error.message);
       } else {
-          alert(`PLATZ GESICHERT FÜR ${gameNight.toLocaleDateString()}. FÜR DEN KÖNIG!`);
+          alert(`PLATZ GESICHERT FÜR ${gameNight.toLocaleDateString()}. VIEL ERFOLG!`);
           setUserReservations([...userReservations, selectedSector]);
           
           setOccupiedData(prev => ({
@@ -218,7 +218,7 @@ export const Services = () => {
 
       {/* Header */}
       <h2 className="text-3xl md:text-6xl font-medieval text-parchment text-center tracking-widest drop-shadow-md border-b-2 border-gold/30 pb-6 w-full max-w-4xl mx-auto">
-        DIE TAFELRUNDE
+        PLATZRESERVIERUNG
       </h2>
 
       {/* ACCESS CONTROL */}
@@ -249,10 +249,10 @@ export const Services = () => {
             >
                  <span className="flex items-center gap-3 font-bold tracking-wider font-medieval">
                     <span className={`w-3 h-3 rotate-45 border border-black/20 ${isLoggedIn ? 'bg-gold' : 'bg-crimson'}`} />
-                    {isLoggedIn ? "SEID GEGRÜSST, RITTER!" : "FREMDER!"}
+                    {isLoggedIn ? "WILLKOMMEN" : "GAST"}
                  </span>
                  <span className="text-xs font-bold font-sans opacity-80 underline">
-                    {isLoggedIn ? "PROFIL ANSEHEN" : "IDENTIFIZIEREN"}
+                    {isLoggedIn ? "PROFIL ANSEHEN" : "ANMELDEN"}
                  </span>
             </div>
 
@@ -266,7 +266,7 @@ export const Services = () => {
                 <div className="absolute bottom-2 right-2 w-4 h-4 border-r-2 border-b-2 border-gold" />
 
                 <h3 className="font-medieval text-xl text-gold mb-6 border-b border-gold/20 pb-2 text-center">
-                    BEFEHLSSTAND
+                    DETAILS
                 </h3>
 
                 {/* Mode Toggle */}
@@ -297,7 +297,7 @@ export const Services = () => {
                 <div className="space-y-4 min-h-[150px]">
                     <div className="text-sm font-bold text-parchment/60 border-b border-gold/10 pb-3 mb-4 tracking-wide flex justify-between font-sans">
                         <div>TERMIN: <span className="text-gold">{gameDate?.toLocaleDateString()}</span></div>
-                        <div>RANG: <span className={isLoggedIn && (userRole === 'member' || userRole === 'admin') ? "text-gold" : "text-crimson"}>{isLoggedIn ? (userRole === 'member' ? 'RITTER' : userRole === 'admin' ? 'KÖNIGSGARDE' : 'KNECHTE') : "UNBEKANNT"}</span></div>
+                        <div>RANG: <span className={isLoggedIn && (userRole === 'member' || userRole === 'admin') ? "text-gold" : "text-crimson"}>{isLoggedIn ? (userRole === 'member' ? 'MITGLIED' : userRole === 'admin' ? 'ADMIN' : 'GAST') : "UNBEKANNT"}</span></div>
                     </div>
 
                     <AnimatePresence mode="wait">
@@ -319,7 +319,7 @@ export const Services = () => {
                                     </span>
                                 </div>
                                 <div className="text-sm text-parchment/50 mt-2 font-sans italic">
-                                    {occupiedData[selectedSector]?.count || 0} / {(occupiedData[selectedSector]?.mode || mode) === '40k' ? '2' : '4'} COMMANDERS
+                                    {occupiedData[selectedSector]?.count || 0} / {(occupiedData[selectedSector]?.mode || mode) === '40k' ? '2' : '4'} SPIELER
                                 </div>
                                 {occupiedData[selectedSector]?.count > 0 && (
                                     <div className="text-xs text-gold mt-1 border-t border-gold/20 pt-1 font-sans">
@@ -330,7 +330,7 @@ export const Services = () => {
                                 {/* Roster */}
                                 {occupiedData[selectedSector]?.names && occupiedData[selectedSector]?.names.length > 0 && (
                                     <div className="mt-3 bg-[#2c1810]/50 p-3 border border-gold/20 rounded">
-                                        <div className="text-[10px] text-parchment/60 mb-1 uppercase tracking-wider">Anwesende Ritter:</div>
+                                        <div className="text-[10px] text-parchment/60 mb-1 uppercase tracking-wider">Angemeldete Spieler:</div>
                                         <div className="space-y-1">
                                             {occupiedData[selectedSector]?.names.map((name, i) => (
                                                 <div key={i} className="text-xs text-gold font-sans tracking-wide">
@@ -344,13 +344,13 @@ export const Services = () => {
                                 {userReservations.includes(selectedSector) ? (
                                     <button 
                                         onClick={handleCancel}
-                                        className="mt-6 w-full py-3 bg-crimson/20 hover:bg-crimson hover:text-white border border-crimson/50 transition-all uppercase tracking-widest text-sm font-bold shadow-lg rounded font-medieval"
+                                        className="mt-6 w-full py-3 bg-crimson/20 hover:bg-crimson text-white border border-crimson/50 transition-all uppercase tracking-widest text-sm font-bold shadow-lg rounded font-medieval"
                                     >
-                                        RÜCKZUG (STORNIEREN)
+                                        RESERVIERUNG STORNIEREN
                                     </button>
                                 ) : (occupiedData[selectedSector]?.count > 0 && occupiedData[selectedSector]?.mode !== mode) ? (
                                     <button disabled className="mt-6 w-full py-3 bg-black/20 text-crimson border border-crimson/30 uppercase tracking-widest text-sm font-bold opacity-60 cursor-not-allowed rounded font-medieval">
-                                        FALSCHES SZENARIO
+                                        FALSCHER MODUS
                                     </button>
                                 ) : (occupiedData[selectedSector]?.count || 0) >= ((occupiedData[selectedSector]?.mode || mode) === '40k' ? 2 : 4) ? (
                                     <button disabled className="mt-6 w-full py-3 bg-black/20 text-parchment/30 border border-wood-light uppercase tracking-widest text-sm font-bold cursor-not-allowed rounded font-medieval">
@@ -365,7 +365,7 @@ export const Services = () => {
                                                 : 'bg-gold/10 border-gold/60 text-gold hover:bg-gold hover:text-wood hover:shadow-[0_0_20px_rgba(197,160,89,0.4)]'}
                                         `}
                                     >
-                                        {!isLoggedIn ? "ERST ANMELDEN" : (userRole !== 'member' && userRole !== 'admin') ? "NUR FÜR MITGLIEDER" : "PLATZ EINNEHMEN"}
+                                        {!isLoggedIn ? "BITTE ANMELDEN" : (userRole !== 'member' && userRole !== 'admin') ? "NUR FÜR MITGLIEDER" : "RESERVIEREN"}
                                     </button>
                                 )}
                             </motion.div>
@@ -382,32 +382,24 @@ export const Services = () => {
           </div>
       ) : (
           /* RESTRICTED ACCESS VIEW */
-          <div className="relative w-full max-w-4xl mx-auto min-h-[400px] border-4 border-[#2c1810] bg-[#1a120b] rounded-lg flex flex-col items-center justify-center text-center p-12 shadow-2xl">
+          <div className="relative w-full max-w-4xl mx-auto min-h-[300px] border-4 border-[#2c1810] bg-[#1a120b] rounded-lg flex flex-col items-center justify-center text-center p-8 shadow-2xl">
               
               <div className="z-10 flex flex-col items-center gap-6">
-                  {/* Wax Seal Icon */}
-                  <div className="w-24 h-24 rounded-full bg-crimson shadow-[inset_0_0_20px_rgba(0,0,0,0.5),0_5px_15px_rgba(0,0,0,0.5)] flex items-center justify-center border-4 border-[#500000] relative">
-                       <span className="text-5xl text-[#500000] font-medieval font-bold">✖</span>
-                  </div>
-
                   <div className="space-y-2">
-                    <h3 className="text-3xl md:text-5xl font-medieval text-crimson tracking-widest drop-shadow-md">
-                        ZUTRITT VERWEHRT
-                    </h3>
                     <p className="font-sans text-parchment/60 tracking-wider text-sm md:text-base uppercase">
-                        KÖNIGLICHE GEMÄCHER - NUR FÜR EINGEWEIHTE
+                        MITGLIEDERBEREICH
                     </p>
                   </div>
 
                   <p className="max-w-md text-parchment/50 text-sm font-sans italic">
-                      Diese Räumlichkeiten sind den Rittern der Würfelrunde vorbehalten. Bittsteller müssen sich ausweisen.
+                      Bitte melde dich an, um einen Platz zu reservieren.
                   </p>
 
                   <button 
                       onClick={() => setIsAuthOpen(true)}
-                      className="mt-6 px-10 py-3 bg-[#2c1810] border-2 border-gold text-gold hover:bg-gold hover:text-[#2c1810] font-medieval font-bold tracking-widest transition-all shadow-lg rounded"
+                      className="mt-2 px-10 py-3 bg-[#2c1810] border-2 border-gold text-gold hover:bg-gold hover:text-[#2c1810] font-medieval font-bold tracking-widest transition-all shadow-lg rounded"
                   >
-                      SICH AUSWEISEN (LOGIN)
+                      ANMELDEN / REGISTRIEREN
                   </button>
               </div>
           </div>

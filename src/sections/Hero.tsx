@@ -9,7 +9,7 @@ export const Hero = () => {
         offset: ["start start", "end start"]
     });
 
-    const yText = useTransform(scrollYProgress, [0, 1], ["0%", "150%"]);
+
     const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
     return (
@@ -27,7 +27,7 @@ export const Hero = () => {
 
             {/* Content */}
             <motion.div 
-                style={{ y: yText, opacity }}
+                style={{ opacity }}
                 className="relative z-10 w-full max-w-7xl mx-auto px-4 flex flex-col items-center justify-center h-full pointer-events-none select-none"
             >
                 {/* Logo Container */}
@@ -45,7 +45,7 @@ export const Hero = () => {
                     <img 
                         src="/hero-logo.png" 
                         alt="Ritter der Würfelrunde" 
-                        className="relative z-10 w-full max-w-[500px] md:max-w-[700px] h-auto object-contain drop-shadow-[0_0_25px_rgba(197,160,89,0.3)]"
+                        className="relative z-10 w-full max-w-[650px] md:max-w-[1000px] h-auto object-contain drop-shadow-[0_0_25px_rgba(197,160,89,0.3)] translate-x-4 md:translate-x-8"
                     />
                 </motion.div>
 

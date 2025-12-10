@@ -41,7 +41,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                 const { data: userEmail, error: rpcError } = await supabase.rpc('get_email_by_username', { username_input: email });
                 
                 if (rpcError) throw rpcError;
-                if (!userEmail) throw new Error("IDENTITÄT UNBEKANNT.");
+                if (!userEmail) throw new Error("BENUTZER NICHT GEFUNDEN.");
                 
                 loginEmail = userEmail;
             }
@@ -72,7 +72,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
             if (authError) throw authError;
 
             if (data.session) {
-                alert("ZUTRITT GEWÄHRT. SEID GEGRÜSST.");
+                alert("ERFOLGREICH REGISTRIERT.");
                 onClose();
             } else {
                 setMessage("REGISTRIERUNG ERFOLGREICH. PRÜFT EURE POST (EMAIL) FÜR DIE BESTÄTIGUNG.");
@@ -91,20 +91,20 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                 redirectTo: window.location.origin,
             });
             if (error) throw error;
-            setMessage("BOTE WURDE ENTSANDT (LINK GESENDET).");
+            setMessage("EMAIL WURDE GESENDET.");
         } catch (error: any) {
             setMessage("FEHLER: " + error.message);
         } finally { setIsLoading(false); }
     };
 
     const handleDelete = async () => {
-        if (!confirm("WARNUNG: DIESE HANDLUNG KANN NICHT RÜCKGÄNGIG GEMACHT WERDEN. WOLLT IHR EUREN SCHWUR WIRKLICH BRECHEN?")) return;
+        if (!confirm("Warnung: Dieser Vorgang ist endgültig. Möchten Sie Ihr Konto wirklich löschen?")) return;
         setIsLoading(true);
         try {
             const { error } = await supabase.rpc('delete_own_account');
             if (error) throw error;
             await supabase.auth.signOut();
-            alert("EURE TATEN WURDEN AUS DEN ANNALEN GETILGT.");
+            alert("KONTO ERFOLGREICH GELÖSCHT.");
             onClose();
         } catch (error: any) {
             setMessage("LÖSCHUNG FEHLGESCHLAGEN: " + error.message);
@@ -134,10 +134,10 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                             <div className="absolute inset-0 opacity-20 pointer-events-none mix-blend-multiply" style={{ backgroundImage: "url('https://www.transparenttextures.com/patterns/aged-paper.png')" }} />
 
                             <h2 className="text-2xl md:text-3xl font-medieval text-[#2c1810] mb-6 text-center border-b-2 border-[#2c1810]/20 pb-4 relative z-10">
-                                {view === 'login' ? "WER KLOPFT AN?" : 
-                                 view === 'register' ? "NEUEN SCHWUR LEISTEN" : 
-                                 view === 'forgot' ? "SIEBART WIEDERHERSTELLEN" : 
-                                 "RITTERLICHES PROFIL"}
+                                {view === 'login' ? "ANMELDEN" : 
+                                 view === 'register' ? "REGISTRIEREN" : 
+                                 view === 'forgot' ? "PASSWORT VERGESSEN" : 
+                                 "BENUTZERPROFIL"}
                             </h2>
 
                             {message && (
@@ -150,17 +150,17 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                                 {view === 'profile' ? (
                                     <div className="space-y-4">
                                          <button onClick={handleLogout} className="w-full border-2 border-[#2c1810] text-[#2c1810] font-bold font-medieval py-3 hover:bg-[#2c1810] hover:text-parchment transition-colors uppercase tracking-widest">
-                                            ABREISEN (LOGOUT)
+                                            AUSLOGGEN
                                          </button>
                                          <button onClick={handleDelete} className="w-full text-xs py-2 text-crimson/50 hover:text-crimson font-bold font-medieval transition-colors uppercase tracking-widest mt-2 hover:bg-crimson/5 rounded-sm">
-                                            ENTEHREN (KONTO LÖSCHEN)
+                                            KONTO LÖSCHEN
                                          </button>
                                     </div>
                                 ) : (
                                     <form onSubmit={view === 'login' ? handleLogin : view === 'register' ? handleRegister : handleReset} className="space-y-6">
                                         {view === 'register' && (
                                             <div>
-                                                <label className="block text-xs font-bold text-[#2c1810]/70 mb-2 font-sans uppercase">EUER NAME</label>
+                                                <label className="block text-xs font-bold text-[#2c1810]/70 mb-2 font-sans uppercase">BENUTZERNAME</label>
                                                 <input type="text" required value={username} onChange={(e) => setUsername(e.target.value)}
                                                     className="w-full bg-[#faebd7] border-2 border-[#8b4513]/30 focus:border-[#8b4513] text-[#2c1810] p-3 outline-none transition-colors font-sans placeholder-[#2c1810]/30"
                                                     placeholder="Sir Galahad" minLength={3} />
@@ -169,7 +169,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
 
                                         <div>
                                             <label className="block text-xs font-bold text-[#2c1810]/70 mb-2 font-sans uppercase">
-                                                {view === 'login' ? "EMAIL ODER NAME" : "EMAIL ADRESSE"}
+                                                {view === 'login' ? "EMAIL ODER BENUTZERNAME" : "EMAIL ADRESSE"}
                                             </label>
                                             <input type="text" required value={email} onChange={(e) => setEmail(e.target.value)}
                                                 className="w-full bg-[#faebd7] border-2 border-[#8b4513]/30 focus:border-[#8b4513] text-[#2c1810] p-3 outline-none transition-colors font-sans placeholder-[#2c1810]/30"
@@ -178,7 +178,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
 
                                         {view !== 'forgot' && (
                                             <div>
-                                                <label className="block text-xs font-bold text-[#2c1810]/70 mb-2 font-sans uppercase">LOSUNGSWORT</label>
+                                                <label className="block text-xs font-bold text-[#2c1810]/70 mb-2 font-sans uppercase">PASSWORT</label>
                                                 <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)}
                                                     className="w-full bg-[#faebd7] border-2 border-[#8b4513]/30 focus:border-[#8b4513] text-[#2c1810] p-3 outline-none transition-colors font-sans placeholder-[#2c1810]/30"
                                                     placeholder="••••••••" minLength={6} />
@@ -188,7 +188,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                                         <button type="submit" disabled={isLoading}
                                             className="w-full bg-[#2c1810] text-gold border-2 border-gold font-bold font-medieval py-3 hover:bg-gold hover:text-[#2c1810] transition-colors disabled:opacity-50 shadow-lg tracking-widest mt-4"
                                         >
-                                            {isLoading ? "VERARBEITE..." : view === 'login' ? "EINLASS BEGEHREN" : view === 'register' ? "SCHWUR LEISTEN" : "NEUES SIEGEL ANFORDERN"}
+                                            {isLoading ? "LÄDT..." : view === 'login' ? "ANMELDEN" : view === 'register' ? "REGISTRIEREN" : "PASSWORT ZURÜCKSETZEN"}
                                         </button>
                                     </form>
                                 )}
@@ -197,15 +197,15 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                                 <div className="mt-6 text-center space-y-2">
                                     {view === 'login' && (
                                         <>
-                                            <button onClick={() => setView('forgot')} className="block w-full text-xs text-[#2c1810]/60 hover:text-[#8b4513] font-sans underline italic">Losungswort vergessen?</button>
-                                            <button onClick={() => setView('register')} className="block w-full text-xs text-[#2c1810]/60 hover:text-[#8b4513] font-sans underline italic">Noch kein Ritter? Hier entlang.</button>
+                                            <button onClick={() => setView('forgot')} className="block w-full text-xs text-[#2c1810]/60 hover:text-[#8b4513] font-sans underline italic">Passwort vergessen?</button>
+                                            <button onClick={() => setView('register')} className="block w-full text-xs text-[#2c1810]/60 hover:text-[#8b4513] font-sans underline italic">Noch kein Konto? Hier registrieren.</button>
                                         </>
                                     )}
                                     {view === 'register' && (
-                                        <button onClick={() => setView('login')} className="block w-full text-xs text-[#2c1810]/60 hover:text-[#8b4513] font-sans underline italic">Bereits geschworen? Zum Tor.</button>
+                                        <button onClick={() => setView('login')} className="block w-full text-xs text-[#2c1810]/60 hover:text-[#8b4513] font-sans underline italic">Bereits registriert? Hier anmelden.</button>
                                     )}
                                     {view === 'forgot' && (
-                                         <button onClick={() => setView('login')} className="block w-full text-xs text-[#2c1810]/60 hover:text-[#8b4513] font-sans underline italic">Zurück zum Tor</button>
+                                         <button onClick={() => setView('login')} className="block w-full text-xs text-[#2c1810]/60 hover:text-[#8b4513] font-sans underline italic">Zurück zum Login</button>
                                     )}
                                 </div>
                             </div>
