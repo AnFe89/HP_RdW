@@ -40,6 +40,7 @@ export const Services = () => {
   const [occupiedData, setOccupiedData] = useState<Record<number, { count: number, mode: string, names: string[] }>>({});
   const [userReservations, setUserReservations] = useState<number[]>([]); 
   const [userRole, setUserRole] = useState<string>('guest');
+  const [username, setUsername] = useState<string>('');
   const [gameDate] = useState<Date>(getNextGameNight());
 
   const isBookingWindowOpen = () => {
@@ -57,8 +58,11 @@ export const Services = () => {
     
     // 1. Check Role
     if (user) {
-        const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
-        if (profile) setUserRole(profile.role);
+        const { data: profile } = await supabase.from('profiles').select('role, username').eq('id', user.id).single();
+        if (profile) {
+            setUserRole(profile.role);
+            setUsername(profile.username);
+        }
         setIsLoggedIn(true);
     }
 
@@ -261,7 +265,7 @@ export const Services = () => {
             >
                  <span className="flex items-center gap-3 font-bold tracking-wider font-medieval">
                     <span className={`w-3 h-3 rotate-45 border border-black/20 ${isLoggedIn ? 'bg-gold' : 'bg-crimson'}`} />
-                    {isLoggedIn ? "WILLKOMMEN" : "GAST"}
+                    {isLoggedIn ? `WILLKOMMEN, ${username.toUpperCase()}` : "GAST"}
                  </span>
                  <span className="text-xs font-bold font-sans opacity-80 underline">
                     {isLoggedIn ? "PROFIL ANSEHEN" : "ANMELDEN"}
