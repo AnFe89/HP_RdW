@@ -166,7 +166,7 @@ export const Services = () => {
               [selectedSector]: {
                   count: (prev[selectedSector]?.count || 0) + 1,
                   mode: mode,
-                  names: prev[selectedSector]?.names || [] 
+                  names: [...(prev[selectedSector]?.names || []), "Du (wird geladen...)"] 
               }
           }));
           initData(); 
@@ -198,15 +198,13 @@ export const Services = () => {
                   [selectedSector]: {
                       count: newCount,
                       mode: newCount === 0 ? '40k' : current.mode, 
-                      names: current.names
+                      names: current.names?.filter(n => n !== 'Du (wird geladen...)') || []
                   }
               };
           });
           initData(); 
       }
   };
-
-
 
   return (
     <section className="relative w-full min-h-screen py-10 md:py-20 px-4 md:px-10 flex flex-col gap-6 md:gap-10 bg-wood border-y-4 border-wood-light shadow-[0_0_50px_rgba(0,0,0,0.8)]">

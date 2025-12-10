@@ -19,13 +19,14 @@ interface NewsItem {
 }
 
 export const AdminDashboard = () => {
-    const [activeTab, setActiveTab] = useState<'decrees' | 'knights'>('decrees');
+    const [activeTab, setActiveTab] = useState<'decrees' | 'knights' | 'reservations'>('decrees');
     const [isAdmin, setIsAdmin] = useState(false);
     const [loading, setLoading] = useState(true);
 
     // Data State
     const [profiles, setProfiles] = useState<Profile[]>([]);
     const [news, setNews] = useState<NewsItem[]>([]);
+    const [reservations, setReservations] = useState<any[]>([]); // Using any for simplicity or define interface
     
     // News Form State
     const [newNews, setNewNews] = useState({ title: '', date: 'Anno Domini 2025', category: 'VERKÜNDIGUNG', summary: '' });
@@ -41,6 +42,21 @@ export const AdminDashboard = () => {
 
         const { data: newsData } = await supabase.from('news').select('*').order('created_at', { ascending: false });
         if (newsData) setNews(newsData);
+
+        // Fetch Reservations (Active/Future)
+        const { data: resData } = await supabase.from('reservations')
+            .select(`
+                id, 
+                table_id, 
+                game_mode, 
+                start_time, 
+                user_id,
+                profiles (username, email)
+            `)
+            .gte('start_time', new Date().toISOString()) // Only future/current
+            .order('start_time', { ascending: true });
+        
+        if (resData) setReservations(resData);
     }, []);
 
     const checkAdmin = useCallback(async () => {
@@ -177,6 +193,12 @@ export const AdminDashboard = () => {
                         className={`px-4 sm:px-8 py-3 sm:py-4 font-bold tracking-widest transition-all w-full sm:w-auto font-medieval text-lg ${activeTab === 'knights' ? 'text-wood bg-gold shadow-inner' : 'text-parchment/60 hover:text-gold hover:bg-[#2c1810]/50'}`}
                     >
                         MITGLIEDERLISTE
+                    </button>
+                    <button 
+                        onClick={() => setActiveTab('reservations')}
+                        className={`px-4 sm:px-8 py-3 sm:py-4 font-bold tracking-widest transition-all w-full sm:w-auto font-medieval text-lg ${activeTab === 'reservations' ? 'text-wood bg-gold shadow-inner' : 'text-parchment/60 hover:text-gold hover:bg-[#2c1810]/50'}`}
+                    >
+                        TAFELRUNDE
                     </button>
                 </div>
 
@@ -422,6 +444,65 @@ export const AdminDashboard = () => {
                                 </div>
                             </div>
                         )}
+                    </div>
+                )}
+
+                {activeTab === 'reservations' && (
+                    <div className="space-y-6">
+                         <div className="flex justify-between items-center">
+                            <h3 className="text-xl text-parchment font-medieval drop-shadow-md">AKTIVE RESERVIERUNGEN ({reservations.length})</h3>
+                            <button 
+                                onClick={() => { setLoading(true); fetchData(); setLoading(false); }}
+                                className="px-4 py-2 bg-[#2c1810] border border-gold text-gold hover:bg-gold hover:text-[#2c1810] font-bold font-sans text-xs tracking-wider transition-all shadow-md"
+                            >
+                                AKTUALISIEREN
+                            </button>
+                        </div>
+
+                         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                            {reservations.map(res => (
+                                <div key={res.id} className="bg-[#f5e6d3] p-4 rounded-sm border-2 border-[#2c1810] shadow-lg relative group">
+                                     <div className="absolute top-2 right-2 opacity-10 font-medieval text-4xl font-bold">
+                                         {res.table_id}
+                                     </div>
+                                     
+                                     <div className="flex justify-between items-start mb-2 relative z-10">
+                                         <span className="bg-[#2c1810] text-gold px-2 py-1 text-xs font-bold font-medieval rounded">
+                                             TISCH {res.table_id}
+                                         </span>
+                                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${res.game_mode === 'killteam' ? 'bg-orange-900/10 text-orange-900 border-orange-900/20' : 'bg-blue-900/10 text-blue-900 border-blue-900/20'}`}>
+                                             {res.game_mode?.toUpperCase() || '40K'}
+                                         </span>
+                                     </div>
+
+                                     <h4 className="font-medieval text-lg text-[#2c1810] mb-1">
+                                         {res.profiles?.username || 'Unbekannter Krieger'}
+                                     </h4>
+                                     <div className="text-xs text-[#2c1810]/60 font-sans mb-4">
+                                         {new Date(res.start_time).toLocaleDateString()} • {new Date(res.start_time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                                     </div>
+
+                                     <button 
+                                        onClick={async () => {
+                                            if(!confirm("Solle diese Reservierung wirklich unwiderruflich gelöscht werden?")) return;
+                                            const { error } = await supabase.from('reservations').delete().eq('id', res.id);
+                                            if(error) alert(error.message);
+                                            else {
+                                                setReservations(reservations.filter(r => r.id !== res.id));
+                                            }
+                                        }}
+                                        className="w-full py-2 bg-crimson/10 border border-crimson text-crimson hover:bg-crimson hover:text-white transition-colors text-xs font-bold tracking-widest font-sans rounded"
+                                     >
+                                         RESERVIERUNG STORNIEREN
+                                     </button>
+                                </div>
+                            ))}
+                            {reservations.length === 0 && (
+                                <div className="col-span-full text-center text-parchment/40 italic py-10 font-sans">
+                                    Keine aktiven Reservierungen gefunden.
+                                </div>
+                            )}
+                         </div>
                     </div>
                 )}
             </div>
