@@ -198,7 +198,7 @@ export const AdminDashboard = () => {
                         onClick={() => setActiveTab('reservations')}
                         className={`px-4 sm:px-8 py-3 sm:py-4 font-bold tracking-widest transition-all w-full sm:w-auto font-medieval text-lg ${activeTab === 'reservations' ? 'text-wood bg-gold shadow-inner' : 'text-parchment/60 hover:text-gold hover:bg-[#2c1810]/50'}`}
                     >
-                        TAFELRUNDE
+                        TISCHRESERVIERUNGEN
                     </button>
                 </div>
 
