@@ -9,10 +9,9 @@ interface InviteModalProps {
     onClose: () => void;
     tableId: number;
     gameDate: Date;
-    currentMode: string;
 }
 
-export const InviteModal = ({ isOpen, onClose, tableId, gameDate, currentMode }: InviteModalProps) => {
+export const InviteModal = ({ isOpen, onClose, tableId, gameDate }: InviteModalProps) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [results, setResults] = useState<Profile[]>([]);
     const [loading, setLoading] = useState(false);

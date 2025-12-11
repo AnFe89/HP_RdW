@@ -307,7 +307,6 @@ export const Services = () => {
         onClose={() => setIsInviteOpen(false)} 
         tableId={selectedSector || 0}
         gameDate={gameDate}
-        currentMode={mode}
       />
 
       {/* Header */}
