@@ -158,9 +158,9 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
                                     {/* Icon */}
                                     {count > 0 && (
                                         <img 
-                                            src={mode === 'killteam' ? '/marker-kt.png' : '/marker-40k.png'} 
+                                            src={mode === 'killteam' ? '/marker-kt-new.jpg' : '/marker-40k.png'} 
                                             alt={mode}
-                                            className="w-4 h-4 md:w-10 md:h-10 object-contain opacity-60 drop-shadow-md mix-blend-overlay mt-0.5 md:mt-1"
+                                            className="w-4 h-4 md:w-10 md:h-10 object-contain opacity-80 drop-shadow-md mix-blend-overlay mt-0.5 md:mt-1 rounded-full"
                                         />
                                     )}
                                 </div>
