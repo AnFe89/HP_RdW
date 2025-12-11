@@ -11,7 +11,6 @@ export const InviteConfirmation = () => {
 
     const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'unauthorized'>('loading');
     const [message, setMessage] = useState('Verifiziere Einladung...');
-    const [inviteDetails, setInviteDetails] = useState<any>(null);
     const processedRef = useRef(false);
 
     const validateAndAccept = async () => {
