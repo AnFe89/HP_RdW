@@ -34,8 +34,15 @@ Dies ist das offizielle Web-Portal für den **Ritter der Würfelrunde** Tabletop
 - **Zugangskontrolle**:
   - **Eingeschränkt**: Nur vereidigte **Mitglieder** und **Admins** können reservieren.
   - **Privilegien**:
-    - **Mitglieder** können Plätze an den Tischen reservieren.
-    - **Admins** verwalten die Sitzordnung.
+    - **Mitglieder** können Plätze an den Tischen reservieren und sehen eine persönliche Begrüßung ("Willkommen, [Name]").
+    - **Admins** haben volle Kontrolle über alle Reservierungen via Dashboard.
+  - **Einladungssystem**:
+    - Mitglieder können Freunde ("Gefährten") via Link an ihren Tisch einladen.
+    - Einladungen sind 24h gültig und geschützt gegen Überbuchung.
+    - Gäste sehen beim Klick auf den Link, wer sie eingeladen hat ("Einladung von X").
+  - **Gast-Modus**:
+    - Gäste können ihren Status und zugewiesenen Tisch einsehen.
+    - Der Zugriff auf die taktische Karte bleibt Gästen verwehrt ("Einblick verwehrt"), um die strategische Integrität zu wahren.
 
 ### 3. Der Thronsaal (Admin)
 
@@ -46,7 +53,12 @@ Dies ist das offizielle Web-Portal für den **Ritter der Würfelrunde** Tabletop
 - **Benutzerverwaltung**:
   - Übersicht aller registrierten Benutzer.
   - Vergabe von Rollen (Gast, Mitglied, Admin).
+  - Übersicht aller registrierten Benutzer.
+  - Vergabe von Rollen (Gast, Mitglied, Admin).
   - Mobile-Optimierte Tabelle für einfache Verwaltung von unterwegs.
+- **Tischreservierungen**:
+  - Zentrale Übersicht aller aktiven Reservierungen ("Tafelrunde").
+  - Administrative Löschgewalt über alle Einträge.
 
 ### 4. Mitgliederverwaltung
 

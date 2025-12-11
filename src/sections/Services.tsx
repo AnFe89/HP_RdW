@@ -2,12 +2,15 @@ import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TacticalMap } from '../components/tactical/TacticalMap';
 import { AuthModal } from '../components/auth/AuthModal';
+import { InviteModal } from '../components/invitation/InviteModal';
 import { supabase } from '../lib/supabase';
 
 export const Services = () => {
   const [mode, setMode] = useState<'40k' | 'killteam'>('40k');
   const [selectedSector, setSelectedSector] = useState<number | null>(null);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [isInviteOpen, setIsInviteOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -231,6 +234,81 @@ export const Services = () => {
     <section className="relative w-full min-h-screen py-10 md:py-20 px-4 md:px-10 flex flex-col gap-6 md:gap-10 bg-wood border-y-4 border-wood-light shadow-[0_0_50px_rgba(0,0,0,0.8)]">
       
       <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
+      
+      {/* Profile / Reservations Modal */}
+      {/* Simple inline modal for now or extract to component */}
+      <AnimatePresence>
+        {isProfileOpen && (
+             <motion.div 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+                onClick={() => setIsProfileOpen(false)}
+             >
+                <div 
+                    className="bg-[#1a120b] border-2 border-gold p-8 max-w-md w-full relative shadow-[0_0_50px_rgba(197,160,89,0.2)]" 
+                    onClick={e => e.stopPropagation()}
+                >
+                    <button onClick={() => setIsProfileOpen(false)} className="absolute top-2 right-4 text-gold hover:text-white text-2xl">×</button>
+                    
+                    <h2 className="text-2xl font-medieval text-gold mb-6 text-center tracking-widest">DEINE GEFÄHRTEN</h2>
+                    
+                    <div className="space-y-4">
+                        <div className="flex justify-between border-b border-gold/20 pb-2">
+                             <span className="text-parchment/60 font-sans">Name:</span>
+                             <span className="text-gold font-bold font-sans">{username}</span>
+                        </div>
+                        <div className="flex justify-between border-b border-gold/20 pb-2">
+                             <span className="text-parchment/60 font-sans">Rang:</span>
+                             <span className="text-gold font-bold font-sans uppercase">{userRole}</span>
+                        </div>
+                        <div className="pt-4">
+                            <h3 className="text-gold font-medieval mb-3 uppercase tracking-wide text-sm">Deine Reservierungen für {gameDate.toLocaleDateString()}:</h3>
+                            
+                            {userReservations.length > 0 ? (
+                                <div className="space-y-3">
+                                    {userReservations.map(tableId => (
+                                        <div key={tableId} className="bg-[#2c1810] p-4 border border-gold/30 rounded flex justify-between items-center">
+                                            <div>
+                                                <div className="text-gold font-bold font-medieval tracking-widest">TISCH {tableId}</div>
+                                                <div className="text-xs text-parchment/50 font-sans mt-1">
+                                                    Modus: {occupiedData[tableId]?.mode === '40k' ? 'WARHAMMER 40K' : 'KILL TEAM'}
+                                                </div>
+                                            </div>
+                                            <div className="text-right">
+                                                 <div className="text-emerald-500 font-bold text-sm">BESTÄTIGT</div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className="text-parchment/40 italic text-center py-4">Keine aktiven Reservierungen für diesen Termin.</p>
+                            )}
+                        </div>
+                    </div>
+                    
+                    <button 
+                        onClick={async () => {
+                            await supabase.auth.signOut();
+                            window.location.reload();
+                        }}
+                        className="w-full mt-8 py-2 border border-crimson/50 text-crimson hover:bg-crimson hover:text-white transition-colors uppercase tracking-widest text-xs font-bold font-sans"
+                    >
+                        ABMELDEN
+                    </button>
+                </div>
+             </motion.div>
+        )}
+      </AnimatePresence>
+
+      <InviteModal 
+        isOpen={isInviteOpen} 
+        onClose={() => setIsInviteOpen(false)} 
+        tableId={selectedSector || 0}
+        gameDate={gameDate}
+        currentMode={mode}
+      />
 
       {/* Header */}
       <h2 className="text-3xl md:text-6xl font-medieval text-parchment text-center tracking-widest drop-shadow-md border-b-2 border-gold/30 pb-6 w-full max-w-4xl mx-auto">
@@ -238,17 +316,36 @@ export const Services = () => {
       </h2>
 
       {/* ACCESS CONTROL */}
-      {isLoggedIn && (userRole === 'member' || userRole === 'admin') ? (
+      {isLoggedIn && (userRole === 'member' || userRole === 'admin' || userRole === 'guest') ? (
           <div className="flex flex-col md:flex-row gap-10 w-full max-w-7xl mx-auto">
             
             {/* Map Container */}
             <div className="w-full md:w-2/3 h-[500px] md:h-[600px] relative">
-                 <TacticalMap 
-                    onSelectSector={setSelectedSector} 
-                    selectedSector={selectedSector}
-                    currentMode={mode}
-                    occupied={occupiedData}
-                 />
+                 {userRole === 'member' || userRole === 'admin' ? (
+                     <TacticalMap 
+                        onSelectSector={setSelectedSector} 
+                        selectedSector={selectedSector}
+                        currentMode={mode}
+                        occupied={occupiedData}
+                     />
+                 ) : (
+                     <div className="w-full h-full border-4 border-[#2c1810] bg-[#1a120b] flex flex-col items-center justify-center p-8 relative overflow-hidden">
+                          {/* Restricted Overlay */}
+                          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1635321593217-40050ad13c74?q=80&w=1920')] bg-cover bg-center opacity-10 mix-blend-overlay" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black" />
+                          
+                          <div className="z-10 text-center border-2 border-crimson/50 p-8 bg-black/80 backdrop-blur-sm max-w-sm mx-auto shadow-[0_0_30px_rgba(220,38,38,0.2)]">
+                              <div className="text-crimson text-6xl mb-4 opacity-80">🛡️</div>
+                              <h3 className="text-2xl font-medieval text-crimson tracking-widest mb-4 border-b border-crimson/30 pb-2">EINBLICK VERWEHRT</h3>
+                              <p className="text-parchment/80 font-medieval text-lg mb-6 leading-relaxed">
+                                  "Halt, Wanderer! Die strategischen Karten sind nur den Rittern der Tafelrunde vorbehalten."
+                              </p>
+                              <div className="text-gold/60 text-xs font-sans uppercase tracking-widest border-t border-gold/10 pt-4">
+                                  STATUS: GAST
+                              </div>
+                          </div>
+                     </div>
+                 )}
             </div>
 
           {/* Control Panel (Scroll) */}
@@ -256,10 +353,13 @@ export const Services = () => {
             
             {/* Status Card (User) */}
             <div 
-              onClick={() => setIsAuthOpen(true)}
+              onClick={() => {
+                  if(isLoggedIn) setIsProfileOpen(true);
+                  else setIsAuthOpen(true);
+              }}
               className={`border-2 p-6 transition-all duration-300 cursor-pointer group flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 shadow-lg rounded-sm bg-[#f5e6d3] text-[#2c1810]
                     ${isLoggedIn 
-                    ? "border-gold/50" 
+                    ? "border-gold/50 hover:border-gold hover:shadow-[0_0_20px_rgba(197,160,89,0.3)]" 
                     : "border-crimson/50"
                 }`}
             >
@@ -358,12 +458,23 @@ export const Services = () => {
                                 )}
                                 
                                 {userReservations.includes(selectedSector) ? (
+                                    <>
                                     <button 
                                         onClick={handleCancel}
                                         className="mt-6 w-full py-3 bg-crimson/20 hover:bg-crimson text-white/70 hover:text-white border border-crimson/50 transition-all uppercase tracking-widest text-xs md:text-sm font-bold shadow-lg rounded font-medieval"
                                     >
                                         RESERVIERUNG STORNIEREN
                                     </button>
+                                    {/* Invitation Button - Only if user has reservation here */}
+                                    <button
+                                      onClick={() => {
+                                         setIsInviteOpen(true);
+                                      }}
+                                      className="mt-4 w-full py-2 bg-emerald-900/40 hover:bg-emerald-900/60 border border-emerald-500/30 text-emerald-400 rounded uppercase tracking-wider text-sm font-bold transition-all shadow-[0_0_10px_rgba(16,185,129,0.1)] hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] flex items-center justify-center gap-2"
+                                    >
+                                       <span>⚔</span> Einladungslink generieren <span>⚔</span>
+                                    </button>
+                                    </>
                                 ) : (occupiedData[selectedSector]?.count > 0 && occupiedData[selectedSector]?.mode !== mode) ? (
                                     <button disabled className="mt-6 w-full py-3 bg-black/20 text-crimson border border-crimson/30 uppercase tracking-widest text-sm font-bold opacity-60 cursor-not-allowed rounded font-medieval">
                                         FALSCHER MODUS
@@ -384,6 +495,9 @@ export const Services = () => {
                                         {!isLoggedIn ? "BITTE ANMELDEN" : (userRole !== 'member' && userRole !== 'admin') ? "NUR FÜR MITGLIEDER" : "RESERVIEREN"}
                                     </button>
                                 )}
+
+                                {/* Invitation Button - Only if user has reservation here */}
+
                             </motion.div>
                         ) : (
                             <div className="text-gold/50 flex items-center justify-center h-full flex-col text-center min-h-[200px]">
