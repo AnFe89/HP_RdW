@@ -176,7 +176,7 @@ export const AdminDashboard = () => {
                 <h1 className="text-4xl md:text-5xl font-medieval text-center mb-10 text-parchment drop-shadow-lg border-b-2 border-gold/30 pb-6 w-full mx-auto max-w-3xl">
                     <span className="block">ADMIN-BEREICH</span>
                     <span className="block text-sm font-sans text-gold mt-4 tracking-widest uppercase">
-                        {currentUserId === CHAPTER_MASTER_ID ? 'WILLKOMMEN, MEIN KÖNIG' : 'WILLKOMMEN'}
+                        {currentUserId === CHAPTER_MASTER_ID ? 'WILLKOMMEN, MILORD' : 'WILLKOMMEN'}
                     </span>
                 </h1>
 

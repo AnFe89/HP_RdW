@@ -36,10 +36,11 @@ Dies ist das offizielle Web-Portal für den **Ritter der Würfelrunde** Tabletop
   - **Privilegien**:
     - **Mitglieder** können Plätze an den Tischen reservieren und sehen eine persönliche Begrüßung ("Willkommen, [Name]").
     - **Admins** haben volle Kontrolle über alle Reservierungen via Dashboard.
-  - **Einladungssystem**:
-    - Mitglieder können Freunde ("Gefährten") via Link an ihren Tisch einladen.
-    - Einladungen sind 24h gültig und geschützt gegen Überbuchung.
-    - Gäste sehen beim Klick auf den Link, wer sie eingeladen hat ("Einladung von X").
+  - **Partner-System & Gäste**:
+    - **Partnerwahl:** Mitglieder können beim Reservieren direkt einen Spielpartner aus der Mitgliederliste auswählen.
+    - **Einzelreservierung:** Option, um alleine zu reservieren (z.B. als Nachrücker).
+    - **Externer Gast:** Ein spezieller "Gastspieler"-Button ermöglicht das Blocken eines Platzes für nicht-registrierte Gäste (benötigt DB-Trigger).
+    - **Einladungssystem (Legacy):** Generierung von Einladungslinks (aktuell deaktiviert zugunsten der direkten Partnerwahl).
   - **Gast-Modus**:
     - Gäste können ihren Status und zugewiesenen Tisch einsehen.
     - Der Zugriff auf die taktische Karte bleibt Gästen verwehrt ("Einblick verwehrt"), um die strategische Integrität zu wahren.
@@ -59,6 +60,7 @@ Dies ist das offizielle Web-Portal für den **Ritter der Würfelrunde** Tabletop
 - **Tischreservierungen**:
   - Zentrale Übersicht aller aktiven Reservierungen ("Tafelrunde").
   - Administrative Löschgewalt über alle Einträge.
+  - **Zugriff:** Schnellzugriff über den "Admin-Dashboard" Button im Profil-Modal (nur für Admins sichtbar).
 
 ### 4. Mitgliederverwaltung
 
