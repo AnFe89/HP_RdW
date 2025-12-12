@@ -19,7 +19,7 @@ export const DataSlate = ({ title, date, category, summary, index }: DataSlatePr
       whileHover={{ y: -5, transition: { duration: 0.2 } }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5, ease: "easeOut", delay: index * 0.1 }}
-      className="relative p-6 md:p-8 bg-[#f5e6d3] text-[#2c1810] shadow-[0_10px_30px_rgba(0,0,0,0.3)] transition-all duration-300 group cursor-pointer w-full max-w-2xl rounded-sm border border-[#d4c5a9]"
+      className="relative p-6 md:p-8 bg-[#f5e6d3] text-[#2c1810] shadow-[0_10px_30px_rgba(0,0,0,0.3)] transition-colors duration-300 group cursor-pointer w-full max-w-2xl rounded-sm border border-[#d4c5a9]"
     >
       {/* Paper texture overlay */}
       <div className="absolute inset-0 opacity-30 pointer-events-none mix-blend-multiply rounded-sm" style={{ backgroundImage: "url('https://www.transparenttextures.com/patterns/aged-paper.png')" }} />
