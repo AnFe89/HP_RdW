@@ -398,6 +398,25 @@ export const Services = () => {
               >
                 ABMELDEN
               </button>
+
+              <div className="pt-4 border-t border-gold/10 mt-4 flex justify-center">
+                 <button 
+                    onClick={async () => {
+                        if (!confirm("ACHTUNG: Möchtest du dein Konto wirklich unwiderruflich löschen? Alle deine Daten gehen verloren.")) return;
+                        
+                        const { error } = await supabase.rpc('delete_own_account');
+                        if (error) {
+                            alert("FEHLER BEI LÖSCHUNG: " + error.message);
+                        } else {
+                            await supabase.auth.signOut();
+                            window.location.reload();
+                        }
+                    }}
+                    className="text-[10px] py-1 px-3 text-crimson/60 hover:text-crimson font-bold font-sans transition-colors uppercase tracking-widest hover:bg-crimson/5 rounded-sm flex items-center gap-1"
+                >
+                    <span>🗑️</span> Account endgültig löschen
+                </button>
+              </div>
             </div>
           </motion.div>
         )}
