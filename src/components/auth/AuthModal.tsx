@@ -98,7 +98,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
     };
 
     const handleDelete = async () => {
-        if (!confirm("Warnung: Dieser Vorgang ist endgültig. Möchten Sie Ihr Konto wirklich löschen?")) return;
+        if (!confirm("ACHTUNG: Möchtest du dein Konto wirklich unwiderruflich löschen? Alle deine Daten gehen verloren.")) return;
         setIsLoading(true);
         try {
             const { error } = await supabase.rpc('delete_own_account');
@@ -152,9 +152,15 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                                          <button onClick={handleLogout} className="w-full border-2 border-[#2c1810] text-[#2c1810] font-bold font-medieval py-3 hover:bg-[#2c1810] hover:text-parchment transition-colors uppercase tracking-widest">
                                             AUSLOGGEN
                                          </button>
-                                         <button onClick={handleDelete} className="w-full text-xs py-2 text-crimson/50 hover:text-crimson font-bold font-medieval transition-colors uppercase tracking-widest mt-2 hover:bg-crimson/5 rounded-sm">
-                                            KONTO LÖSCHEN
-                                         </button>
+                                         
+                                         <div className="pt-4 border-t border-[#2c1810]/10 mt-4 flex justify-center">
+                                            <button 
+                                                onClick={handleDelete} 
+                                                className="text-[10px] py-1 px-3 text-crimson/60 hover:text-crimson font-bold font-sans transition-colors uppercase tracking-widest hover:bg-crimson/5 rounded-sm flex items-center gap-1"
+                                            >
+                                                <span>🗑️</span> Account endgültig löschen
+                                            </button>
+                                         </div>
                                     </div>
                                 ) : (
                                     <form onSubmit={view === 'login' ? handleLogin : view === 'register' ? handleRegister : handleReset} className="space-y-6">
