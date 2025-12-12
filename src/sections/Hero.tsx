@@ -13,7 +13,7 @@ export const Hero = () => {
     const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
     return (
-        <section ref={ref} className="h-screen w-full relative flex items-center justify-center overflow-hidden bg-wood">
+        <section ref={ref} className="h-dvh w-full relative flex items-center justify-center overflow-hidden bg-wood">
             {/* 3D Dice Scene (Restored) - Positioned behind content */}
             <div className="absolute inset-0 z-0">
                 <HeroScene />
@@ -67,7 +67,7 @@ export const Hero = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.5, duration: 1 }}
-                className="absolute bottom-4 z-20 flex flex-col items-center gap-2 text-gold/70"
+                className="absolute bottom-16 md:bottom-8 z-20 flex flex-col items-center gap-2 text-gold/70"
             >
                 <span className="text-[10px] tracking-[0.3em] font-medieval uppercase text-shadow-sm">Scrollen</span>
                 <motion.div 
