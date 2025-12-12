@@ -1,24 +1,24 @@
 -- 0. Create Profiles Table & User Trigger
 -- This table mirrors the auth.users table and holds public profile info
 CREATE TABLE IF NOT EXISTS public.profiles (
-    id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
+    id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,    
     username TEXT UNIQUE,
     role TEXT DEFAULT 'guest',
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,  
     email TEXT,
     email_confirmed_at TIMESTAMP WITH TIME ZONE
 );
 
 -- Function to handle new user signup automatically
-CREATE OR REPLACE FUNCTION public.handle_new_user() 
+CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
     INSERT INTO public.profiles (id, username, role, email, email_confirmed_at)
     VALUES (
-        new.id, 
-        COALESCE(new.raw_user_meta_data->>'username', 'Recruit-' || substring(new.id::text, 1, 6)), 
-        'guest', 
-        new.email, 
+        new.id,
+        COALESCE(new.raw_user_meta_data->>'username', 'Recruit-' || substring(new.id::text, 1, 6)),
+        'guest',
+        new.email,
         new.email_confirmed_at
     )
     ON CONFLICT (id) DO UPDATE SET
@@ -35,11 +35,11 @@ CREATE TRIGGER on_auth_user_created
     FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
 
 -- Trigger for UPDATE (Email Confirmation sync)
-CREATE OR REPLACE FUNCTION public.handle_user_update() 
+CREATE OR REPLACE FUNCTION public.handle_user_update()
 RETURNS TRIGGER AS $$
 BEGIN
     UPDATE public.profiles
-    SET 
+    SET
         email = new.email,
         email_confirmed_at = new.email_confirmed_at
     WHERE id = new.id;
@@ -55,7 +55,7 @@ CREATE TRIGGER on_auth_user_updated
 -- 1. Create News Table
 CREATE TABLE IF NOT EXISTS public.news (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,  
     title TEXT NOT NULL,
     date TEXT NOT NULL, -- Flexible 40k date format
     category TEXT NOT NULL,
@@ -68,18 +68,18 @@ ALTER TABLE public.news ENABLE ROW LEVEL SECURITY;
 
 -- 3. Create Policies for News
 -- Everyone can read news
-CREATE POLICY "Public can view news" 
-ON public.news FOR SELECT 
+CREATE POLICY "Public can view news"
+ON public.news FOR SELECT
 USING (true);
 
 -- Only Admins can insert/update/delete news
 -- Assuming 'role' in 'profiles' table is 'admin'
-CREATE POLICY "Admins can manage news" 
-ON public.news FOR ALL 
+CREATE POLICY "Admins can manage news"
+ON public.news FOR ALL
 USING (
     exists (
-        select 1 from public.profiles 
-        where profiles.id = auth.uid() 
+        select 1 from public.profiles
+        where profiles.id = auth.uid()
         and profiles.role = 'admin'
     )
 );
@@ -89,19 +89,19 @@ USING (
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
 -- Allow users to read all profiles (needed for Admin list)
--- Note: You might want to restrict this in a real high-security app, 
+-- Note: You might want to restrict this in a real high-security app,
 -- but for this club app, knowing who is a member is fine.
-CREATE POLICY "Members can view all profiles" 
-ON public.profiles FOR SELECT 
+CREATE POLICY "Members can view all profiles"
+ON public.profiles FOR SELECT
 USING (auth.uid() IS NOT NULL);
 
 -- Allow Admins to update profiles (e.g. change roles)
-CREATE POLICY "Admins can update profiles" 
-ON public.profiles FOR UPDATE 
+CREATE POLICY "Admins can update profiles"
+ON public.profiles FOR UPDATE
 USING (
     exists (
-        select 1 from public.profiles 
-        where profiles.id = auth.uid() 
+        select 1 from public.profiles
+        where profiles.id = auth.uid()
         and profiles.role = 'admin'
     )
 );
@@ -115,11 +115,11 @@ RETURNS TEXT
 LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = public
-AS c:\Users\Besitzer\hp ritter der würfelrunde
+AS $$
 BEGIN
-    RETURN (SELECT email FROM public.profiles WHERE username = username_input LIMIT 1);
+    RETURN (SELECT email FROM public.profiles WHERE username = username_input LIMIT 1); 
 END;
-c:\Users\Besitzer\hp ritter der würfelrunde;
+$$;
 
 -- 7. Helper to Delete Own Account
 CREATE OR REPLACE FUNCTION public.delete_own_account()
@@ -127,9 +127,9 @@ RETURNS void
 LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = public
-AS c:\Users\Besitzer\hp ritter der würfelrunde
+AS $$
 BEGIN
   -- Delete the user from auth.users (Cascades to profile)
   DELETE FROM auth.users WHERE id = auth.uid();
 END;
-c:\Users\Besitzer\hp ritter der würfelrunde;
+$$;

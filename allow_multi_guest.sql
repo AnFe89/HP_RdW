@@ -50,7 +50,9 @@ DROP CONSTRAINT IF EXISTS reservations_user_id_start_time_key;
 
 -- 3. Create Function to check for Single Reservation (Except for Gastspieler)
 CREATE OR REPLACE FUNCTION check_reservation_limit()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER 
+SET search_path = public
+AS $$
 DECLARE
   user_name text;
 BEGIN
