@@ -52,9 +52,9 @@ function AppContent() {
                 <Suspense fallback={null}>
                   <Hero />
                   <About />
+                  <News />
                   <Services />
                 </Suspense>
-                <News />
                 <Board />
                 <Footer />
               </main>
