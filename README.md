@@ -135,19 +135,24 @@ Falls die Domain geändert werden soll (z.B. auf `www.ritter-wuerfelrunde.de`), 
 - In den Project Settings > **Domains** die neue Domain hinzufügen.
 - Den angezeigten Vercel DNS-Records (A-Record / CNAME) beim Domain-Provider hinterlegen.
 
-### 2. DNS Provider (Domain Host)
+### 2. DNS Provider (Domain Host: Netcup)
 
-- Einloggen beim Anbieter wo die Domain gekauft wurde.
-- DNS-Einstellungen öffnen.
-- Die von Vercel geforderten Records eintragen (z.B. `A @ 76.76.21.21`).
+Für **Netcup** (CCP) sind folgende Einträge unter "DNS" vorzunehmen:
+
+| Type      | Host  | Destination / Ziel                    | Zweck                         |
+| :-------- | :---- | :------------------------------------ | :---------------------------- |
+| **A**     | `@`   | `216.198.79.1`                        | Hauptadresse (rdw-ev.de)      |
+| **CNAME** | `www` | `e7bdb6f9ad698a0c.vercel-dns-017.com` | Weiterleitung (www.rdw-ev.de) |
+
+⚠️ **Wichtig:** Alle anderen A/AAAA Einträge für `@` und `www` löschen!
 
 ### 3. Supabase (Auth Redirects) - WICHTIG!
 
-Wenn dies vergessen wird, funktioniert der Login nicht mehr!
+Wenn dies vergessen wird, funktioniert der Login nach dem Umzug nicht mehr!
 
 - **Dashboard** > **Authentication** > **URL Configuration** öffnen.
-- **Site URL**: Auf die neue Domain ändern (z.B. `https://www.ritter-wuerfelrunde.de`).
-- **Redirect URLs**: Die neue Domain hinzufügen, am besten mit Wildcard für Unterseiten: `https://www.ritter-wuerfelrunde.de/**`.
+- **Site URL**: Auf die neue Domain ändern (`https://www.rdw-ev.de`).
+- **Redirect URLs**: Die neue Domain hinzufügen: `https://rdw-ev.de/**` und `https://www.rdw-ev.de/**`.
 
 ## © Copyright
 
