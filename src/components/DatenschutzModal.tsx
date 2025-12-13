@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
+
 
 interface DatenschutzModalProps {
     isOpen: boolean;
