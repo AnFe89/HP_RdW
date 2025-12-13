@@ -1,5 +1,6 @@
 import { Suspense, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom'; 
+import { Seo } from './components/Seo';
 import { Layout } from './components/Layout';
 import { Hero } from './sections/Hero';
 import { Services } from './sections/Services';
@@ -46,6 +47,7 @@ function AppContent() {
 
   return (
       <Layout>
+        <Seo />
         <Routes>
             <Route path="/" element={
               <main>

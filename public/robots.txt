@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Unallow: /admin
+Sitemap: https://www.rdw-ev.de/sitemap.xml

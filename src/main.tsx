@@ -1,5 +1,6 @@
 import { StrictMode, useState, useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
+import { HelmetProvider } from 'react-helmet-async'
 import './index.css'
 
 // Dynamic import wrapper to catch load errors (like Avast blocking chunks)
@@ -40,7 +41,11 @@ export function Bootstrap() {
     );
   }
 
-  return <App />;
+  return (
+    <HelmetProvider>
+      <App />
+    </HelmetProvider>
+  );
 }
 
 createRoot(document.getElementById('root')!).render(
