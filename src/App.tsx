@@ -5,7 +5,7 @@ import { Hero } from './sections/Hero';
 import { Services } from './sections/Services';
 import { About } from './sections/About';
 import { News } from './sections/News';
-import { Board } from './sections/Board';
+// import { Board } from './sections/Board';
 import { Footer } from './components/Footer';
 import { AdminDashboard } from './admin/AdminDashboard';
 import { InviteConfirmation } from './components/invitation/InviteConfirmation';
@@ -55,7 +55,7 @@ function AppContent() {
                   <News />
                   <Services />
                 </Suspense>
-                <Board />
+                {/* <Board /> */}
                 <Footer />
               </main>
             } />
