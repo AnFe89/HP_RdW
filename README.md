@@ -21,6 +21,7 @@ Dies ist das offizielle Web-Portal für den **Ritter der Würfelrunde** Tabletop
 
 - **Information**: Vorstellung des Vereins, Treffpunkt (Phantasos Studio) und Zeiten (Donnerstags 18:00).
 - **Stil**: Persönliche Ansprache ("Du"), die neue Spieler willkommen heißt.
+- **Social Media**: Direkte Verlinkung zum **Discord Server** und **Instagram Profil** (@rdw_ev).
 
 ### 3. Die Tafelrunde (Tischreservierung)
 
@@ -45,7 +46,14 @@ Dies ist das offizielle Web-Portal für den **Ritter der Würfelrunde** Tabletop
     - Gäste können ihren Status und zugewiesenen Tisch einsehen.
     - Der Zugriff auf die taktische Karte bleibt Gästen verwehrt ("Einblick verwehrt"), um die strategische Integrität zu wahren.
 
-### 3. Der Thronsaal (Admin)
+### 4. Der Herold (News-Feed)
+
+- **Aktuelle Kunde**: Anzeige der neuesten Dekrete und Berichte aus dem Vereinsleben.
+- **Organisation**:
+  - Zeigt standardmäßig die **5 aktuellsten** Beiträge.
+  - **Archiv-Funktion**: Über eine Blätter-Funktion ("Neuere/Ältere Beiträge") können auch vergangene Nachrichten eingesehen werden.
+
+### 5. Der Thronsaal (Admin)
 
 - **Geschützter Bereich**: Nur zugänglich für die Führungsebene (`role: admin`).
 - **News-System**:
@@ -61,6 +69,11 @@ Dies ist das offizielle Web-Portal für den **Ritter der Würfelrunde** Tabletop
   - Zentrale Übersicht aller aktiven Reservierungen ("Tafelrunde").
   - Administrative Löschgewalt über alle Einträge.
   - **Zugriff:** Schnellzugriff über den "Admin-Dashboard" Button im Profil-Modal (nur für Admins sichtbar).
+
+### 5. Rechtliches (Footer)
+
+- **Impressum**: Rechtskonformes Impressum, eingebettet in einem Pergament-Modal.
+- **Datenschutz**: DSGVO-konforme Datenschutzerklärung, angepasst an Vercel/Supabase Hosting, ebenfalls als Modal integriert.
 
 ### 4. Mitgliederverwaltung
 

@@ -13,18 +13,39 @@ interface NewsItem {
 export const News = () => {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+  const ITEMS_PER_PAGE = 5;
+
+  const fetchNews = async () => {
+    setLoading(true);
+    
+    // Get total count first
+    const countResult = await supabase
+        .from('news')
+        .select('*', { count: 'exact', head: true });
+    
+    setTotalCount(countResult.count || 0);
+
+    // Get paginated data
+    const from = page * ITEMS_PER_PAGE;
+    const to = from + ITEMS_PER_PAGE - 1;
+
+    const { data, error } = await supabase
+        .from('news')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .range(from, to);
+
+    if (error) {
+        console.error("Error loading news:", error);
+    } else {
+        setNews(data || []);
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
-    const fetchNews = async () => {
-        const { data, error } = await supabase.from('news').select('*').order('created_at', { ascending: false });
-        if (error) {
-            console.error("Error loading news:", error);
-        } else {
-            setNews(data || []);
-        }
-        setLoading(false);
-    };
-
     fetchNews();
 
     // Subscribe to realtime changes
@@ -35,7 +56,10 @@ export const News = () => {
         .subscribe();
 
     return () => { subscription.unsubscribe(); }
-  }, []);
+  }, [page]); // Re-fetch when page changes
+
+  const hasNextPage = (page + 1) * ITEMS_PER_PAGE < totalCount;
+  const hasPrevPage = page > 0;
 
   return (
     <section className="relative w-full py-12 md:py-24 px-4 bg-wood border-t-4 border-[#2c1810]">
@@ -58,17 +82,54 @@ export const News = () => {
         {/* Feed */}
         <div className="md:w-2/3 flex flex-col gap-8">
             {loading ? (
-                 <div className="text-gold/50 font-medieval animate-pulse text-xl text-center">DER BOTE IST UNTERWEGS...</div>
+                 <div className="text-gold/50 font-medieval animate-pulse text-xl text-center py-12">DER BOTE IST UNTERWEGS...</div>
             ) : news.length === 0 ? (
-                 <div className="text-parchment/50 font-sans italic text-center">KEINE NEUEN NACHRICHTEN VORLIEGEND.</div>
+                 <div className="text-parchment/50 font-sans italic text-center py-12">KEINE NEUEN NACHRICHTEN VORLIEGEND.</div>
             ) : (
-                news.map((item, i) => (
-                    <DataSlate key={item.id || i} index={i} {...item} />
-                ))
+                <div className="flex flex-col gap-8">
+                    {news.map((item, i) => (
+                        <DataSlate key={item.id || i} index={i} {...item} />
+                    ))}
+                </div>
+            )}
+            
+            {/* Pagination Controls */}
+            {(hasPrevPage || hasNextPage) && (
+                <div className="flex justify-between items-center pt-8 border-t border-[#2c1810]/30">
+                    <button 
+                        onClick={() => setPage(p => Math.max(0, p - 1))}
+                        disabled={!hasPrevPage}
+                        className={`
+                            font-medieval text-sm md:text-base px-6 py-2 rounded border-2 transition-all duration-300
+                            ${!hasPrevPage 
+                                ? 'opacity-0 pointer-events-none' 
+                                : 'border-[#8b4513] text-[#8b4513] bg-[#f5e6d3] hover:bg-[#8b4513] hover:text-[#f5e6d3] shadow-md hover:shadow-lg lowercase font-variant-small-caps'}
+                        `}
+                    >
+                        ❮ Neuere Beiträge
+                    </button>
+
+                    <span className="text-gold/50 font-medieval text-xs tracking-widest">
+                        SEITE {page + 1}
+                    </span>
+
+                    <button 
+                        onClick={() => setPage(p => p + 1)}
+                        disabled={!hasNextPage}
+                        className={`
+                            font-medieval text-sm md:text-base px-6 py-2 rounded border-2 transition-all duration-300
+                            ${!hasNextPage 
+                                ? 'opacity-0 pointer-events-none' 
+                                : 'border-[#8b4513] text-[#8b4513] bg-[#f5e6d3] hover:bg-[#8b4513] hover:text-[#f5e6d3] shadow-md hover:shadow-lg lowercase font-variant-small-caps'}
+                        `}
+                    >
+                        Ältere Beiträge ❯
+                    </button>
+                </div>
             )}
             
             {/* Divider */}
-            <div className="flex items-center gap-4 text-gold/30 text-xs font-medieval justify-center py-10 opacity-50">
+            <div className="flex items-center gap-4 text-gold/30 text-xs font-medieval justify-center py-4 opacity-50">
                 <span className="w-10 h-[1px] bg-gold/50"></span> ⚔ <span className="w-10 h-[1px] bg-gold/50"></span>
             </div>
         </div>
