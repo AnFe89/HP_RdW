@@ -48,7 +48,7 @@ export const About = () => {
                             rel="noopener noreferrer"
                             className="group flex items-center gap-3 px-6 py-3 bg-[#5865F2]/10 hover:bg-[#5865F2] border-2 border-[#5865F2] rounded-lg transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-1"
                         >
-                            <img src="/discord-logo.png" alt="Discord" className="w-8 h-8 object-contain group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all" />
+                            <img src="/discord-logo-3d.jpg" alt="Discord" className="w-12 h-12 object-contain group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all rounded-full" />
                             <span className="font-medieval text-[#5865F2] group-hover:text-white font-bold tracking-wider">Discord Server</span>
                         </a>
 
@@ -58,7 +58,7 @@ export const About = () => {
                             rel="noopener noreferrer"
                             className="group flex items-center gap-3 px-6 py-3 bg-[#E4405F]/10 hover:bg-[#E4405F] border-2 border-[#E4405F] rounded-lg transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-1"
                         >
-                            <img src="/instagram-logo.jpg" alt="Instagram" className="w-8 h-8 object-contain group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all rounded-xl" />
+                            <img src="/instagram-logo.jpg" alt="Instagram" className="w-12 h-12 object-contain group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all rounded-xl" />
                             <span className="font-medieval text-[#E4405F] group-hover:text-white font-bold tracking-wider">@rdw_ev</span>
                         </a>
                     </div>
