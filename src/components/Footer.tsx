@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { ImpressumModal } from './ImpressumModal';
+import { DatenschutzModal } from './DatenschutzModal';
 
 export const Footer = () => {
     const [isImpressumOpen, setIsImpressumOpen] = useState(false);
+    const [isDatenschutzOpen, setIsDatenschutzOpen] = useState(false);
 
     return (
         <>
@@ -24,9 +26,12 @@ export const Footer = () => {
                         Impressum
                     </button>
                     <span className="text-[10px] text-parchment/30">|</span>
-                    <a href="#" className="text-[10px] tracking-widest hover:text-gold transition-colors uppercase border-b border-transparent hover:border-gold/50 pb-0.5">
+                    <button 
+                        onClick={() => setIsDatenschutzOpen(true)}
+                        className="text-[10px] tracking-widest hover:text-gold transition-colors uppercase border-b border-transparent hover:border-gold/50 pb-0.5"
+                    >
                         Datenschutz
-                    </a>
+                    </button>
                 </div>
                 <p className="mt-4 text-[10px] text-gold/40 font-serif italic max-w-md mx-auto relative z-10">
                     "DER SIEG GEHÖRT DENEN, DIE AN IHRE SACHE GLAUBEN."
@@ -36,6 +41,11 @@ export const Footer = () => {
             <ImpressumModal 
                 isOpen={isImpressumOpen} 
                 onClose={() => setIsImpressumOpen(false)} 
+            />
+
+            <DatenschutzModal
+                isOpen={isDatenschutzOpen}
+                onClose={() => setIsDatenschutzOpen(false)}
             />
         </>
     )
