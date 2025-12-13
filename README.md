@@ -113,6 +113,29 @@ Jede neue Funktion muss primär auf mobilen Geräten funktionieren.
 - Bilder dürfen den Rahmen nicht sprengen.
 - Schaltflächen müssen groß genug für Touch-Bedienung sein.
 
+## 🌐 Domain Einrichtung & Deployment
+
+Falls die Domain geändert werden soll (z.B. auf `www.ritter-wuerfelrunde.de`), sind Anpassungen an 3 Stellen notwendig:
+
+### 1. Vercel (Frontend)
+
+- In den Project Settings > **Domains** die neue Domain hinzufügen.
+- Den angezeigten Vercel DNS-Records (A-Record / CNAME) beim Domain-Provider hinterlegen.
+
+### 2. DNS Provider (Domain Host)
+
+- Einloggen beim Anbieter wo die Domain gekauft wurde.
+- DNS-Einstellungen öffnen.
+- Die von Vercel geforderten Records eintragen (z.B. `A @ 76.76.21.21`).
+
+### 3. Supabase (Auth Redirects) - WICHTIG!
+
+Wenn dies vergessen wird, funktioniert der Login nicht mehr!
+
+- **Dashboard** > **Authentication** > **URL Configuration** öffnen.
+- **Site URL**: Auf die neue Domain ändern (z.B. `https://www.ritter-wuerfelrunde.de`).
+- **Redirect URLs**: Die neue Domain hinzufügen, am besten mit Wildcard für Unterseiten: `https://www.ritter-wuerfelrunde.de/**`.
+
 ## © Copyright
 
 **Ritter der Würfelrunde © 2026**

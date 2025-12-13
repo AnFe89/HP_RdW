@@ -41,7 +41,27 @@ export const About = () => {
                         </p>
                     </div>
 
-                    {/* Decorative Divider */}
+                    <div className="flex flex-col md:flex-row items-center justify-center gap-6 mt-10">
+                        <a 
+                            href="https://discord.gg/UKXHTTBnxX" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="group flex items-center gap-3 px-6 py-3 bg-[#5865F2]/10 hover:bg-[#5865F2] border-2 border-[#5865F2] rounded-lg transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-1"
+                        >
+                            <img src="/discord-logo.png" alt="Discord" className="w-8 h-8 object-contain group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all" />
+                            <span className="font-medieval text-[#5865F2] group-hover:text-white font-bold tracking-wider">Discord Server</span>
+                        </a>
+
+                        <a 
+                            href="https://www.instagram.com/rdw_ev?igsh=MXdueHI0eHl3eXlsbQ==" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="group flex items-center gap-3 px-6 py-3 bg-[#E4405F]/10 hover:bg-[#E4405F] border-2 border-[#E4405F] rounded-lg transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-1"
+                        >
+                            <img src="/instagram-logo.jpg" alt="Instagram" className="w-8 h-8 object-contain group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all rounded-xl" />
+                            <span className="font-medieval text-[#E4405F] group-hover:text-white font-bold tracking-wider">@rdw_ev</span>
+                        </a>
+                    </div>
                     <div className="w-24 h-1 bg-[#8b4513]/20 mx-auto mt-10 rounded-full" />
                 </motion.div>
 
