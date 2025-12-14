@@ -224,6 +224,21 @@ export const Services = () => {
     const endTime = new Date(gameNight);
     endTime.setHours(23, 59, 0, 0);
 
+    // Capacity Check
+    const tableInfo = occupiedData[selectedSector] || { count: 0, mode: mode };
+    // Use existing mode if table has players, otherwise use selected mode
+    const effectiveMode = tableInfo.count > 0 ? tableInfo.mode : mode;
+    const capacity = effectiveMode === "40k" ? 2 : 4;
+    const slotsNeeded = partnerId ? 2 : 1;
+
+    if (tableInfo.count + slotsNeeded > capacity) {
+        alert(slotsNeeded === 2 
+            ? "NICHT GENUG PLATZ: Der Tisch hat nicht genügend freie Plätze für euch beide."
+            : "DER TISCH IST LEIDER SCHON VOLL."
+        );
+        return;
+    }
+
     // Book for Self
     const { error } = await supabase.from("reservations").insert({
         table_id: selectedSector,
