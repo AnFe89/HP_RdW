@@ -6,7 +6,7 @@ Dies ist das offizielle Web-Portal für den **Ritter der Würfelrunde** Tabletop
 
 ## 📡 Status
 
-**Live-Betrieb:** [Vercel Deployment](https://hprdw.vercel.app)
+**Live-Betrieb:** [www.rdw-ev.de](https://www.rdw-ev.de)
 **Code:** [GitHub](https://github.com/AnFe89/HP_RdW)
 
 ## 🛡️ Funktionen & Bereiche
@@ -126,23 +126,18 @@ Jede neue Funktion muss primär auf mobilen Geräten funktionieren.
 - Bilder dürfen den Rahmen nicht sprengen.
 - Schaltflächen müssen groß genug für Touch-Bedienung sein.
 
-## 🌐 Domain Einrichtung & Deployment
+## 🌐 Domain Konfiguration (Live)
 
-Falls die Domain geändert werden soll (z.B. auf `www.ritter-wuerfelrunde.de`), sind Anpassungen an 3 Stellen notwendig:
+Die Domain `rdw-ev.de` ist bei Netcup registriert und via DNS mit Vercel verbunden.
 
-### 1. Vercel (Frontend)
+### DNS Einträge (Netcup CCP)
 
-- In den Project Settings > **Domains** die neue Domain hinzufügen.
-- Den angezeigten Vercel DNS-Records (A-Record / CNAME) beim Domain-Provider hinterlegen.
+Folgende DNS-Records sind aktiv, um die Verbindung herzustellen:
 
-### 2. DNS Provider (Domain Host: Netcup)
-
-Für **Netcup** (CCP) sind folgende Einträge unter "DNS" vorzunehmen:
-
-| Type      | Host  | Destination / Ziel                    | Zweck                         |
-| :-------- | :---- | :------------------------------------ | :---------------------------- |
-| **A**     | `@`   | `216.198.79.1`                        | Hauptadresse (rdw-ev.de)      |
-| **CNAME** | `www` | `e7bdb6f9ad698a0c.vercel-dns-017.com` | Weiterleitung (www.rdw-ev.de) |
+| Type      | Host  | Destination / Ziel     | Zweck                         |
+| :-------- | :---- | :--------------------- | :---------------------------- |
+| **A**     | `@`   | `216.198.79.1`         | Hauptadresse (rdw-ev.de)      |
+| **CNAME** | `www` | `cname.vercel-dns.com` | Weiterleitung (www.rdw-ev.de) |
 
 ⚠️ **Wichtig:** Alle anderen A/AAAA Einträge für `@` und `www` löschen!
 
