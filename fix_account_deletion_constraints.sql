@@ -37,7 +37,7 @@ DROP CONSTRAINT IF EXISTS reservations_user_id_fkey;
 ALTER TABLE public.reservations
 ADD CONSTRAINT reservations_user_id_fkey
 FOREIGN KEY (user_id)
-REFERENCES auth.users(id)
+REFERENCES public.profiles(id)
 ON DELETE CASCADE;
 
 
