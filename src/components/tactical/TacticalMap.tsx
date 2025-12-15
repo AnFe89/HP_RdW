@@ -117,32 +117,60 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
 
                                 {/* Chairs */}
                                 <div className={clsx(
-                                    "absolute flex gap-4 w-full justify-center",
+                                    "absolute flex w-full",
+                                    effectiveMode === 'killteam' ? "justify-between px-4 md:px-8" : "justify-center gap-4",
                                     "-top-4" // Chairs above
                                 )}>
-                                     {[...Array(Math.ceil(capacity/2))].map((_, i) => (
-                                        <div key={`top-${i}`} className={clsx(
-                                            "w-6 h-6 rounded-full border border-black/30 shadow-sm transition-colors",
-                                            // Green glow for full dots
-                                            i < count 
-                                                ? (isFull ? "bg-green-600 shadow-[0_0_8px_rgba(34,197,94,0.8)] border-green-400" : "bg-gold shadow-[0_0_5px_rgba(255,215,0,0.4)]") 
-                                                : "bg-[#1a120b]"
-                                        )} />
-                                    ))}
+                                     {[...Array(Math.ceil(capacity/2))].map((_, i) => {
+                                         // Logic: 
+                                         // i=0 -> Pair 1 (Left). Occupied if count >= 1. Green if Pair Full (count >= 2).
+                                         // i=1 -> Pair 2 (Right). Occupied if count >= 3. Green if Pair Full (count >= 4).
+                                         const pairIndex = i;
+                                         // For 40k: Simple count check (no pairs concept visualized)
+                                         // For KT: Pair logic
+                                         
+                                         // Unified logic works for both if we treat 40k as 1 pair per row effectively?
+                                         // Actually 40k is 1vs1, so 2 players total.
+                                         // If 40k: capacity=2. i goes 0..0 (ceil(1)). pairIndex=0.
+                                         // isPairFull = count >= 2. isOccupied = count >= 1.
+                                         // This logic is compatible with 40k (Green if full, Gold if 1).
+                                         
+                                         const isPairFull = count >= (pairIndex + 1) * 2;
+                                         const isOccupied = count >= (pairIndex * 2) + 1;
+
+                                         return (
+                                            <div key={`top-${i}`} className={clsx(
+                                                "w-6 h-6 rounded-full border border-black/30 shadow-sm transition-colors",
+                                                isOccupied 
+                                                    ? (isPairFull 
+                                                        ? "bg-green-600 shadow-[0_0_8px_rgba(34,197,94,0.8)] border-green-400" // Green if pair/table is ready
+                                                        : "bg-gold shadow-[0_0_5px_rgba(255,215,0,0.4)]") // Gold if waiting for partner
+                                                    : "bg-[#1a120b]" // Empty
+                                            )} />
+                                         );
+                                     })}
                                 </div>
                                 <div className={clsx(
-                                    "absolute flex gap-4 w-full justify-center",
+                                    "absolute flex w-full",
+                                    effectiveMode === 'killteam' ? "justify-between px-4 md:px-8" : "justify-center gap-4",
                                     "-bottom-4" // Chairs below
                                 )}>
-                                     {[...Array(Math.floor(capacity/2))].map((_, i) => (
-                                        <div key={`bot-${i}`} className={clsx(
-                                            "w-6 h-6 rounded-full border border-black/30 shadow-sm transition-colors",
-                                            // Green glow for full dots
-                                            (i + Math.ceil(capacity/2)) < count 
-                                                ? (isFull ? "bg-green-600 shadow-[0_0_8px_rgba(34,197,94,0.8)] border-green-400" : "bg-gold shadow-[0_0_5px_rgba(255,215,0,0.4)]") 
-                                                : "bg-[#1a120b]"
-                                        )} />
-                                    ))}
+                                     {[...Array(Math.floor(capacity/2))].map((_, i) => {
+                                         const pairIndex = i;
+                                         const isPairFull = count >= (pairIndex + 1) * 2;
+                                         const isOccupied = count >= (pairIndex * 2) + 2;
+
+                                         return (
+                                            <div key={`bot-${i}`} className={clsx(
+                                                "w-6 h-6 rounded-full border border-black/30 shadow-sm transition-colors",
+                                                isOccupied 
+                                                    ? (isPairFull 
+                                                        ? "bg-green-600 shadow-[0_0_8px_rgba(34,197,94,0.8)] border-green-400" 
+                                                        : "bg-gold shadow-[0_0_5px_rgba(255,215,0,0.4)]") 
+                                                    : "bg-[#1a120b]"
+                                            )} />
+                                         );
+                                     })}
                                 </div>
 
                                 {/* CONTENT CONTAINER: Label + Icon */}
