@@ -28,6 +28,7 @@ Dies ist das offizielle Web-Portal für den **Ritter der Würfelrunde** Tabletop
 - **Interaktive Karte**: Eine interaktive Karte ("TacticalMap"), die den Saal mit 6 Tischen zeigt.
 - **Realismus & Taktik**:
   - Tische zeigen dynamisch das aktive Spielsystem an (**Warhammer 40k** Logo oder **Kill Team** Icon).
+  - **Kill Team Spezial**: Bei Kill Team werden die Plätze paarweise (Säulen) gefüllt. Ein Paar leuchtet grün, sobald sich zwei Spieler gefunden haben (auch wenn der Tisch noch nicht voll ist). Die Paare werden visuell getrennt dargestellt (Links vs. Rechts).
   - Visuelle Details wie Spielmatten und Würfel auf leeren Tischen.
 - **Platzwahl**:
   - **Freie Plätze**: Werden durch leere Stühle symbolisiert.
@@ -78,6 +79,7 @@ Dies ist das offizielle Web-Portal für den **Ritter der Würfelrunde** Tabletop
 ### 4. Mitgliederverwaltung
 
 - **Authentifizierung**: Login via Email oder Benutzername.
+- **Profilverwaltung**: Mitglieder können ihren Anzeigenamen ("Rufname") direkt im Profil ändern.
 - **Flexibler Zugang**: Passwortloser Zugang via Magic Link möglich.
 - **Recht auf Vergessen**: Vollständige Löschung des Accounts auf Wunsch (DSGVO-konform).
 
