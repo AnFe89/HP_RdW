@@ -15,6 +15,34 @@ export const Services = () => {
   const [isPartnerSelectionOpen, setIsPartnerSelectionOpen] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [newUsername, setNewUsername] = useState("");
+
+  const handleUpdateUsername = async () => {
+    if(!newUsername || newUsername.length < 3) {
+        alert("Name muss mindestens 3 Zeichen lang sein.");
+        return;
+    }
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    try {
+        const { error } = await supabase
+            .from('profiles')
+            .update({ username: newUsername })
+            .eq('id', user.id);
+
+        if (error) throw error;
+        
+        setUsername(newUsername);
+        setIsEditingName(false);
+        // Refresh to sync invites etc if needed
+        initData();
+    } catch (err: any) {
+        alert("Fehler beim Aktualisieren: " + (err.message || "Unbekannter Fehler. Name evtl. schon vergeben?"));
+    }
+  };
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -47,7 +75,9 @@ export const Services = () => {
   const [occupiedData, setOccupiedData] = useState<
     Record<number, { count: number; mode: string; names: string[] }>
   >({});
-  const [bookedUsersMap, setBookedUsersMap] = useState<Record<string, number>>({});
+  const [bookedUsersMap, setBookedUsersMap] = useState<Record<string, number>>(
+    {}
+  );
   const [userReservations, setUserReservations] = useState<number[]>([]);
   const [userRole, setUserRole] = useState<string>("guest");
   const [username, setUsername] = useState<string>("");
@@ -90,8 +120,14 @@ export const Services = () => {
       .select("table_id, user_id, game_mode, profiles(username)")
       // Widen the search window to the whole evening (e.g. +/- 6 hours around 18:00)
       // This prevents issues with slight timezone offsets or precision differences
-      .gte("start_time", new Date(gameDate.getTime() - 12 * 60 * 60 * 1000).toISOString()) 
-      .lte("start_time", new Date(gameDate.getTime() + 12 * 60 * 60 * 1000).toISOString());
+      .gte(
+        "start_time",
+        new Date(gameDate.getTime() - 12 * 60 * 60 * 1000).toISOString()
+      )
+      .lte(
+        "start_time",
+        new Date(gameDate.getTime() + 12 * 60 * 60 * 1000).toISOString()
+      );
 
     if (data) {
       const tableData: Record<
@@ -116,8 +152,8 @@ export const Services = () => {
 
       // Create map of UserID -> TableID
       const userMap: Record<string, number> = {};
-      data.forEach(r => {
-        if(r.user_id) userMap[r.user_id] = r.table_id;
+      data.forEach((r) => {
+        if (r.user_id) userMap[r.user_id] = r.table_id;
       });
       setBookedUsersMap(userMap);
 
@@ -211,16 +247,18 @@ export const Services = () => {
       data: { user },
     } = await supabase.auth.getUser();
     if (!user) return;
-    
+
     // Open Partner Selection instead of booking directly
     setIsPartnerSelectionOpen(true);
   };
 
   const finalizeReservation = async (partnerId: string | null) => {
     setIsPartnerSelectionOpen(false);
-    
-    const { data: { user } } = await supabase.auth.getUser();
-    if(!user || !selectedSector) return;
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user || !selectedSector) return;
 
     const gameNight = getNextGameNight();
     const endTime = new Date(gameNight);
@@ -234,46 +272,54 @@ export const Services = () => {
     const slotsNeeded = partnerId ? 2 : 1;
 
     if (tableInfo.count + slotsNeeded > capacity) {
-        alert(slotsNeeded === 2 
-            ? "NICHT GENUG PLATZ: Der Tisch hat nicht genügend freie Plätze für euch beide."
-            : "DER TISCH IST LEIDER SCHON VOLL."
-        );
-        return;
+      alert(
+        slotsNeeded === 2
+          ? "NICHT GENUG PLATZ: Der Tisch hat nicht genügend freie Plätze für euch beide."
+          : "DER TISCH IST LEIDER SCHON VOLL."
+      );
+      return;
     }
 
     // Book for Self
     const { error } = await supabase.from("reservations").insert({
-        table_id: selectedSector,
-        user_id: user.id,
-        start_time: gameNight.toISOString(),
-        end_time: endTime.toISOString(),
-        game_mode: mode,
+      table_id: selectedSector,
+      user_id: user.id,
+      start_time: gameNight.toISOString(),
+      end_time: endTime.toISOString(),
+      game_mode: mode,
     });
 
     if (error) {
-        alert("FEHLER BEI DER RESERVIERUNG: " + error.message);
-        return;
+      alert("FEHLER BEI DER RESERVIERUNG: " + error.message);
+      return;
     }
 
     // Book for Partner (if selected)
     if (partnerId) {
-        const { error: partnerError } = await supabase.from("reservations").insert({
-            table_id: selectedSector,
-            user_id: partnerId,
-            start_time: gameNight.toISOString(),
-            end_time: endTime.toISOString(),
-            game_mode: mode,
+      const { error: partnerError } = await supabase
+        .from("reservations")
+        .insert({
+          table_id: selectedSector,
+          user_id: partnerId,
+          start_time: gameNight.toISOString(),
+          end_time: endTime.toISOString(),
+          game_mode: mode,
         });
 
-        if (partnerError) {
-             alert("WARNUNG: DU WURDEST GEBUCHT, ABER DEIN PARTNER KONNTE NICHT GEBUCHT WERDEN (Evtl. schon belegt?): " + partnerError.message);
-        }
+      if (partnerError) {
+        alert(
+          "WARNUNG: DU WURDEST GEBUCHT, ABER DEIN PARTNER KONNTE NICHT GEBUCHT WERDEN (Evtl. schon belegt?): " +
+            partnerError.message
+        );
+      }
     }
 
-    alert(`PLATZ GESICHERT FÜR ${gameNight.toLocaleDateString()}. VIEL ERFOLG!`);
-    
+    alert(
+      `PLATZ GESICHERT FÜR ${gameNight.toLocaleDateString()}. VIEL ERFOLG!`
+    );
+
     // Optimistic Update (Full Refresh better to see partner)
-    initData(); 
+    initData();
   };
 
   const handleCancel = async () => {
@@ -346,11 +392,53 @@ export const Services = () => {
               </h2>
 
               <div className="space-y-4">
-                <div className="flex justify-between border-b border-gold/20 pb-2">
-                  <span className="text-parchment/60 font-sans">Name:</span>
-                  <span className="text-gold font-bold font-sans">
-                    {username}
-                  </span>
+                <div className="flex flex-col border-b border-gold/20 pb-2 gap-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-parchment/60 font-sans">Name:</span>
+                    {!isEditingName ? (
+                      <div className="flex items-center gap-2">
+                        <span className="text-gold font-bold font-sans">
+                          {username}
+                        </span>
+                        <button
+                          onClick={() => {
+                            setNewUsername(username);
+                            setIsEditingName(true);
+                          }}
+                          className="text-xs text-parchment/40 hover:text-gold underline"
+                        >
+                          Bearbeiten
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="text"
+                          value={newUsername}
+                          onChange={(e) => setNewUsername(e.target.value)}
+                          className="bg-[#2c1810] border border-gold/40 text-gold px-2 py-1 text-sm rounded w-32 focus:outline-none focus:border-gold"
+                        />
+                        <button
+                          onClick={handleUpdateUsername}
+                          className="text-emerald-500 hover:text-emerald-400 font-bold"
+                        >
+                          ✓
+                        </button>
+                        <button
+                          onClick={() => setIsEditingName(false)}
+                          className="text-crimson hover:text-crimson/80 font-bold"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                  {isEditingName && (
+                    <p className="text-[10px] text-parchment/40 italic">
+                      Hinweis: Dein neuer Name wird sofort auf Reservationen
+                      übertragen.
+                    </p>
+                  )}
                 </div>
                 <div className="flex justify-between border-b border-gold/20 pb-2">
                   <span className="text-parchment/60 font-sans">Rang:</span>
@@ -417,21 +505,26 @@ export const Services = () => {
               </button>
 
               <div className="pt-4 border-t border-gold/10 mt-4 flex justify-center">
-                 <button 
-                    onClick={async () => {
-                        if (!confirm("ACHTUNG: Möchtest du dein Konto wirklich unwiderruflich löschen? Alle deine Daten gehen verloren.")) return;
-                        
-                        const { error } = await supabase.rpc('delete_own_account');
-                        if (error) {
-                            alert("FEHLER BEI LÖSCHUNG: " + error.message);
-                        } else {
-                            await supabase.auth.signOut();
-                            window.location.reload();
-                        }
-                    }}
-                    className="text-[10px] py-1 px-3 text-crimson/60 hover:text-crimson font-bold font-sans transition-colors uppercase tracking-widest hover:bg-crimson/5 rounded-sm flex items-center gap-1"
+                <button
+                  onClick={async () => {
+                    if (
+                      !confirm(
+                        "ACHTUNG: Möchtest du dein Konto wirklich unwiderruflich löschen? Alle deine Daten gehen verloren."
+                      )
+                    )
+                      return;
+
+                    const { error } = await supabase.rpc("delete_own_account");
+                    if (error) {
+                      alert("FEHLER BEI LÖSCHUNG: " + error.message);
+                    } else {
+                      await supabase.auth.signOut();
+                      window.location.reload();
+                    }
+                  }}
+                  className="text-[10px] py-1 px-3 text-crimson/60 hover:text-crimson font-bold font-sans transition-colors uppercase tracking-widest hover:bg-crimson/5 rounded-sm flex items-center gap-1"
                 >
-                    <span>🗑️</span> Account endgültig löschen
+                  <span>🗑️</span> Account endgültig löschen
                 </button>
               </div>
             </div>
@@ -446,11 +539,11 @@ export const Services = () => {
         gameDate={gameDate}
       />
 
-      <PartnerSelectionModal 
+      <PartnerSelectionModal
         isOpen={isPartnerSelectionOpen}
         onClose={() => setIsPartnerSelectionOpen(false)}
         onConfirm={finalizeReservation}
-        currentUserId={currentUserId || ''}
+        currentUserId={currentUserId || ""}
         bookedUsers={bookedUsersMap}
       />
 
@@ -672,7 +765,7 @@ export const Services = () => {
                           >
                             RESERVIERUNG STORNIEREN
                           </button>
-                            {/* Invitation Button - DISABLED per user request
+                          {/* Invitation Button - DISABLED per user request
                           <button
                             onClick={() => {
                               setIsInviteOpen(true);
