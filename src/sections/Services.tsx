@@ -88,8 +88,10 @@ export const Services = () => {
     const { data } = await supabase
       .from("reservations")
       .select("table_id, user_id, game_mode, profiles(username)")
-      .gte("start_time", new Date(gameDate.getTime() - 1000).toISOString())
-      .lte("start_time", new Date(gameDate.getTime() + 1000).toISOString());
+      // Widen the search window to the whole evening (e.g. +/- 6 hours around 18:00)
+      // This prevents issues with slight timezone offsets or precision differences
+      .gte("start_time", new Date(gameDate.getTime() - 12 * 60 * 60 * 1000).toISOString()) 
+      .lte("start_time", new Date(gameDate.getTime() + 12 * 60 * 60 * 1000).toISOString());
 
     if (data) {
       const tableData: Record<
