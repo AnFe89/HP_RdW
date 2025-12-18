@@ -23,7 +23,13 @@ Dies ist das offizielle Web-Portal für den **Ritter der Würfelrunde** Tabletop
 - **Stil**: Persönliche Ansprache ("Du"), die neue Spieler willkommen heißt.
 - **Social Media**: Direkte Verlinkung zum **Discord Server** und **Instagram Profil** (@rdw_ev).
 
-### 3. Die Tafelrunde (Tischreservierung)
+### 3. Der Rabe (Kontakt)
+
+- **Funktion**: Ein stilvolles Kontaktformular, um dem Verein Nachrichten ("Raben") zu senden.
+- **Technik**: Integration via Formspree.
+- **Feedback**: Visuelles Feedback beim Senden (Ladeanimation, Erfolgsmeldung).
+
+### 4. Die Tafelrunde (Tischreservierung)
 
 - **Interaktive Karte**: Eine interaktive Karte ("TacticalMap"), die den Saal mit 6 Tischen zeigt.
 - **Realismus & Taktik**:
@@ -47,14 +53,14 @@ Dies ist das offizielle Web-Portal für den **Ritter der Würfelrunde** Tabletop
     - Gäste können ihren Status und zugewiesenen Tisch einsehen.
     - Der Zugriff auf die taktische Karte bleibt Gästen verwehrt ("Einblick verwehrt"), um die strategische Integrität zu wahren.
 
-### 4. Der Herold (News-Feed)
+### 5. Der Herold (News-Feed)
 
 - **Aktuelle Kunde**: Anzeige der neuesten Dekrete und Berichte aus dem Vereinsleben.
 - **Organisation**:
   - Zeigt standardmäßig die **5 aktuellsten** Beiträge.
   - **Archiv-Funktion**: Über eine Blätter-Funktion ("Neuere/Ältere Beiträge") können auch vergangene Nachrichten eingesehen werden.
 
-### 5. Der Thronsaal (Admin)
+### 6. Der Thronsaal (Admin)
 
 - **Geschützter Bereich**: Nur zugänglich für die Führungsebene (`role: admin`).
 - **News-System**:
@@ -71,12 +77,12 @@ Dies ist das offizielle Web-Portal für den **Ritter der Würfelrunde** Tabletop
   - Administrative Löschgewalt über alle Einträge.
   - **Zugriff:** Schnellzugriff über den "Admin-Dashboard" Button im Profil-Modal (nur für Admins sichtbar).
 
-### 5. Rechtliches (Footer)
+### 7. Rechtliches (Footer)
 
 - **Impressum**: Rechtskonformes Impressum, eingebettet in einem Pergament-Modal.
 - **Datenschutz**: DSGVO-konforme Datenschutzerklärung, angepasst an Vercel/Supabase Hosting, ebenfalls als Modal integriert.
 
-### 4. Mitgliederverwaltung
+### 8. Mitgliederverwaltung
 
 - **Authentifizierung**: Login via Email oder Benutzername.
 - **Profilverwaltung**: Mitglieder können ihren Anzeigenamen ("Rufname") direkt im Profil ändern.
