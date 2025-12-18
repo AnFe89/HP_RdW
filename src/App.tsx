@@ -6,6 +6,7 @@ import { Hero } from './sections/Hero';
 import { Services } from './sections/Services';
 import { About } from './sections/About';
 import { News } from './sections/News';
+import { Contact } from './sections/Contact';
 // import { Board } from './sections/Board';
 import { Footer } from './components/Footer';
 import { AdminDashboard } from './admin/AdminDashboard';
@@ -56,6 +57,7 @@ function AppContent() {
                   <About />
                   <News />
                   <Services />
+                  <Contact />
                 </Suspense>
                 {/* <Board /> */}
                 <Footer />
