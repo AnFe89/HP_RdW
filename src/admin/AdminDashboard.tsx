@@ -153,6 +153,43 @@ export const AdminDashboard = () => {
         }
     };
 
+    const handleUpdateParticipant = async (reservationId: string, newUserId: string) => {
+        if (!confirm("Soll dieser Spieler wirklich ausgewechselt werden?")) return;
+
+        const { error } = await supabase
+            .from('reservations')
+            .update({ user_id: newUserId })
+            .eq('id', reservationId);
+
+        if (error) {
+            alert("Fehler beim Aktualisieren: " + error.message);
+        } else {
+            // Optimistic Update
+            const newPlayerProfile = profiles.find(p => p.id === newUserId);
+            
+            setReservations(reservations.map(r => {
+                if (r.id === reservationId) {
+                    return {
+                        ...r,
+                        user_id: newUserId,
+                        profiles: newPlayerProfile ? { username: newPlayerProfile.username, email: newPlayerProfile.email } : r.profiles
+                    };
+                }
+                return r;
+            }));
+        }
+    };
+
+    const getAvailableSubstitutes = (currentRes: any) => {
+        // Find all users who are blocked at this time (excluding the current reservation's user)
+        // We compare start times strictly
+        const blockedUserIds = reservations
+            .filter(r => r.start_time === currentRes.start_time && r.user_id !== currentRes.user_id)
+            .map(r => r.user_id);
+            
+        return profiles.filter(p => !blockedUserIds.includes(p.id) && p.id !== currentRes.user_id);
+    };
+
     if (loading) return <div className="text-gold p-10 font-medieval text-center text-2xl animate-pulse">LADEN...</div>;
     
     if (!isAdmin) {
@@ -475,9 +512,21 @@ export const AdminDashboard = () => {
                                          </span>
                                      </div>
 
-                                     <h4 className="font-medieval text-lg text-[#2c1810] mb-1">
-                                         {res.profiles?.username || 'Unbekannter Krieger'}
-                                     </h4>
+                                     <div className="mb-4 mt-2">
+                                         <label className="text-[10px] font-bold text-[#2c1810]/50 uppercase tracking-widest mb-1 block font-sans">Spieler</label>
+                                         <select
+                                            className="w-full bg-[#faebd7] border border-[#8b4513]/30 p-2 text-[#2c1810] text-sm font-bold font-sans outline-none focus:border-gold rounded shadow-inner"
+                                            value={res.user_id}
+                                            onChange={(e) => handleUpdateParticipant(res.id, e.target.value)}
+                                         >
+                                            <option value={res.user_id}>{res.profiles?.username || 'Unbekannt'}</option>
+                                            {getAvailableSubstitutes(res).map(p => (
+                                                <option key={p.id} value={p.id}>
+                                                    {p.username} {p.role !== 'guest' ? `[${p.role.toUpperCase()}]` : ''}
+                                                </option>
+                                            ))}
+                                         </select>
+                                     </div>
                                      <div className="text-xs text-[#2c1810]/60 font-sans mb-4">
                                          {new Date(res.start_time).toLocaleDateString()} • {new Date(res.start_time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                                      </div>
