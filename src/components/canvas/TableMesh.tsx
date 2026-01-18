@@ -6,7 +6,7 @@ import * as THREE from 'three';
 interface TableMeshProps {
   position: [number, number, number];
   id: number;
-  mode: '40k' | 'killteam';
+  mode: '40k' | 'killteam' | 'aos_spearhead';
   isOccupied: boolean;
   onClick: (id: number) => void;
   isSelected: boolean;
@@ -57,8 +57,8 @@ export const TableMesh = ({ position, id, mode, isOccupied, onClick, isSelected 
         <meshStandardMaterial color="#0b0c10" />
       </mesh>
 
-      {/* Kill Team Divider (Visual only) */}
-      {mode === 'killteam' && (
+      {/* Kill Team / Spearhead Divider (Visual only) */}
+      {(mode === 'killteam' || mode === 'aos_spearhead') && (
         <mesh position={[0, 0.6, 0]}>
              <boxGeometry args={[0.05, 0.1, 2]} />
              <meshStandardMaterial color="#c5c6c7" emissive="#66fcf1" />

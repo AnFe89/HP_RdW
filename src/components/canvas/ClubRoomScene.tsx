@@ -5,7 +5,7 @@ import { TableMesh } from './TableMesh';
 
 interface ClubRoomSceneProps {
     onSelectSector: (id: number) => void;
-    currentMode: '40k' | 'killteam';
+    currentMode: '40k' | 'killteam' | 'aos_spearhead';
 }
 
 export const ClubRoomScene = ({ onSelectSector, currentMode }: ClubRoomSceneProps) => {

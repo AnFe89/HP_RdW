@@ -7,7 +7,7 @@ import { PartnerSelectionModal } from "../components/reservations/PartnerSelecti
 import { supabase } from "../lib/supabase";
 
 export const Services = () => {
-  const [mode, setMode] = useState<"40k" | "killteam">("40k");
+  const [mode, setMode] = useState<"40k" | "killteam" | "aos_spearhead">("40k");
   const [selectedSector, setSelectedSector] = useState<number | null>(null);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isInviteOpen, setIsInviteOpen] = useState(false);
@@ -19,28 +19,33 @@ export const Services = () => {
   const [newUsername, setNewUsername] = useState("");
 
   const handleUpdateUsername = async () => {
-    if(!newUsername || newUsername.length < 3) {
-        alert("Name muss mindestens 3 Zeichen lang sein.");
-        return;
+    if (!newUsername || newUsername.length < 3) {
+      alert("Name muss mindestens 3 Zeichen lang sein.");
+      return;
     }
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) return;
 
     try {
-        const { error } = await supabase
-            .from('profiles')
-            .update({ username: newUsername })
-            .eq('id', user.id);
+      const { error } = await supabase
+        .from("profiles")
+        .update({ username: newUsername })
+        .eq("id", user.id);
 
-        if (error) throw error;
-        
-        setUsername(newUsername);
-        setIsEditingName(false);
-        // Refresh to sync invites etc if needed
-        initData();
+      if (error) throw error;
+
+      setUsername(newUsername);
+      setIsEditingName(false);
+      // Refresh to sync invites etc if needed
+      initData();
     } catch (err: any) {
-        alert("Fehler beim Aktualisieren: " + (err.message || "Unbekannter Fehler. Name evtl. schon vergeben?"));
+      alert(
+        "Fehler beim Aktualisieren: " +
+          (err.message || "Unbekannter Fehler. Name evtl. schon vergeben?"),
+      );
     }
   };
 
@@ -71,12 +76,15 @@ export const Services = () => {
     return nextThursday;
   };
 
-  // Map of table_id -> { count, mode, names: string[] }
+  // Map of table_id -> { count, mode, modes: string[], names: string[] }
   const [occupiedData, setOccupiedData] = useState<
-    Record<number, { count: number; mode: string; names: string[] }>
+    Record<
+      number,
+      { count: number; mode: string; modes: string[]; names: string[] }
+    >
   >({});
   const [bookedUsersMap, setBookedUsersMap] = useState<Record<string, number>>(
-    {}
+    {},
   );
   const [userReservations, setUserReservations] = useState<number[]>([]);
   const [userRole, setUserRole] = useState<string>("guest");
@@ -122,27 +130,38 @@ export const Services = () => {
       // This prevents issues with slight timezone offsets or precision differences
       .gte(
         "start_time",
-        new Date(gameDate.getTime() - 12 * 60 * 60 * 1000).toISOString()
+        new Date(gameDate.getTime() - 12 * 60 * 60 * 1000).toISOString(),
       )
       .lte(
         "start_time",
-        new Date(gameDate.getTime() + 12 * 60 * 60 * 1000).toISOString()
+        new Date(gameDate.getTime() + 12 * 60 * 60 * 1000).toISOString(),
       );
 
     if (data) {
       const tableData: Record<
         number,
-        { count: number; mode: string; names: string[] }
+        { count: number; mode: string; modes: string[]; names: string[] }
       > = {};
       data.forEach((r) => {
         if (!tableData[r.table_id]) {
           tableData[r.table_id] = {
             count: 0,
-            mode: r.game_mode || "40k",
+            mode: r.game_mode || "40k", // Primary/First mode found
+            modes: [],
             names: [],
           };
         }
         tableData[r.table_id].count += 1;
+
+        // Track unique modes on this table
+        if (r.game_mode && !tableData[r.table_id].modes.includes(r.game_mode)) {
+          tableData[r.table_id].modes.push(r.game_mode);
+        } else if (
+          !r.game_mode &&
+          !tableData[r.table_id].modes.includes("40k")
+        ) {
+          tableData[r.table_id].modes.push("40k");
+        }
 
         const profile = Array.isArray(r.profiles) ? r.profiles[0] : r.profiles;
         if (profile?.username)
@@ -177,7 +196,7 @@ export const Services = () => {
         { event: "*", schema: "public", table: "reservations" },
         () => {
           initData();
-        }
+        },
       )
       .subscribe();
 
@@ -215,13 +234,30 @@ export const Services = () => {
     const tableInfo = occupiedData[selectedSector] || {
       count: 0,
       mode: mode,
+      modes: [],
       names: [],
     };
     const currentCount = tableInfo.count;
 
-    if (currentCount > 0 && tableInfo.mode !== mode) {
+    // Compatibility Check
+    const isSkirmish = (m: string) => m === "killteam" || m === "aos_spearhead";
+    const isCompatible = (existingModes: string[], newMode: string) => {
+      if (existingModes.length === 0) return true;
+      // If table has 40k, only compatible if empty (handled by count > 0 check basically)
+      // Actually, if table has 40k, nothing else can join.
+      if (existingModes.includes("40k")) return false;
+
+      // If new mode is 40k, table must be empty
+      if (newMode === "40k") return currentCount === 0;
+
+      // If existing is skirmish and new is skirmish, they are compatible
+      const allSkirmish = existingModes.every((m) => isSkirmish(m));
+      return allSkirmish && isSkirmish(newMode);
+    };
+
+    if (currentCount > 0 && !isCompatible(tableInfo.modes, mode)) {
       alert(
-        `INKOMPATIBLER MODUS. TISCH IST FÜR ${tableInfo.mode.toUpperCase()} KONFIGURIERT.`
+        `INKOMPATIBLER MODUS. TISCH IST BEREITS FÜR ANDERE SYSTEME RESERVIERT.`,
       );
       return;
     }
@@ -265,17 +301,25 @@ export const Services = () => {
     endTime.setHours(23, 59, 0, 0);
 
     // Capacity Check
-    const tableInfo = occupiedData[selectedSector] || { count: 0, mode: mode };
+    const tableInfo = occupiedData[selectedSector] || {
+      count: 0,
+      mode: mode,
+      modes: [],
+    };
     // Use existing mode if table has players, otherwise use selected mode
-    const effectiveMode = tableInfo.count > 0 ? tableInfo.mode : mode;
-    const capacity = effectiveMode === "40k" ? 2 : 4;
+    // Compatibility is already checked in handleReservation, but we need capacity
+    const is40k =
+      tableInfo.modes.includes("40k") ||
+      (tableInfo.count === 0 && mode === "40k");
+
+    const capacity = is40k ? 2 : 4;
     const slotsNeeded = partnerId ? 2 : 1;
 
     if (tableInfo.count + slotsNeeded > capacity) {
       alert(
         slotsNeeded === 2
           ? "NICHT GENUG PLATZ: Der Tisch hat nicht genügend freie Plätze für euch beide."
-          : "DER TISCH IST LEIDER SCHON VOLL."
+          : "DER TISCH IST LEIDER SCHON VOLL.",
       );
       return;
     }
@@ -309,13 +353,13 @@ export const Services = () => {
       if (partnerError) {
         alert(
           "WARNUNG: DU WURDEST GEBUCHT, ABER DEIN PARTNER KONNTE NICHT GEBUCHT WERDEN (Evtl. schon belegt?): " +
-            partnerError.message
+            partnerError.message,
         );
       }
     }
 
     alert(
-      `PLATZ GESICHERT FÜR ${gameNight.toLocaleDateString()}. VIEL ERFOLG!`
+      `PLATZ GESICHERT FÜR ${gameNight.toLocaleDateString()}. VIEL ERFOLG!`,
     );
 
     // Optimistic Update (Full Refresh better to see partner)
@@ -340,7 +384,7 @@ export const Services = () => {
     } else {
       alert("RESERVIERUNG AUFGEHOBEN.");
       setUserReservations(
-        userReservations.filter((id) => id !== selectedSector)
+        userReservations.filter((id) => id !== selectedSector),
       );
 
       setOccupiedData((prev) => {
@@ -352,6 +396,7 @@ export const Services = () => {
           [selectedSector]: {
             count: newCount,
             mode: newCount === 0 ? "40k" : current.mode,
+            modes: newCount === 0 ? [] : current.modes, // Simplification: we don't strictly remove the mode from list locally, but initData refresh will fix it.
             names:
               current.names?.filter((n) => n !== "Du (wird geladen...)") || [],
           },
@@ -463,10 +508,22 @@ export const Services = () => {
                               TISCH {tableId}
                             </div>
                             <div className="text-xs text-parchment/50 font-sans mt-1">
-                              Modus:{" "}
-                              {occupiedData[tableId]?.mode === "40k"
-                                ? "WARHAMMER 40K"
-                                : "KILL TEAM"}
+                              {occupiedData[tableId]?.modes
+                                ?.map((m) =>
+                                  m === "40k"
+                                    ? "WARHAMMER 40K"
+                                    : m === "killteam"
+                                      ? "KILL TEAM"
+                                      : m === "aos_spearhead"
+                                        ? "AOS: SPEARHEAD"
+                                        : m,
+                                )
+                                .join(" + ") ||
+                                (occupiedData[tableId]?.mode === "40k"
+                                  ? "WARHAMMER 40K"
+                                  : occupiedData[tableId]?.mode === "killteam"
+                                    ? "KILL TEAM"
+                                    : "AOS: SPEARHEAD")}
                             </div>
                           </div>
                           <div className="text-right">
@@ -509,7 +566,7 @@ export const Services = () => {
                   onClick={async () => {
                     if (
                       !confirm(
-                        "ACHTUNG: Möchtest du dein Konto wirklich unwiderruflich löschen? Alle deine Daten gehen verloren."
+                        "ACHTUNG: Möchtest du dein Konto wirklich unwiderruflich löschen? Alle deine Daten gehen verloren.",
                       )
                     )
                       return;
@@ -656,6 +713,17 @@ export const Services = () => {
                 >
                   KILL TEAM
                 </button>
+                <button
+                  onClick={() => setMode("aos_spearhead")}
+                  className={`flex-1 py-3 border-2 transition-all duration-300 font-bold tracking-widest relative font-sans text-xs md:text-sm
+                            ${
+                              mode === "aos_spearhead"
+                                ? "bg-gold text-wood border-gold shadow-[0_0_15px_rgba(197,160,89,0.3)]"
+                                : "border-[#2c1810] bg-[#2c1810] text-parchment/60 hover:text-gold hover:border-gold/50"
+                            }`}
+                >
+                  AOS: SPEARHEAD
+                </button>
               </div>
 
               {/* Sector Info */}
@@ -681,8 +749,8 @@ export const Services = () => {
                         ? userRole === "member"
                           ? "MITGLIED"
                           : userRole === "admin"
-                          ? "ADMIN"
-                          : "GAST"
+                            ? "ADMIN"
+                            : "GAST"
                         : "UNBEKANNT"}
                     </span>
                   </div>
@@ -730,8 +798,12 @@ export const Services = () => {
                       </div>
                       {occupiedData[selectedSector]?.count > 0 && (
                         <div className="text-xs text-gold mt-1 border-t border-gold/20 pt-1 font-sans">
-                          AKTIVES SZENARIO:{" "}
-                          {occupiedData[selectedSector]?.mode.toUpperCase()}
+                          AKTIVE SYSTEME:{" "}
+                          {occupiedData[selectedSector]?.modes
+                            .map((m) =>
+                              m === "aos_spearhead" ? "AOS" : m.toUpperCase(),
+                            )
+                            .join(" + ")}
                         </div>
                       )}
 
@@ -751,7 +823,7 @@ export const Services = () => {
                                   >
                                     ⚔ {name}
                                   </div>
-                                )
+                                ),
                               )}
                             </div>
                           </div>
@@ -811,8 +883,8 @@ export const Services = () => {
                           {!isLoggedIn
                             ? "BITTE ANMELDEN"
                             : userRole !== "member" && userRole !== "admin"
-                            ? "NUR FÜR MITGLIEDER"
-                            : "RESERVIEREN"}
+                              ? "NUR FÜR MITGLIEDER"
+                              : "RESERVIEREN"}
                         </button>
                       )}
 

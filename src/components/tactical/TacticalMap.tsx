@@ -4,9 +4,9 @@ import { clsx } from 'clsx';
 
 interface TacticalMapProps {
     onSelectSector: (id: number) => void;
-    currentMode: '40k' | 'killteam';
+    currentMode: '40k' | 'killteam' | 'aos_spearhead';
     selectedSector: number | null;
-    occupied: Record<number, { count: number, mode: string }>;
+    occupied: Record<number, { count: number, mode: string, modes?: string[] }>;
 }
 
 
@@ -44,13 +44,17 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
             {/* Tables Container */}
             <div className="relative z-10 w-full h-full">
                 {tables.map((table) => {
-                    const data = occupied[table.id] || { count: 0, mode: '40k' };
+                    const data = occupied[table.id] || { count: 0, mode: '40k', modes: [] };
                     const count = data.count;
                     const mode = data.mode || '40k';
+                    const modes = data.modes || [];
                     
                     // Logic: If table is occupied, show ITS capacity. If empty, show selected mode's capacity (preview).
+                    const isSkirmish = (m: string) => m === 'killteam' || m === 'aos_spearhead';
                     const effectiveMode = count > 0 ? mode : currentMode;
-                    const capacity = effectiveMode === '40k' ? 2 : 4;
+                    const isEffectiveSkirmish = isSkirmish(effectiveMode);
+                    
+                    const capacity = !isEffectiveSkirmish ? 2 : 4;
                     
                     const isFull = count >= capacity;
                     const isSelected = selectedSector === table.id;
@@ -118,7 +122,7 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
                                 {/* Chairs */}
                                 <div className={clsx(
                                     "absolute flex w-full",
-                                    effectiveMode === 'killteam' ? "justify-between px-4 md:px-8" : "justify-center gap-4",
+                                    isEffectiveSkirmish ? "justify-between px-4 md:px-8" : "justify-center gap-4",
                                     "-top-4" // Chairs above
                                 )}>
                                      {[...Array(Math.ceil(capacity/2))].map((_, i) => {
@@ -152,7 +156,7 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
                                 </div>
                                 <div className={clsx(
                                     "absolute flex w-full",
-                                    effectiveMode === 'killteam' ? "justify-between px-4 md:px-8" : "justify-center gap-4",
+                                    isEffectiveSkirmish ? "justify-between px-4 md:px-8" : "justify-center gap-4",
                                     "-bottom-4" // Chairs below
                                 )}>
                                      {[...Array(Math.floor(capacity/2))].map((_, i) => {
@@ -185,11 +189,40 @@ export const TacticalMap = memo(({ onSelectSector, currentMode, selectedSector, 
 
                                     {/* Icon */}
                                     {count > 0 && (
-                                        <img 
-                                            src={mode === 'killteam' ? '/marker-kt-new.jpg' : '/marker-40k.png'} 
-                                            alt={mode}
-                                            className="w-4 h-4 md:w-10 md:h-10 object-contain opacity-80 drop-shadow-md mix-blend-overlay mt-0.5 md:mt-1 rounded-full"
-                                        />
+                                        <div className="flex gap-1 justify-center mt-0.5 md:mt-1">
+                                            {(modes.includes('killteam') || (modes.length === 0 && mode === 'killteam')) && (
+                                                <img 
+                                                    src="/marker-kt-new.jpg"
+                                                    alt="Kill Team"
+                                                    className="w-4 h-4 md:w-8 md:h-8 object-contain opacity-80 drop-shadow-md mix-blend-overlay rounded-full"
+                                                />
+                                            )}
+                                            {(modes.includes('aos_spearhead') || (modes.length === 0 && mode === 'aos_spearhead')) && (
+                                                <img 
+                                                    src="/marker-aos.png"
+                                                    alt="AoS"
+                                                    className="w-4 h-4 md:w-8 md:h-8 object-contain opacity-80 drop-shadow-md mix-blend-overlay rounded-full"
+                                                />
+                                            )}
+                                            {/* Fallback/Legacy logic if modes array is empty but mode is set */}
+                                            {/* Note: In regular use modes array should be populated. Only purely legacy cases might miss it. */}
+                                            
+                                            {(modes.length === 0 && mode === '40k') && (
+                                                  <img 
+                                                    src="/marker-40k.png"
+                                                    alt="40k"
+                                                    className="w-4 h-4 md:w-10 md:h-10 object-contain opacity-80 drop-shadow-md mix-blend-overlay rounded-full"
+                                                />
+                                            )}
+                                             {/* If modes includes 40k explicitly */}
+                                             {modes.includes('40k') && (
+                                                  <img 
+                                                    src="/marker-40k.png"
+                                                    alt="40k"
+                                                    className="w-4 h-4 md:w-10 md:h-10 object-contain opacity-80 drop-shadow-md mix-blend-overlay rounded-full"
+                                                />
+                                            )}
+                                        </div>
                                     )}
                                 </div>
                             </motion.div>
