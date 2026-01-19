@@ -62,17 +62,22 @@ export const News = () => {
   const hasPrevPage = page > 0;
 
   return (
-    <section className="relative w-full py-12 md:py-24 px-4 bg-wood border-t-4 border-[#2c1810]">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-8 md:gap-16">
+    <section className="relative w-full py-12 md:py-24 px-4 bg-[#1a120b] border-t-4 border-[#2c1810]">
+      {/* Background Image */}
+      <div className="absolute inset-0 z-0">
+        <img src="/bg/news-bg.png" alt="News Background" className="w-full h-full object-cover opacity-30" />
+        <div className="absolute inset-0 bg-black/60" />
+      </div>
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-8 md:gap-16 relative z-10">
         
         {/* Sticky Header */}
         <div className="md:w-1/3">
            <div className="sticky top-24">
-              <h2 className="text-3xl md:text-5xl font-medieval text-parchment mb-4 leading-none drop-shadow-md">
+              <h2 className="text-3xl md:text-5xl font-medieval text-parchment mb-4 leading-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
                  NEUE KUNDE <br />
                  <span className="text-gold">VOM HEROLD</span>
               </h2>
-               <div className="text-parchment/80 font-sans text-base max-w-xs border-l-4 border-gold pl-4 py-2 mt-4 tracking-wide bg-[#2c1810]/50 p-4 rounded-r-lg shadow-lg italic">
+               <div className="text-parchment/80 font-sans text-base max-w-xs border-l-4 border-gold pl-4 py-2 mt-4 tracking-wide bg-black/40 backdrop-blur-sm p-4 rounded-r-lg shadow-lg italic">
                   "HÖRT, HÖRT! Hier werden die neuesten Dekrete und Berichte der Ritterschaft verkündet." <br/>
                   <span className="text-gold font-bold not-italic block mt-2 border-t border-gold/20 pt-2">STATUS: ÖFFENTLICH</span>
                </div>

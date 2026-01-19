@@ -55,7 +55,13 @@ export const Contact = () => {
   };
 
   return (
-    <section className="relative w-full py-20 bg-parchment border-t-8 border-wood overflow-hidden">
+    <section className="relative w-full py-20 bg-[#1a120b] border-t-8 border-wood overflow-hidden">
+      {/* Background Image */}
+      <div className="absolute inset-0 z-0">
+         <img src="/bg/contact-bg.png" alt="Contact Background" className="w-full h-full object-cover opacity-40" />
+         <div className="absolute inset-0 bg-black/40 mix-blend-multiply" />
+      </div>
+
       {/* Background Texture Overlay */}
       <div
         className="absolute inset-0 opacity-10 pointer-events-none"
@@ -71,11 +77,11 @@ export const Contact = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-5xl font-medieval text-[#2c1810] mb-4 drop-shadow-md inline-block border-b-2 border-[#8b4513]/20 pb-4"
+            className="text-3xl md:text-5xl font-medieval text-parchment mb-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] inline-block border-b-2 border-gold/30 pb-4"
           >
             KONTAKT
           </motion.h2>
-          <p className="font-sans text-[#2c1810]/80 text-lg max-w-2xl mx-auto">
+          <p className="font-sans text-parchment/80 text-lg max-w-2xl mx-auto drop-shadow-md">
             Habt ihr Fragen zur Mitgliedschaft, zum Spielbetrieb oder wollt ihr
             einfach nur 'Hallo' sagen? Sendet uns einen Raben!
           </p>

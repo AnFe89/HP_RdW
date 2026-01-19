@@ -43,7 +43,7 @@ export const ImpressumModal = ({ isOpen, onClose }: ImpressumModalProps) => {
 
                             <div className="space-y-6 text-sm md:text-base leading-relaxed">
                                 <section>
-                                    <h3 className="font-bold text-lg mb-2 text-[#8b4513]">Allgemeine Angaben</h3>
+                                    <h3 className="font-bold text-lg mb-2 text-[#8b4513]">Angaben gemäß § 5 DDG</h3>
                                     <p>
                                         <b>Internet:</b> <a href="https://www.rdw-ev.de" target="_blank" rel="noopener noreferrer" className="hover:text-[#8b4513] underline decoration-dotted">https://www.rdw-ev.de</a>
                                     </p>

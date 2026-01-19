@@ -458,7 +458,7 @@ export const DatenschutzModal = ({
                     Rechtsgrundlage angegeben wird. Der Websitebetreiber hat ein
                     berechtigtes Interesse an der Speicherung von notwendigen
                     Cookies zur technisch fehlerfreien und optimierten
-                    Bereitstellung seiner Dienste.
+                    Bereitstellung seiner Dienste. Soweit eine Einwilligung zur Speicherung von Cookies abgefragt wurde, erfolgt die Verarbeitung ausschließlich auf Grundlage dieser Einwilligung (Art. 6 Abs. 1 lit. a DSGVO und § 25 Abs. 1 TDDDG); die Einwilligung ist jederzeit widerrufbar. Für technisch notwendige Cookies berufen wir uns zudem auf § 25 Abs. 2 TDDDG.
                   </p>
 
                   <h3 className="font-bold text-lg mb-2 text-[#8b4513] mt-4">
