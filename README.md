@@ -13,25 +13,25 @@ Dies ist das offizielle Web-Portal für den **Ritter der Würfelrunde** Tabletop
 
 ### 1. Das Tor (Landing)
 
-- **Atmosphäre**: Ein lebendiges, mittelalterliches Erlebnis mit 3D-Würfelanimationen und majesticer Musik.
+- **Atmosphäre**: Ein lebendiges, mittelalterliches Erlebnis mit immersiven Hintergründen, 3D-Würfelanimationen und majesticer Musik.
 - **Design**: "Ink on Parchment" (Tinte auf Pergament) - Helle, freundliche Optik mit Holztexturen, goldenen Akzenten und authentischen Schriftarten (`Cinzel` & `Lato`).
 - **Funktion**: Das Eingangsportal, das Besucher willkommen heißt.
 
 ### 2. Wir über uns
 
 - **Information**: Vorstellung des Vereins, Treffpunkt (Phantasos Studio) und Zeiten (Donnerstags 18:00).
-- **Stil**: Persönliche Ansprache ("Du"), die neue Spieler willkommen heißt.
+- **Stil**: Persönliche Ansprache ("Du") vor dem Hintergrund einer **belebten Taverne**, die neue Spieler willkommen heißt.
 - **Social Media**: Direkte Verlinkung zum **Discord Server** und **Instagram Profil** (@rdw_ev).
 
 ### 3. Der Rabe (Kontakt)
 
-- **Funktion**: Ein stilvolles Kontaktformular, um dem Verein Nachrichten ("Raben") zu senden.
+- **Funktion**: Ein stilvolles Kontaktformular vor dem Hintergrund eines **mystischen Raben-Schreibtischs**.
 - **Technik**: Integration via Formspree.
 - **Feedback**: Visuelles Feedback beim Senden (Ladeanimation, Erfolgsmeldung).
 
 ### 4. Die Tafelrunde (Tischreservierung)
 
-- **Interaktive Karte**: Eine interaktive Karte ("TacticalMap"), die den Saal mit 6 Tischen zeigt.
+- **Interaktive Karte**: Eine taktische Karte auf einem **Kriegstisch-Hintergrund**, die den Saal mit 6 Tischen zeigt.
 - **Realismus & Taktik**:
   - Tische zeigen dynamisch das aktive Spielsystem an (**Warhammer 40k**, **Kill Team** oder **AoS: Spearhead**).
   - **Kill Team & Spearhead Spezial**: Bei Kill Team und Age of Sigmar: Spearhead werden die Plätze paarweise (Säulen) gefüllt. Ein Paar leuchtet grün, sobald sich zwei Spieler gefunden haben (auch wenn der Tisch noch nicht voll ist). Die Paare werden visuell getrennt dargestellt (Links vs. Rechts).
@@ -56,7 +56,7 @@ Dies ist das offizielle Web-Portal für den **Ritter der Würfelrunde** Tabletop
 
 ### 5. Der Herold (News-Feed)
 
-- **Aktuelle Kunde**: Anzeige der neuesten Dekrete und Berichte aus dem Vereinsleben.
+- **Aktuelle Kunde**: Anzeige der neuesten Dekrete auf einer **mittelalterlichen Anschlagtafel**.
 - **Organisation**:
   - Zeigt standardmäßig die **5 aktuellsten** Beiträge.
   - **Archiv-Funktion**: Über eine Blätter-Funktion ("Neuere/Ältere Beiträge") können auch vergangene Nachrichten eingesehen werden.
@@ -80,8 +80,8 @@ Dies ist das offizielle Web-Portal für den **Ritter der Würfelrunde** Tabletop
 
 ### 7. Rechtliches (Footer)
 
-- **Impressum**: Rechtskonformes Impressum, eingebettet in einem Pergament-Modal.
-- **Datenschutz**: DSGVO-konforme Datenschutzerklärung, angepasst an Vercel/Supabase Hosting, ebenfalls als Modal integriert.
+- **Impressum**: Rechtskonformes Impressum nach **§ 5 DDG** (ehemals TMG), eingebettet in einem Pergament-Modal.
+- **Datenschutz**: DSGVO-konforme Datenschutzerklärung (inkl. **TDDDG** für Cookies), angepasst an Vercel/Supabase Hosting, ebenfalls als Modal integriert.
 
 ### 8. Mitgliederverwaltung
 
