@@ -35,7 +35,7 @@ Dies ist das offizielle Web-Portal für den **Ritter der Würfelrunde** Tabletop
 - **Realismus & Taktik**:
   - Tische zeigen dynamisch das aktive Spielsystem an (**Warhammer 40k**, **Kill Team** oder **AoS: Spearhead**).
   - **Kill Team & Spearhead Spezial**: Bei Kill Team und Age of Sigmar: Spearhead werden die Plätze paarweise (Säulen) gefüllt. Ein Paar leuchtet grün, sobald sich zwei Spieler gefunden haben (auch wenn der Tisch noch nicht voll ist). Die Paare werden visuell getrennt dargestellt (Links vs. Rechts).
-  - **Misch-Tische**: Dank dem neuen modularen System können **Kill Team** und **Spearhead** Partien gleichzeitig an einem Tisch stattfinden. Die Logos werden entsprechend dynamisch kombiniert.
+  - **Misch-Tische**: Dank dem neuen modularen System können **Kill Team** und **Age of Sigmar: Spearhead** Partien gleichzeitig an einem Tisch stattfinden. Beide Systeme gelten als "Skirmish"-Systeme und sind kompatibel. Die Logos werden entsprechend dynamisch kombiniert.
   - Visuelle Details wie Spielmatten und Würfel auf leeren Tischen.
 - **Platzwahl**:
   - **Freie Plätze**: Werden durch leere Stühle symbolisiert.
