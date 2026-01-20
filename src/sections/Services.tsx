@@ -229,6 +229,17 @@ export const Services = () => {
       return;
     }
 
+    // Compatibility Helpers (Moved to scope for usage in render)
+    const isSkirmish = (m: string) => m === "killteam" || m === "aos_spearhead";
+    const isCompatible = (existingModes: string[], newMode: string) => {
+      if (existingModes.length === 0) return true;
+      if (existingModes.includes("40k")) return false;
+      if (newMode === "40k") return existingModes.length === 0; // Should be empty (handled by count check usually but safe here)
+
+      const allSkirmish = existingModes.every((m) => isSkirmish(m));
+      return allSkirmish && isSkirmish(newMode);
+    };
+
     if (!selectedSector) return;
 
     const tableInfo = occupiedData[selectedSector] || {
@@ -239,21 +250,8 @@ export const Services = () => {
     };
     const currentCount = tableInfo.count;
 
-    // Compatibility Check
-    const isSkirmish = (m: string) => m === "killteam" || m === "aos_spearhead";
-    const isCompatible = (existingModes: string[], newMode: string) => {
-      if (existingModes.length === 0) return true;
-      // If table has 40k, only compatible if empty (handled by count > 0 check basically)
-      // Actually, if table has 40k, nothing else can join.
-      if (existingModes.includes("40k")) return false;
 
-      // If new mode is 40k, table must be empty
-      if (newMode === "40k") return currentCount === 0;
-
-      // If existing is skirmish and new is skirmish, they are compatible
-      const allSkirmish = existingModes.every((m) => isSkirmish(m));
-      return allSkirmish && isSkirmish(newMode);
-    };
+    // Compatibility Check uses helper functions defined above
 
     if (currentCount > 0 && !isCompatible(tableInfo.modes, mode)) {
       alert(
@@ -855,7 +853,10 @@ export const Services = () => {
                           */}
                         </>
                       ) : occupiedData[selectedSector]?.count > 0 &&
-                        occupiedData[selectedSector]?.mode !== mode ? (
+                        !isCompatible(
+                          occupiedData[selectedSector]?.modes || [],
+                          mode,
+                        ) ? (
                         <button
                           disabled
                           className="mt-6 w-full py-3 bg-black/20 text-crimson border border-crimson/30 uppercase tracking-widest text-sm font-bold opacity-60 cursor-not-allowed rounded font-medieval"
