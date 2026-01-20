@@ -101,6 +101,17 @@ export const Services = () => {
     return now >= windowOpen && now < gameDate;
   };
 
+  // Compatibility Helpers
+  const isSkirmish = (m: string) => m === "killteam" || m === "aos_spearhead";
+  const isCompatible = (existingModes: string[], newMode: string) => {
+    if (existingModes.length === 0) return true;
+    if (existingModes.includes("40k")) return false;
+    if (newMode === "40k") return existingModes.length === 0;
+
+    const allSkirmish = existingModes.every((m) => isSkirmish(m));
+    return allSkirmish && isSkirmish(newMode);
+  };
+
   const initData = useCallback(async () => {
     const {
       data: { user },
@@ -229,16 +240,10 @@ export const Services = () => {
       return;
     }
 
-    // Compatibility Helpers (Moved to scope for usage in render)
-    const isSkirmish = (m: string) => m === "killteam" || m === "aos_spearhead";
-    const isCompatible = (existingModes: string[], newMode: string) => {
-      if (existingModes.length === 0) return true;
-      if (existingModes.includes("40k")) return false;
-      if (newMode === "40k") return existingModes.length === 0; // Should be empty (handled by count check usually but safe here)
 
-      const allSkirmish = existingModes.every((m) => isSkirmish(m));
-      return allSkirmish && isSkirmish(newMode);
-    };
+    // Compatibility Helpers (Moved to scope for usage in render)
+    
+    if (!selectedSector) return;
 
     if (!selectedSector) return;
 
