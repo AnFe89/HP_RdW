@@ -18,7 +18,7 @@ You are an expert developer specializing in creating "Skills" for the Antigravit
 
 Every skill you generate must follow this folder hierarchy:
 
-```
+```text
 <skill-name>/
 ├── SKILL.md          (Required: Main logic and instructions)
 ├── scripts/          (Optional: Helper scripts)

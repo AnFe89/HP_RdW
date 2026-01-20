@@ -15,9 +15,9 @@ This skill allows the agent to retrieve top posts from any public subreddit with
 
 ## Workflow
 
-1.  **Identify Subreddit**: Determine which subreddit(s) the user is interested in.
-2.  **Execute Script**: Run the provided Python script to fetch the data.
-3.  **Process Output**: Parse the JSON or text output to answer the user's specific question.
+1. **Identify Subreddit**: Determine which subreddit(s) the user is interested in.
+2. **Execute Script**: Run the provided Python script to fetch the data.
+3. **Process Output**: Parse the JSON or text output to answer the user's specific question.
 
 ## Instructions
 

@@ -1,58 +1,66 @@
 ---
 name: frontend-design
-description: Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, or applications. Generates creative, polished code that avoids generic AI aesthetics.
-license: Complete terms in LICENSE.txt
+description: Create distinctive, production-grade frontend interfaces with high design quality using Gemini 3 Pro and Nano Banana Pro. Use when the user asks to build web components, pages, artifacts, posters, or applications.
 ---
 
-# Frontend Design
+# Frontend Design & Implementation
 
-This skill guides creation of distinctive, production-grade frontend interfaces that avoid generic "AI slop" aesthetics. Implement real working code with exceptional attention to aesthetic details and creative choices.
+This skill guides creation of distinctive, production-grade frontend interfaces that avoid generic "AI slop" aesthetics. It leverages **Gemini 3 Pro** for logic and **Nano Banana Pro** (Gemini 3 Pro Image) for visual intelligence.
 
 ## When to use this skill
 
-- User asks to build web components, pages, or applications
-- User requests UI/UX design or improvements
-- User wants "creative", "polished", or "high-quality" frontend code
-- User specifically asks to avoid generic or "AI-looking" designs
+- User asks to build a website, page, or component.
+- User requests a "modern", "beautiful", or "distinctive" UI.
+- User wants to fix or improve the aesthetics of an existing interface.
+- User asks to "visualize" a design before coding.
 
-## Workflow
+## 1. Nano Banana Pro (Gemini 3 Pro Image) Integration
 
-### 1. Design Thinking (Mental Step)
+**CRITICAL**: You have access to "Nano Banana Pro" capabilities via the `generate_image` tool. You must use this for visual planning.
 
-Before coding, mentally commit to a BOLD aesthetic direction:
+### When to use `generate_image`
 
-- **Purpose**: What problem does this solve?
-- **Tone**: Pick an extreme (e.g., brutally minimal, maximalist chaos, retro-futuristic, luxury/refined).
-- **Differentiation**: What makes this UNFORGETTABLE?
+1. **Exploration**: Before writing code for a complex page, generate a mock-up to confirm the aesthetic direction.
+2. **Assets**: Generate unique backgrounds, textures, or hero images that match the design (e.g., "grainy gradients", "abstract 3D shapes").
+3. **Visualization**: If the user asks "what will it look like?", show them an image first.
 
-**CRITICAL**: Choose a clear conceptual direction and execute it with precision.
+### Prompting "Nano Banana Pro" for UI
 
-### 2. Aesthetic Guidelines
+Nano Banana Pro excels at **Text Rendering** and **Infographic Structures**.
 
-Implement working code that adheres to these principles:
+- **DO**: Include specific text you want in the UI in quotes (e.g., `a dashboard with title "Analytics Overview"`).
+- **DO**: Use keywords like "high fidelity UI design", "infographic style", "blueprint", "schematic", "dense information density".
+- **DO**: Describe the layout structure (e.g., "sidebar on left, data grid in center, dark mode").
 
-- **Typography**: beautiful, unique, and interesting fonts. No generic choices (Inter, Arial). Pair distinctive display fonts with refined body fonts.
-- **Color & Theme**: Cohesive, dominant colors with sharp accents. Avoid timid, evenly-distributed palettes.
-- **Motion**: High-impact staggered reveals, scroll-triggering, and hover states. CSS-only where possible, Framer Motion for React.
-- **Spatial Composition**: Asymmetry, overlap, diagonal flow, grid-breaking elements.
-- **Backgrounds**: Atmosphere and depth via gradients, noise, patterns, shadows, or layered transparencies.
-- **Visual Assets (Nano Banana Pro)**: Use the `generate_image` tool to create unique, high-quality images that match the aesthetic. **Never use placeholders.** Use Nano Banana Pro (via image generation) to "spice up" the design with distinctive visuals.
+---
 
-### 3. Implementation
+## 2. Design Thinking
 
-- **Production-grade**: Functional and bug-free.
-- **Cohesive**: Every element supports the chosen aesthetic.
-- **Meticulous**: Strict attention to spacing and micro-interactions.
+Before coding, understand the context and commit to a BOLD aesthetic direction:
 
-## Output Rules
+- **Purpose**: What problem does this interface solve? Who uses it?
+- **Tone**: Pick an extreme: brutally minimal, maximalist chaos, retro-futuristic, organic/natural, luxury/refined, playful/toy-like, editorial/magazine, brutalist/raw, art deco/geometric, soft/pastel, industrial/utilitarian.
+- **Constraints**: Technical requirements (framework, performance, accessibility).
+- **Differentiation**: What makes this UNFORGETTABLE? What's the one thing someone will remember?
 
-- **Match Complexity**: Maximalist designs get elaborate code/animations; Minimalist designs get strict restraint.
-- **Vary Choices**: Never use the same aesthetic twice. Switch between light/dark, different fonts, and different vibes.
-- **NO GENERIC AI AESTHETICS**:
-  - No overused fonts (Space Grotesk, Roboto)
-  - No purple gradients on white backgrounds
-  - No cookie-cutter layouts
+**CRITICAL**: Choose a clear conceptual direction and execute it with precision. Bold maximalism and refined minimalism both work - the key is intentionality.
 
-## Resources
+## 3. Frontend Aesthetics Guidelines
 
-- **scripts/generate-palette**: (Optional) Helper to generate cohesive color themes.
+Focus on:
+
+- **Typography**: Choose fonts that are beautiful, unique, and interesting. Avoid generic fonts like Arial and Inter. Pair a distinctive display font with a refined body font.
+- **Color & Theme**: Commit to a cohesive aesthetic. Use CSS variables. Dominant colors with sharp accents outperform timid palettes.
+- **Motion**: Use animations for effects and micro-interactions. Focus on one well-orchestrated page load with staggered reveals.
+- **Spatial Composition**: Unexpected layouts. Asymmetry. Overlap. Diagonal flow.
+- **Backgrounds & Visual Details**: Create atmosphere and depth. Add contextual effects: gradient meshes, noise textures, geometric patterns, layered transparencies, dramatic shadows.
+
+**NEVER** use generic AI-generated aesthetics like overused font families (Inter, Roboto), cliched color schemes (purple gradients), or cookie-cutter layouts.
+
+## 4. Workflow
+
+1. **Analyze**: Understand the requirements. Use `mcp-research` if you need to look up latest trends or libraries.
+2. **Visualize**: Use `generate_image` (Nano Banana Pro) to create a visual target or assets.
+    - *Example Prompt*: "High fidelity UI design of a futuristic dashboard, dark mode, neon orange accents, title text 'COMMAND CENTER', infographic style charts."
+3. **Implement**: Write the code (HTML/CSS/React) to match the vision and the generated imagery.
+4. **Refine**: Polish animations, spacing, and mobile responsiveness.

@@ -31,11 +31,11 @@ Create a new markdown file at `docs/plans/YYYY-MM-DD-<feature-name>.md` with thi
 
 Break everything down into **bite-sized tasks** (2-5 minutes each). Each task must follow TDD principles:
 
-1.  **Write failing test**
-2.  **Verify failure**
-3.  **Minimal implementation**
-4.  **Verify pass**
-5.  **Commit**
+1. **Write failing test**
+2. **Verify failure**
+3. **Minimal implementation**
+4. **Verify pass**
+5. **Commit**
 
 ### 3. Task Template
 
@@ -61,7 +61,7 @@ Use this exact format for every task in the plan:
 Run: `pytest tests/path/test.py::test_name -v`
 Expected: FAIL with "function not defined"
 
-**Step 3: Write minimal implementation**
+### Step 3: Write minimal implementation
 
 ```python
 # Minimal code to pass
@@ -71,14 +71,14 @@ Expected: FAIL with "function not defined"
 Run: `pytest tests/path/test.py::test_name -v`
 Expected: PASS
 
-**Step 5: Commit**
+### Step 5: Commit
 
 ```bash
 git add tests/path/test.py src/path/file.py
 git commit -m "feat: add specific feature"
 ```
 
-```
+```text
 
 ## Instructions for the Planner
 
